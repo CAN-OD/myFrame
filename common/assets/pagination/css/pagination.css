@@ -1,0 +1,22 @@
+/* 分页插件 */
+.jump-ipt {
+	width: 71px;
+	float: left;
+	height: 30px;
+	border-color: #ddd; 
+	border-radius: 0;
+	border-left: none;
+}
+.jump-btn {
+	border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+.paging-position {
+	display: inline-block;
+    line-height: 30px;
+    margin-left: 5px;
+}
+.paging-position span {
+	font-weight: bolder;
+	margin: 0 3px;
+}
