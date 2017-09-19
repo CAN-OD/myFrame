@@ -7,7 +7,7 @@
         '<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>' +
         '<h4 class="modal-title" id="modalLabel">[Title]</h4>' +
         '</div>' +
-        '<div class="modal-body clearfix">' +
+        '<div class="modal-body">' +
         '<p>[Message]</p>' +
         '</div>' +
         '<div class="modal-footer">' +
@@ -24,11 +24,11 @@
         '<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>' +
         '<h4 class="modal-title" id="modalLabel">[Title]</h4>' +
         '</div>' +
-        '<div class="modal-body clearfix">' +
+        '<div class="modal-body">' +
         '</div>' +
         '<div class="modal-footer">' +
-        '<button type="button" class="btn btn-primary ok" data-dismiss="modal">[BtnOk]</button>' +
         '<button type="button" class="btn btn-default cancel" data-dismiss="modal">[BtnCancel]</button>' +
+        '<button type="button" class="btn btn-primary ok" data-dismiss="modal">[BtnOk]</button>' +
         '</div>' +
         '</div>' +
         '</div>' +
@@ -129,7 +129,7 @@
                     },1000);  
                 // },10); 
             } */ 
-            // dom.css({"min-height":dom.find('.modal-dialog').height()+"px"});
+            dom.css({"min-height":dom.find('.modal-dialog').height()+"px"});
         },
         // 错误与成功提示框
         alert: function(options) {
@@ -259,10 +259,9 @@
            
             // if (options.onReady()) options.onReady.call(target);
             // hidden.bs.modal的意思就是当弹出的模态框消失的时候，接下来回调的函数
-            target.on('hidden.bs.modal', function(e) { // 点击空白地方隐藏弹出框时删除
-                $('body').find(target).next(".modal-backdrop").remove(); // 清楚已关闭的弹出框HTML
-                $('body').find(target).remove();
-            });
+            // target.on('hide.bs.modal', function(e) {
+            //     $('body').find(target).remove();
+            // });
 
             // if (options.closeClick()) options.closeClick.call(target);
 
@@ -281,7 +280,6 @@
                     if (callback && callback instanceof Function) {
                         //当调用 hide 实例方法时触发。
                         target.find('.ok').on('click',function(e) {
-                            $('body').find(target).next(".modal-backdrop").remove(); // 清楚已关闭的弹出框HTML
                             $('body').find(target).remove();
                             callback(target, e);
                         });
@@ -291,7 +289,6 @@
                     if (callback && callback instanceof Function) {
                         //当调用 hide 实例方法时触发。
                         target.find('.cancel').on('click', function(e) {
-                            $('body').find(target).next(".modal-backdrop").remove(); // 清楚已关闭的弹出框HTML
                             $('body').find(target).remove();
                             callback(target, e);
                         });

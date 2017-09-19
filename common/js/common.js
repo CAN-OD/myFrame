@@ -52,10 +52,9 @@
             myFrame.loadCSS(filePath + pageUrl);
         }
         // 加载请求 jsp文件路径 css
-        if (options.hrefType && options.hrefType!="") {
+        if (options.hrefType) {
             myFrame.loadCSS($$(options.hrefType + ".css"));
         }
-
         // _this.loadingShow(true, $("body"));
         return _this.request({
             url: $$(options.href),
@@ -285,18 +284,6 @@
         url = url.replace(/\/{2}/, '/');
         return url;
     };
-    // 模态框关闭方法
-    /**
-     * [closeBox ]
-     * @param  {[type]} dom  弹出框加载页面dom节点
-     * @return {[type]}     [description]
-     */
-    myFrame.closeBox = function(dom) {
-        var box= dom.parents(".modal");
-        box.next(".modal-backdrop").remove(); // 清楚已关闭的弹出框HTML
-        box.remove(); // 清楚已关闭的弹出框HTML
-    };
-
     // 弹出框
     /**
      * @param title 弹出框标题
@@ -307,7 +294,6 @@
      */
     myFrame.dialog = function(options) {
         var _this = this;
-
         options = $.extend({}, {
             title: 'title',
             url: '',
@@ -323,7 +309,16 @@
             }
         }, options || {});
 
-       var myAlert = myPopup.dialog(options);
+       var myAlert = myPopup.dialog({
+            title: options.title,
+            url: options.url,
+            width: options.width,
+            height: options.height,
+            onReady: options.onReady,
+            onSure: options.onSure,
+            onCancel: options.onCancel,
+            onClose: options.onClose 
+        });
 
 
         // 弹出框初始化 之后操作回调
@@ -413,7 +408,7 @@
         myAlert.onSure(function(target) {
             if (typeof sure == "function") return sure(target);
         });
-        // 点击关闭时触发
+        // 点击确定时触发
         myAlert.onClose(function(target) {
             if (typeof sure == "function") {
                if (typeof notSure == "function") return notSure(target);
@@ -607,7 +602,7 @@
 
     //  layerDate 时间插件
     myFrame.laydate = function(option){
-        //require(["laydate"],function(laydate){
+        require(["laydate"],function(laydate){
             laydate.render( {
                 theme:option.theme || "defaults" ,// 主题  default（默认简约）、molv（墨绿背景）、#颜色值（自定义颜色背景）、grid（格子主题）
                 elem: option.elem , // 绑定元素
@@ -634,7 +629,52 @@
             });
             // var date = laydate.render({}); date.hint() 当前实例对象。其中包含一些成员属性和方法
             // laydate.getEndDate(month, year) 获取指定年月的最后一天
-        //});
+        });
+    };
+    // 时间日期区间选择 限制 插件
+    /**
+     * [datetimeLimit object]
+     * @param  {[type]} startDom [substring] 开始时间 dom节点
+     * @param  {[type]} startSet [object] myFrame.laydate() 开始时间插件配置
+     * @param  {[type]} endDom   [object] 结束时间 dom节点
+     * @param  {[type]} endSet   [substring] myFrame.laydate() 结束时间插件配置
+     */
+    myFrame.datetimeLimit = function(startDom,startSet,endDom,endSet){
+        startSet = $.extend({}, {
+            elem: startDom,
+            format: 'yyyy-MM-dd', 
+            theme:"#1756af",
+            max: $(endDom).val(),
+            show: true, //直,接显示
+            closeStop: startDom, //这里代表的意思是：点击 test1 所在元素阻止关闭事件冒泡。如果不设定，则无法弹出控件
+            btns: ['now', 'confirm'],
+            done:function(value,date,endDate){//改变日期触发事件
+            
+            }
+        }, startSet || {});
+
+        endSet = $.extend({}, {
+            elem: endDom,
+            format: 'yyyy-MM-dd',
+            theme:"#1756af",
+            min: $(startDom).val(),
+            btns: ['now', 'confirm'],
+            show: true, //直接显示
+            closeStop: endDom, //这里代表的意思是：点击 test1 所在元素阻止关闭事件冒泡。如果不设定，则无法弹出控件
+            done:function(value,date,endDate){
+               
+            }
+        }, startSet || {});
+
+        //外部事件调用
+        $(startDom).on('click', function(e){ //假设 test1 是一个按钮
+            startSet.max= $(endDom).val();
+            myFrame.laydate(startSet);
+        });
+        $(endDom).on('click', function(e){ //假设 test1 是一个按钮
+            endSet.min = $(startDom).val();
+            myFrame.laydate(endSet);
+        });
     };
    
     // 加载插件方法 引入js 、css文件
