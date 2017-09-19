@@ -52,9 +52,10 @@
             myFrame.loadCSS(filePath + pageUrl);
         }
         // 加载请求 jsp文件路径 css
-        if (options.hrefType) {
+        if (options.hrefType && options.hrefType!="") {
             myFrame.loadCSS($$(options.hrefType + ".css"));
         }
+
         // _this.loadingShow(true, $("body"));
         return _this.request({
             url: $$(options.href),
@@ -284,6 +285,18 @@
         url = url.replace(/\/{2}/, '/');
         return url;
     };
+    // 模态框关闭方法
+    /**
+     * [closeBox ]
+     * @param  {[type]} dom  弹出框加载页面dom节点
+     * @return {[type]}     [description]
+     */
+    myFrame.closeBox = function(dom) {
+        var box= dom.parents(".modal");
+        box.next(".modal-backdrop").remove(); // 清楚已关闭的弹出框HTML
+        box.remove(); // 清楚已关闭的弹出框HTML
+    };
+
     // 弹出框
     /**
      * @param title 弹出框标题
@@ -294,6 +307,7 @@
      */
     myFrame.dialog = function(options) {
         var _this = this;
+
         options = $.extend({}, {
             title: 'title',
             url: '',
@@ -309,16 +323,7 @@
             }
         }, options || {});
 
-       var myAlert = myPopup.dialog({
-            title: options.title,
-            url: options.url,
-            width: options.width,
-            height: options.height,
-            onReady: options.onReady,
-            onSure: options.onSure,
-            onCancel: options.onCancel,
-            onClose: options.onClose 
-        });
+       var myAlert = myPopup.dialog(options);
 
 
         // 弹出框初始化 之后操作回调
@@ -408,7 +413,7 @@
         myAlert.onSure(function(target) {
             if (typeof sure == "function") return sure(target);
         });
-        // 点击确定时触发
+        // 点击关闭时触发
         myAlert.onClose(function(target) {
             if (typeof sure == "function") {
                if (typeof notSure == "function") return notSure(target);
@@ -602,7 +607,7 @@
 
     //  layerDate 时间插件
     myFrame.laydate = function(option){
-        require(["laydate"],function(laydate){
+        //require(["laydate"],function(laydate){
             laydate.render( {
                 theme:option.theme || "defaults" ,// 主题  default（默认简约）、molv（墨绿背景）、#颜色值（自定义颜色背景）、grid（格子主题）
                 elem: option.elem , // 绑定元素
@@ -629,7 +634,7 @@
             });
             // var date = laydate.render({}); date.hint() 当前实例对象。其中包含一些成员属性和方法
             // laydate.getEndDate(month, year) 获取指定年月的最后一天
-        });
+        //});
     };
     // 时间日期区间选择 限制 插件
     /**
@@ -676,7 +681,6 @@
             myFrame.laydate(endSet);
         });
     };
-   
     // 加载插件方法 引入js 、css文件
     myFrame.pluginPath = function(){
         var config = myFrame.config,
