@@ -1,4 +1,4 @@
-//get form data 获取form input等数据
+ //get form data 获取form input等数据
 // define(["pagination"], function(pagination) {
 (function (window, undefined) {
     //framework library
@@ -1055,6 +1055,40 @@ $.fn.paging = function() {
             callback(pagination);
         });
     };
+
+    // 表格合并单元格
+    /**
+     * [description]
+     * @param  {[type]} colIdx  要合并的列序号，从0开始
+     * @return {[type]} idNmae  需合并行区别标识符
+     */
+    $.fn.extend({
+        "rowspan": function (colIdx,idNmae) {
+            return this.each(function () {
+                var that;
+                var id ;
+                $('tr', this).each(function (row) {
+                    $('td:eq(' + colIdx + ')', this).filter(':visible').each(function (col) {
+                        id = idNmae?$(this).attr(idNmae) == $(that).attr(idNmae):$(this).html() == $(that).html();
+                        if (that != null && id) {
+                            //console.log($(this).html()+' =='+ $(that).html())
+                            rowspan = $(that).attr("rowSpan");
+                            // 默认添加
+                            if (rowspan == undefined) {
+                                $(that).attr("rowSpan", 1);
+                                rowspan = $(that).attr("rowSpan");
+                            }
+                            rowspan = Number(rowspan) + 1;
+                            $(that).attr("rowSpan", rowspan);
+                            $(this).hide();
+                        } else {
+                            that = this;
+                        }
+                    });
+                });
+            });
+        }
+    });
 
 })(jQuery, window, document);
 // });
