@@ -1,4 +1,4 @@
- //get form data 获取form input等数据
+//get form data 获取form input等数据
 // define(["pagination"], function(pagination) {
 (function (window, undefined) {
     //framework library
@@ -607,7 +607,7 @@
 
     //  layerDate 时间插件
     myFrame.laydate = function(option){
-        //require(["laydate"],function(laydate){
+        require(["laydate"],function(laydate){
             laydate.render( {
                 theme:option.theme || "defaults" ,// 主题  default（默认简约）、molv（墨绿背景）、#颜色值（自定义颜色背景）、grid（格子主题）
                 elem: option.elem , // 绑定元素
@@ -634,7 +634,7 @@
             });
             // var date = laydate.render({}); date.hint() 当前实例对象。其中包含一些成员属性和方法
             // laydate.getEndDate(month, year) 获取指定年月的最后一天
-        //});
+        });
     };
     // 时间日期区间选择 限制 插件
     /**
@@ -805,21 +805,6 @@
             nowLv++;
         }
         return nowLv;
-    };
-
-    //表单提交，jsp返回页面方法
-    /**
-     * [submit description]
-     * @param  {[type]} url      [请求地址]
-     * @param  {[type]} formDom  [form表单dom节点]
-     * @param  {[type]} contDom  [页面容器节点]
-     * @param  {[type]} dataType [数据返回类型]
-     * @return {[type]}          [description]
-     */
-    myFrame.submit = function(url,formDom,contDom,dataType){
-        var data = myFrame.getJson($$(url), "GET", $(formDom).getFormData(), dataType);
-        $(contDom).html(data);
-        console.log(data);
     };
 // };
 
@@ -1070,40 +1055,6 @@ $.fn.paging = function() {
             callback(pagination);
         });
     };
-
-    // 表格合并单元格
-    /**
-     * [description]
-     * @param  {[type]} colIdx  要合并的列序号，从0开始
-     * @return {[type]} idNmae  需合并行区别标识符
-     */
-    $.fn.extend({
-        "rowspan": function (colIdx,idNmae) {
-            return this.each(function () {
-                var that;
-                var id ;
-                $('tr', this).each(function (row) {
-                    $('td:eq(' + colIdx + ')', this).filter(':visible').each(function (col) {
-                        id = idNmae?$(this).attr(idNmae) == $(that).attr(idNmae):$(this).html() == $(that).html();
-                        if (that != null && id) {
-                            //console.log($(this).html()+' =='+ $(that).html())
-                            rowspan = $(that).attr("rowSpan");
-                            // 默认添加
-                            if (rowspan == undefined) {
-                                $(that).attr("rowSpan", 1);
-                                rowspan = $(that).attr("rowSpan");
-                            }
-                            rowspan = Number(rowspan) + 1;
-                            $(that).attr("rowSpan", rowspan);
-                            $(this).hide();
-                        } else {
-                            that = this;
-                        }
-                    });
-                });
-            });
-        }
-    });
 
 })(jQuery, window, document);
 // });

@@ -18,10 +18,6 @@ body.modal-open {
   right: 0;
   display: table;
 }
-.modal-body {
-  overflow-x: hidden;
-  overflow-y: auto;
-}
 h3.nav-title,
 h4.nav-title,
 h6.nav-title {

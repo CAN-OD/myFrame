@@ -7,7 +7,7 @@
         '<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>' +
         '<h4 class="modal-title" id="modalLabel">[Title]</h4>' +
         '</div>' +
-        '<div class="modal-body clearfix">' +
+        '<div class="modal-body">' +
         '<p>[Message]</p>' +
         '</div>' +
         '<div class="modal-footer">' +
@@ -24,7 +24,7 @@
         '<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>' +
         '<h4 class="modal-title" id="modalLabel">[Title]</h4>' +
         '</div>' +
-        '<div class="modal-body clearfix">' +
+        '<div class="modal-body">' +
         '</div>' +
         '<div class="modal-footer">' +
         '<button type="button" class="btn btn-default cancel" data-dismiss="modal">[BtnCancel]</button>' +
@@ -72,10 +72,6 @@
                 $('body').find('#' + modalId).next(".modal-backdrop").remove(); // 清楚已关闭的弹出框HTML
                 $('body').find('#' + modalId).remove(); // 清楚已关闭的弹出框HTML
 
-            });
-             $('#' + modalId).on('hidden.bs.modal', function(e) {
-                $('body').find('#' + modalId).next(".modal-backdrop").remove(); // 清楚已关闭的弹出框HTML
-                $('body').find('#' + modalId).remove();
             });
             // 当模态框对用户可见时触发（将等待 CSS 过渡效果完成）。初始化时的回调函数
             $('#' + modalId).on('shown.bs.modal', function(e) {
@@ -258,11 +254,8 @@
             target.modal('show').find(".modal-dialog").css({
                 "width": options.width // 改变弹出框内容宽度 
             });
-           
-            target.on('hidden.bs.modal', function(e) {
-                $('body').find('#' + modalId).next(".modal-backdrop").remove(); // 清楚已关闭的弹出框HTML
-                $('body').find(target).remove();
-            });
+
+            
            
             // if (options.onReady()) options.onReady.call(target);
             // hidden.bs.modal的意思就是当弹出的模态框消失的时候，接下来回调的函数

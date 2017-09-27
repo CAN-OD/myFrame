@@ -924,6 +924,7 @@
                  _this.getMap(code,value,endTime);
             }
         };
+
         var end = {
             elem: '#endDate',
             format: 'yyyy-MM-dd',
@@ -938,6 +939,7 @@
             	_this.getMap(code,startTime,value);
             }
         };
+ myFrame.laydate(end);
         //外部事件调用
         $('#startDate').on('click', function(e){ //假设 test1 是一个按钮
             start.max= $('#endDate').val();
