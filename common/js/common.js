@@ -806,6 +806,21 @@
         }
         return nowLv;
     };
+
+    //表单提交，jsp返回页面方法
+    /**
+     * [submit description]
+     * @param  {[type]} url      [请求地址]
+     * @param  {[type]} formDom  [form表单dom节点]
+     * @param  {[type]} contDom  [页面容器节点]
+     * @param  {[type]} dataType [数据返回类型]
+     * @return {[type]}          [description]
+     */
+    myFrame.submit = function(url,formDom,contDom,dataType){
+        var data = myFrame.getJson($$(url), "GET", $(formDom).getFormData(), dataType);
+        $(contDom).html(data);
+        console.log(data);
+    };
 // };
 
 
