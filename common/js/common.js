@@ -909,8 +909,8 @@ $.fn.paging = function() {
         activeCls: 'active', //当前页选中状态
         coping: false, //首页和尾页
         little: false, //点点省略
-        homePage: '', //首页节点内容
-        endPage: '', //尾页节点内容
+        homePage: '首页', //首页节点内容
+        endPage: '末页', //尾页节点内容
         count: 3, //当前页前后分页个数
         position: false, //显示当前页数/总页数
         jump: false, //跳转到指定页数
@@ -919,7 +919,6 @@ $.fn.paging = function() {
         jumpBtn: '跳转', //跳转按钮文本
         callback: function() {} //回调
     };
-
     var Pagination = function(element, options) {
         //全局变量
         var opts = options, //配置
