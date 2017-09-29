@@ -607,7 +607,7 @@
 
     //  layerDate 时间插件
     myFrame.laydate = function(option){
-        //require(["laydate"],function(laydate){
+        require(["laydate"],function(laydate){
             laydate.render( {
                 theme:option.theme || "defaults" ,// 主题  default（默认简约）、molv（墨绿背景）、#颜色值（自定义颜色背景）、grid（格子主题）
                 elem: option.elem , // 绑定元素
@@ -634,7 +634,7 @@
             });
             // var date = laydate.render({}); date.hint() 当前实例对象。其中包含一些成员属性和方法
             // laydate.getEndDate(month, year) 获取指定年月的最后一天
-        //});
+        });
     };
     // 时间日期区间选择 限制 插件
     /**
