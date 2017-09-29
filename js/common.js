@@ -917,6 +917,7 @@ $.fn.paging = function() {
         jumpIptCls: 'jump-ipt', //文本框内容
         jumpBtnCls: 'jump-btn', //跳转按钮
         jumpBtn: '跳转', //跳转按钮文本
+        isCallback:true, // 是否初始化时进行回调
         callback: function() {} //回调
     };
     var Pagination = function(element, options) {
@@ -998,7 +999,10 @@ $.fn.paging = function() {
             html.push(opts.position ? '<p class="paging-position">当前第<span class="now">1</span> /共 <span class="common"></span>页</p>' : "");
 
             $obj.empty().html('<nav aria-label="Page navigation"><ul class="pagination pagination-sm">' + html.join(" ") + '</ul></nav>');
-            typeof opts.callback === 'function' && opts.callback.call(_self);
+           // 是否初始化时进行回调
+            if(opts.isCallback){
+                typeof opts.callback === 'function' && opts.callback.call(_self); 
+            }
         };
 
         //绑定点击事件
@@ -1022,6 +1026,7 @@ $.fn.paging = function() {
                     index = parseInt($(this).data('page'));
                 }
                 _self.filling(index);
+              
                 typeof opts.callback === 'function' && opts.callback.call(_self);
             });
             //输入跳转的页码
@@ -1042,6 +1047,7 @@ $.fn.paging = function() {
                 if (e.keyCode == 13 && $obj.find('.' + opts.jumpIptCls).val()) {
                     index = parseInt($obj.find('.' + opts.jumpIptCls).val());
                     _self.filling(index);
+                  
                     typeof opts.callback === 'function' && opts.callback.call(_self);
                 }
             });
