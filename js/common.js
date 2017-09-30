@@ -1002,6 +1002,9 @@ $.fn.paging = function() {
            // 是否初始化时进行回调
             if(opts.isCallback){
                 typeof opts.callback === 'function' && opts.callback.call(_self); 
+            }else{
+                $('.now').text(current);
+                $('.common').text(pageCount);
             }
         };
 
