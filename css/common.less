@@ -22,6 +22,9 @@
 @colorfff:#fff;    //白色
 @color666:#666;    // 字体颜色
 @colorccc:#ccc;    // 字体颜色
+@color1ab394:#1ab394;    // 字体颜色
+@colorf8ac59:#f8ac59;    // 字体颜色
+@colorca4440:#ca4440;    // 字体颜色
 
 
 
@@ -58,6 +61,21 @@ body.modal-open {
 .modal-body {
   overflow-x: hidden;
   overflow-y: auto;
+  // fa-check 成功 、fa-close 失败、fa-exclamation 默认感叹号 
+  i.fa {
+    font-size: 30px;
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+  i.fa-check {
+    color:@color1ab394;
+  }
+  i.fa-close {
+    color:@colorca4440;
+  }
+  i.fa-exclamation {
+    color:@colorf8ac59;
+  }
 }
 
 

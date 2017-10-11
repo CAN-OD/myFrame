@@ -8,7 +8,7 @@
         '<h4 class="modal-title" id="modalLabel">[Title]</h4>' +
         '</div>' +
         '<div class="modal-body clearfix">' +
-        '<p>[Message]</p>' +
+        '<p><i class="fa [status]" aria-hidden="true"></i>[Message]</p>' +
         '</div>' +
         '<div class="modal-footer">' +
         '<button type="button" class="btn btn-default cancel" data-dismiss="modal">[BtnCancel]</button>' +
@@ -45,17 +45,26 @@
                 btncl: "取消",
                 width: 200,
                 auto: false,
-                mask: true // 是否显示遮罩
+                mask: true, // 是否显示遮罩
+                status: "fa-exclamation" // 提示图标
             }, options || {});
             var modalId = _this.generateId();
-            //  
+            // options.status ||  // fa-check 成功 、fa-close 失败、fa-exclamation 默认感叹号  
+            // 
+        
+            if(options.status == "error"){options.status = 'fa-close'} 
+            if(options.status == "success"){options.status = 'fa-check'} 
+            if(options.status == "error"){options.status = 'fa-close'} 
+
+            //
             var content = html.replace(reg, function(node, key) {
                 return {
                     Id: modalId,
                     Title: options.title,
                     Message: options.message,
                     BtnOk: options.btnok,
-                    BtnCancel: options.btncl
+                    BtnCancel: options.btncl,
+                    status:options.status 
                 }[key];
             });
             $('body').append(content);
@@ -139,12 +148,11 @@
         alert: function(options) {
             var _this = this;
             if (typeof options == 'object') {
-                options = {
+                options = $.extend({}, {
                     mask: options.mask,
                     message: options.message
-                };
+                }, options || {});
             }
-
             var id = _this.init(options);
             var modal = $('#' + id);
             modal.find('.ok').removeClass('btn-success').addClass('btn-primary');

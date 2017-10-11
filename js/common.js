@@ -69,10 +69,11 @@
             success: function(d) {
                 if (options.type == "html") {
                     options.cont.html(d);
+                    if (typeof options.callBack == "function") options.callBack(options.cont, $(d));
                 } else if (options.type == "append") {
                     options.cont.append(d);
+                    if (typeof options.callBack == "function") options.callBack(options.cont, $(d));
                 }
-                if (typeof options.callBack == "function") options.callBack(options.cont, $(d));
                 // _this.loadingHide();
             }
         });
@@ -354,7 +355,7 @@
      * @param width  宽度
      * @param height 高度
      */
-    myFrame.alert = function(message, sure, mask, title, btnok, btncl, width, height) {
+    myFrame.alert = function(status,message, sure, mask, title, btnok, btncl, width, height) {
         var _this = this;
         var myAlert = myPopup.alert({
             title: title || "系统提示",
@@ -365,6 +366,7 @@
             width: width || 800,
             height: height || 550,
             auto: false,
+            status: status,
         });
         // 点击确定时触发
         myAlert.on(function() {
@@ -389,7 +391,7 @@
      * @param width  宽度
      * @param height 高度
      */
-    myFrame.confirm = function(message, sure,notSure,title,mask, btnok, btncl, width, height) {
+    myFrame.confirm = function(status,message, sure,notSure,title,mask, btnok, btncl, width, height) {
         var _this = this;
         var close = close || function(){};
         var myAlert = myPopup.confirm({
@@ -401,6 +403,7 @@
             width: width || 800,
             height: height || 550,
             auto: false,
+            status: status,
             onReady: function(dom, e) {
 
             },
@@ -713,14 +716,22 @@
     };
 
     // 滚动条插件
+    /**
+     * [jScrollPane description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     * 滚动条 初始化成功必须要有内容或高度
+     */
     myFrame.jScrollPane = function(options){
+
+    
         // 初始化
-        options.elem.jScrollPane({
+        var jspApi = options.elem.jScrollPane({
             showArrows: options.showArrows || false , // boolean (default false)//显示滑杆两边的箭头
             maintainPosition : options.maintainPosition || true, // boolean (default true)//保持原位置
             stickToBottom: options.stickToBottom || false , // boolean (default false)//滑到底部
             stickToRight: options.stickToRight || false , // boolean (default false)//滑到最右边
-            autoReinitialise: options.autoReinitialise || false , // boolean (default false)//自动加载出现滑杆
+            autoReinitialise: options.autoReinitialise || false , // boolean (default false)// 滚动元素内容动态增加及时更新滚动条 自动加载出现滑杆  
             autoReinitialiseDelay: options.autoReinitialiseDelay || 500 , // int (default 500)//自动加载的时间延迟
             verticalDragMinHeight: options.verticalDragMinHeight || 0 , // int (default 0)//垂直拖拽的最小高度
             verticalDragMaxHeight: options.verticalDragMaxHeight || 99999 , // int (default 99999)//处置拖拽的最大高度
@@ -745,6 +756,11 @@
             trackClickSpeed: options.trackClickSpeed || 30 , // int (default 30)//互动轨迹上的点击速度
             trackClickRepeatFreq: options.trackClickRepeatFreq ||  100 // int (default 100)//滑动轨迹上的重复频率 
         });
+
+        //获取滚动条  
+        var refreshApi=jspApi.data("jsp");
+        //重新加载刷新滚动条  
+        refreshApi.reinitialise(options);    
     };
     
     // 日期格式转换
@@ -916,7 +932,8 @@ $.fn.paging = function() {
         jump: false, //跳转到指定页数
         jumpIptCls: 'jump-ipt', //文本框内容
         jumpBtnCls: 'jump-btn', //跳转按钮
-        jumpBtn: '跳转', //跳转按钮文本
+        // jumpBtn: '跳转', //跳转按钮文本
+        jumpBtn: '确定', //跳转按钮文本
         isCallback:true, // 是否初始化时进行回调
         callback: function() {} //回调
     };
@@ -992,11 +1009,12 @@ $.fn.paging = function() {
                 html.push(opts.coping ? '<li><a href="javascript:;" data-page="' + pageCount + '">' + end + '</a></li>' : '');
             }
 
-            // 添加输入框
-            html.push(opts.jump ? '<li><input type="text" class="form-control ' + opts.jumpIptCls + '" placeholder="跳转页" aria-describedby="sizing-addon1"></li><li><a href="javascript:;" class="' + opts.jumpBtnCls + '">' + opts.jumpBtn + '</a></li>' : '');
-
             // 显示当前页数/总页数
-            html.push(opts.position ? '<p class="paging-position">当前第<span class="now">1</span> /共 <span class="common"></span>页</p>' : "");
+            html.push(opts.position ? '<li><p class="paging-position">当前第<span class="now">1</span> /共 <span class="common"></span>页</p></li>' : "");
+
+            // 添加输入框
+            html.push(opts.jump ? '<li>到<input type="text" class="form-control ' + opts.jumpIptCls + '" placeholder="" aria-describedby="sizing-addon1">页</li><li><a href="javascript:;" class="' + opts.jumpBtnCls + '">' + opts.jumpBtn + '</a></li>' : '');
+
 
             $obj.empty().html('<nav aria-label="Page navigation"><ul class="pagination pagination-sm">' + html.join(" ") + '</ul></nav>');
            // 是否初始化时进行回调
