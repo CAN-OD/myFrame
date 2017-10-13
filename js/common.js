@@ -78,7 +78,14 @@
             }
         });
     };
+
     //
+    /**
+     * [laodPage description]
+     * @param  {[type]} option   [description]
+     * @param  {[type]} callBack [description]
+     * @return {[type]}          [description]
+     */
     myFrame.laodPage = function(option, callBack) {
         var defaultOption = {
                 el: $("#contentRight"),
@@ -114,6 +121,11 @@
         }
     };
     //依赖加载请求HTML对应 css 文件
+    /**
+     * [loadCSS description]
+     * @param  {[type]} url [description]
+     * @return {[type]}     [description]
+     */
     myFrame.loadCSS = function(url) {
         var _this = this;
         var cssUrl = require.toUrl(url);
@@ -177,6 +189,12 @@
         return state;
     };
     //根据路径，判断 文件是否在 本机存在
+    /**
+     * [fileIsExist description]
+     * @param  {[type]}   filepath [description]
+     * @param  {Function} callback [description]
+     * @return {[type]}            [description]
+     */
     myFrame.fileIsExist = function(filepath, callback) {
         return this.request({
             url: filepath,
@@ -195,6 +213,11 @@
         });
     };
     // ajax 请求封装
+    /**
+     * [request description]
+     * @param  {[type]} option [description]
+     * @return {[type]}        [description]
+     */
     myFrame.request = function(option) {
         var _this = this,
             ajaxTimeoutTest, result = "",
@@ -280,6 +303,10 @@
         });
     };
     // 解析清地址或接口地址
+    /**
+     * [setNoCacheUrl description]
+     * @param {[type]} url [description]
+     */
     myFrame.setNoCacheUrl = function(url) {
         if (url.indexOf("?") >= 0) url += "&rd=" + Math.random();
         else url += "?rd=" + Math.random();
@@ -428,6 +455,13 @@
         });
     };
     // 文字公告轮播特效 
+    /**
+     * [ScrollImgLeft description]
+     * @param {[type]} beginDiv [description]
+     * @param {[type]} endDiv   [description]
+     * @param {[type]} contDiv  [description]
+     * @param {[type]} speed    [description]
+     */
     myFrame.ScrollImgLeft = function(beginDiv, endDiv, contDiv, speed) {
         var speed = speed;
         var scroll_begin = document.getElementById(beginDiv);
@@ -450,6 +484,13 @@
         };
     };
     // 回填数据 input、 select、textarea 的name value 值
+    /**
+     * [buildFormValue description]
+     * @param  {[type]} target         [description]
+     * @param  {[type]} data           [description]
+     * @param  {[type]} dataObjectName [description]
+     * @return {[type]}                [description]
+     */
     myFrame.buildFormValue = function (target, data, dataObjectName) {
         if (typeof data != "object") return;
         var obj,
@@ -520,12 +561,22 @@
         });
     };
     //解析url参数
+    /**
+     * [getUrlString description]
+     * @param  {[type]} name [description]
+     * @return {[type]}      [description]
+     */
     myFrame.getUrlString = function(name) {
         var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
         var result = window.location.search.substr(1).match(reg);
         return result?decodeURIComponent(result[2]):null;
     };
     // 获取url地址栏参数
+    /**
+     * [getRequest description]
+     * @param  {[type]} urlDat [description]
+     * @return {[type]}        [description]
+     */
     myFrame.getRequest = function (urlDat) {
        var url = urlDat || location.search; //获取url中"?"符后的字串
        var theRequest = new Object();
@@ -558,6 +609,11 @@
         }, false);
     };
     // 判断数组是否有重复值 true为有重复值 false没有重复值
+    /**
+     * [isRepeat description]
+     * @param  {[type]}  arr [description]
+     * @return {Boolean}     [description]
+     */
     myFrame.isRepeat = function (arr) {
         var hash = {};
         for (var i in arr) {
@@ -569,6 +625,11 @@
         return false;
     };
     // 判断是否为null
+    /**
+     * [isNull description]
+     * @param  {[type]}  name [description]
+     * @return {Boolean}      [description]
+     */
     myFrame.isNull = function(name){
         var stie = false;
         if (!name && typeof(name)!="undefined" && name!=0){ 
@@ -609,6 +670,11 @@
     };  
 
     //  layerDate 时间插件
+    /**
+     * [laydate description]
+     * @param  {[type]} option [description]
+     * @return {[type]}        [description]
+     */
     myFrame.laydate = function(option){
         //require(["laydate"],function(laydate){
             laydate.render( {
@@ -793,6 +859,11 @@
     };
 
     // 判断 板块是否处于 浏览器可是区域内
+    /**
+     * [butArea description]
+     * @param  {[type]} dom [description]
+     * @return {[type]}     [description]
+     */
     myFrame.butArea = function(dom){
         if(dom.offset().top >= $(window).scrollTop() && dom.offset().top < ($(window).scrollTop()+$(window).height())){
             return true;
@@ -800,6 +871,23 @@
         return false;
     };
     
+    // 表单检验方法
+    /**
+     * [validator description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
+    myFrame.validator = function(options){
+        $(options.elem).validator({
+            submitBtnId:options.submitBtnId, // 提交按钮 ID 
+            backColor:[2, 'red'],// 提示框 方向 颜色
+            sure:function(that){  // 验证成功后的回调函数 that 当前提交按钮
+                if (typeof options.sure == "function") options.sure(that);
+            }
+        });
+    };
+
+
     //检测密码强度
     //checkPwd('12asdASAD')
     //3(强度等级为3)
@@ -1081,6 +1169,7 @@ $.fn.paging = function() {
         };
         this.init();
     };
+
 
     $.fn.pagination = function(parameter, callback) {
         if (typeof parameter == 'function') { //重载
