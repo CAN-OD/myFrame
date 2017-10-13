@@ -321,6 +321,7 @@
      */
     myFrame.closeBox = function(dom) {
         var box= dom.parents(".modal");
+        layer.closeAll('tips'); // 关闭验证提示框
         box.next(".modal-backdrop").remove(); // 清楚已关闭的弹出框HTML
         box.remove(); // 清楚已关闭的弹出框HTML
     };

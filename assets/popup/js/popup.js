@@ -270,13 +270,14 @@
             target.on('hidden.bs.modal', function(e) {
                 $('body').find('#' + modalId).next(".modal-backdrop").remove(); // 清楚已关闭的弹出框HTML
                 $('body').find(target).remove();
+                layer.closeAll('tips');
             });
            
             // if (options.onReady()) options.onReady.call(target);
             // hidden.bs.modal的意思就是当弹出的模态框消失的时候，接下来回调的函数
-            // target.on('hide.bs.modal', function(e) {
-            //     $('body').find(target).remove();
-            // });
+            target.on('hide.bs.modal', function(e) {
+                $('body').find(target).remove();
+            });
 
             // if (options.closeClick()) options.closeClick.call(target);
 
@@ -304,6 +305,7 @@
                     if (callback && callback instanceof Function) {
                         //当调用 hide 实例方法时触发。
                         target.find('.cancel').on('click', function(e) {
+                            layer.closeAll('tips');// 关闭验证提示框
                             $('body').find(target).remove();
                             callback(target, e);
                         });
@@ -312,6 +314,7 @@
                 onClose: function(callback) {// 右上角叉叉关闭回调函数
                     if (callback && callback instanceof Function) {
                         target.find('.close').click(function() {
+                            layer.closeAll('tips');// 关闭验证提示框
                             $('body').find('#' + modalId).next(".modal-backdrop").remove(); // 清楚已关闭的弹出框HTML
                             $('body').find(target).remove();
                             callback(true);
