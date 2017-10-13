@@ -94,11 +94,13 @@
                 html.push(opts.coping ? '<li><a href="javascript:;" data-page="'+pageCount+'">'+end+'</a></li>' : '');
             }
             
+
+            // 显示当前页数/总页数
+            html.push(opts.position ? '<li><p class="paging-position">当前第<span class="now">1</span> /共 <span class="common"></span>页</p><li>':"");
+            
             // 添加输入框
             html.push(opts.jump ? '<li><input type="text" class="form-control '+opts.jumpIptCls+'" placeholder="跳转页" aria-describedby="sizing-addon1"></li><li><a href="javascript:;" class="'+opts.jumpBtnCls+'">'+opts.jumpBtn+'</a></li>' : '');
 
-            // 显示当前页数/总页数
-            html.push(opts.position ? '<p class="paging-position">当前第<span class="now">1</span> /共 <span class="common"></span>页</p>':"");
             
             $obj.empty().html('<nav aria-label="Page navigation"><ul class="pagination pagination-sm">'+html.join(" ")+'</ul></nav>');
             typeof opts.callback === 'function' && opts.callback.call(_self);

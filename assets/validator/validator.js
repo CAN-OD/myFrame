@@ -19,8 +19,9 @@
 				targetId:"",
 				submitBtnId:"",
 				msgDirection:"right",
+				backColor:[], // 方向 颜色
 				keyup:function(){},
-				sure:function(){},
+				sure:function(){}, // 确认回调
 				msgShow:true,
 				always:false,
 				fields:[]
@@ -144,24 +145,33 @@
 				x=offset.left,
 				y=offset.top,
 				msgDirection=target.attr("msgDirection")?target.attr("msgDirection"):o.get("msgDirection");
-			if(obj.length==0)
-			{
-				mark=o.guid();
-				target.attr("mark",mark);
-				obj=$("<div class=\"validator-msg"+((msgDirection!="left")?" msg-"+msgDirection:"")+"\" mark=\""+mark+"\">"+
-						"<div class=\"msg-content\"></div>"+
-						"<div class=\"msg-arrow-outer\"></div>"+
-						"<div class=\"msg-arrow\"></div>"+
-					  "</div>");
-				// $("body").append(obj);
-				target.parent().append(obj);
-			}
-			// 错误提示自动关闭
-			setTimeout(function(){
-				obj.hide();
-			},3500);
-			//msg
-			obj.find(".msg-content").text(message);
+			// if(obj.length==0)
+			// {
+			// 	mark=o.guid();
+			// 	target.attr("mark",mark);
+			// 	obj=$("<div class=\"validator-msg"+((msgDirection!="left")?" msg-"+msgDirection:"")+"\" mark=\""+mark+"\">"+
+			// 			"<div class=\"msg-content\"></div>"+
+			// 			"<div class=\"msg-arrow-outer\"></div>"+
+			// 			"<div class=\"msg-arrow\"></div>"+
+			// 		  "</div>");
+			// 	// $("body").append(obj);
+			// 	target.parent().append(obj);
+			// }
+			// // 错误提示自动关闭
+			// setTimeout(function(){
+			// 	obj.hide();
+			// },3500);
+			// //msg
+			// obj.find(".msg-content").text(message);
+
+
+			// 提示信息框	layer
+			layer.tips(message,target,{//1.错误信息，2提示位置，3同时提示多个错误
+				tips: o.get("backColor") || [4, '#78BA32'],  // 方向 颜色
+                tipsMore:false//错误信息可以同时提示多个，...
+            });
+
+
 			var xSize,ySize;
 			//msg direction
 			switch(msgDirection){
@@ -200,7 +210,7 @@
 			if(this.get("msgShow")==true) this.show(target,"error");
 			else target.attr("validator-msg",message);
 		},
-		success:function(target){
+		success:function(target){ // 验证正确后的 默认操作
 			target.removeClass("validator-input-error");
 			$(".validator-msg[mark="+target.attr("mark")+"]").remove();
 			target.removeAttr("mark").removeAttr("validator-msg");

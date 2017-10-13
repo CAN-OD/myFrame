@@ -8,7 +8,7 @@
         '<h4 class="modal-title" id="modalLabel">[Title]</h4>' +
         '</div>' +
         '<div class="modal-body clearfix">' +
-        '<p>[Message]</p>' +
+        '<p><i class="fa [status]" aria-hidden="true"></i>[Message]</p>' +
         '</div>' +
         '<div class="modal-footer">' +
         '<button type="button" class="btn btn-default cancel" data-dismiss="modal">[BtnCancel]</button>' +
@@ -45,17 +45,26 @@
                 btncl: "取消",
                 width: 200,
                 auto: false,
-                mask: true // 是否显示遮罩
+                mask: true, // 是否显示遮罩
+                status: "fa-exclamation" // 提示图标
             }, options || {});
             var modalId = _this.generateId();
-            //  
+            // options.status ||  // fa-check 成功 、fa-close 失败、fa-exclamation 默认感叹号  
+            // 
+        
+            if(options.status == "error"){options.status = 'fa-close'} 
+            if(options.status == "success"){options.status = 'fa-check'} 
+            if(options.status == "error"){options.status = 'fa-close'} 
+
+            //
             var content = html.replace(reg, function(node, key) {
                 return {
                     Id: modalId,
                     Title: options.title,
                     Message: options.message,
                     BtnOk: options.btnok,
-                    BtnCancel: options.btncl
+                    BtnCancel: options.btncl,
+                    status:options.status 
                 }[key];
             });
             $('body').append(content);
@@ -139,12 +148,11 @@
         alert: function(options) {
             var _this = this;
             if (typeof options == 'object') {
-                options = {
+                options = $.extend({}, {
                     mask: options.mask,
                     message: options.message
-                };
+                }, options || {});
             }
-
             var id = _this.init(options);
             var modal = $('#' + id);
             modal.find('.ok').removeClass('btn-success').addClass('btn-primary');
@@ -262,13 +270,14 @@
             target.on('hidden.bs.modal', function(e) {
                 $('body').find('#' + modalId).next(".modal-backdrop").remove(); // 清楚已关闭的弹出框HTML
                 $('body').find(target).remove();
+                layer.closeAll('tips');
             });
            
             // if (options.onReady()) options.onReady.call(target);
             // hidden.bs.modal的意思就是当弹出的模态框消失的时候，接下来回调的函数
-            // target.on('hide.bs.modal', function(e) {
-            //     $('body').find(target).remove();
-            // });
+            target.on('hide.bs.modal', function(e) {
+                $('body').find(target).remove();
+            });
 
             // if (options.closeClick()) options.closeClick.call(target);
 
@@ -296,6 +305,7 @@
                     if (callback && callback instanceof Function) {
                         //当调用 hide 实例方法时触发。
                         target.find('.cancel').on('click', function(e) {
+                            layer.closeAll('tips');// 关闭验证提示框
                             $('body').find(target).remove();
                             callback(target, e);
                         });
@@ -304,6 +314,7 @@
                 onClose: function(callback) {// 右上角叉叉关闭回调函数
                     if (callback && callback instanceof Function) {
                         target.find('.close').click(function() {
+                            layer.closeAll('tips');// 关闭验证提示框
                             $('body').find('#' + modalId).next(".modal-backdrop").remove(); // 清楚已关闭的弹出框HTML
                             $('body').find(target).remove();
                             callback(true);

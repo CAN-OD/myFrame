@@ -69,15 +69,23 @@
             success: function(d) {
                 if (options.type == "html") {
                     options.cont.html(d);
+                    if (typeof options.callBack == "function") options.callBack(options.cont, $(d));
                 } else if (options.type == "append") {
                     options.cont.append(d);
+                    if (typeof options.callBack == "function") options.callBack(options.cont, $(d));
                 }
-                if (typeof options.callBack == "function") options.callBack(options.cont, $(d));
                 // _this.loadingHide();
             }
         });
     };
+
     //
+    /**
+     * [laodPage description]
+     * @param  {[type]} option   [description]
+     * @param  {[type]} callBack [description]
+     * @return {[type]}          [description]
+     */
     myFrame.laodPage = function(option, callBack) {
         var defaultOption = {
                 el: $("#contentRight"),
@@ -113,6 +121,11 @@
         }
     };
     //依赖加载请求HTML对应 css 文件
+    /**
+     * [loadCSS description]
+     * @param  {[type]} url [description]
+     * @return {[type]}     [description]
+     */
     myFrame.loadCSS = function(url) {
         var _this = this;
         var cssUrl = require.toUrl(url);
@@ -176,6 +189,12 @@
         return state;
     };
     //根据路径，判断 文件是否在 本机存在
+    /**
+     * [fileIsExist description]
+     * @param  {[type]}   filepath [description]
+     * @param  {Function} callback [description]
+     * @return {[type]}            [description]
+     */
     myFrame.fileIsExist = function(filepath, callback) {
         return this.request({
             url: filepath,
@@ -194,6 +213,11 @@
         });
     };
     // ajax 请求封装
+    /**
+     * [request description]
+     * @param  {[type]} option [description]
+     * @return {[type]}        [description]
+     */
     myFrame.request = function(option) {
         var _this = this,
             ajaxTimeoutTest, result = "",
@@ -279,6 +303,10 @@
         });
     };
     // 解析清地址或接口地址
+    /**
+     * [setNoCacheUrl description]
+     * @param {[type]} url [description]
+     */
     myFrame.setNoCacheUrl = function(url) {
         if (url.indexOf("?") >= 0) url += "&rd=" + Math.random();
         else url += "?rd=" + Math.random();
@@ -293,6 +321,7 @@
      */
     myFrame.closeBox = function(dom) {
         var box= dom.parents(".modal");
+        layer.closeAll('tips'); // 关闭验证提示框
         box.next(".modal-backdrop").remove(); // 清楚已关闭的弹出框HTML
         box.remove(); // 清楚已关闭的弹出框HTML
     };
@@ -354,7 +383,7 @@
      * @param width  宽度
      * @param height 高度
      */
-    myFrame.alert = function(message, sure, mask, title, btnok, btncl, width, height) {
+    myFrame.alert = function(status,message, sure, mask, title, btnok, btncl, width, height) {
         var _this = this;
         var myAlert = myPopup.alert({
             title: title || "系统提示",
@@ -365,6 +394,7 @@
             width: width || 800,
             height: height || 550,
             auto: false,
+            status: status,
         });
         // 点击确定时触发
         myAlert.on(function() {
@@ -389,7 +419,7 @@
      * @param width  宽度
      * @param height 高度
      */
-    myFrame.confirm = function(message, sure,notSure,title,mask, btnok, btncl, width, height) {
+    myFrame.confirm = function(status,message, sure,notSure,title,mask, btnok, btncl, width, height) {
         var _this = this;
         var close = close || function(){};
         var myAlert = myPopup.confirm({
@@ -401,6 +431,7 @@
             width: width || 800,
             height: height || 550,
             auto: false,
+            status: status,
             onReady: function(dom, e) {
 
             },
@@ -425,6 +456,13 @@
         });
     };
     // 文字公告轮播特效 
+    /**
+     * [ScrollImgLeft description]
+     * @param {[type]} beginDiv [description]
+     * @param {[type]} endDiv   [description]
+     * @param {[type]} contDiv  [description]
+     * @param {[type]} speed    [description]
+     */
     myFrame.ScrollImgLeft = function(beginDiv, endDiv, contDiv, speed) {
         var speed = speed;
         var scroll_begin = document.getElementById(beginDiv);
@@ -447,6 +485,13 @@
         };
     };
     // 回填数据 input、 select、textarea 的name value 值
+    /**
+     * [buildFormValue description]
+     * @param  {[type]} target         [description]
+     * @param  {[type]} data           [description]
+     * @param  {[type]} dataObjectName [description]
+     * @return {[type]}                [description]
+     */
     myFrame.buildFormValue = function (target, data, dataObjectName) {
         if (typeof data != "object") return;
         var obj,
@@ -517,12 +562,22 @@
         });
     };
     //解析url参数
+    /**
+     * [getUrlString description]
+     * @param  {[type]} name [description]
+     * @return {[type]}      [description]
+     */
     myFrame.getUrlString = function(name) {
         var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
         var result = window.location.search.substr(1).match(reg);
         return result?decodeURIComponent(result[2]):null;
     };
     // 获取url地址栏参数
+    /**
+     * [getRequest description]
+     * @param  {[type]} urlDat [description]
+     * @return {[type]}        [description]
+     */
     myFrame.getRequest = function (urlDat) {
        var url = urlDat || location.search; //获取url中"?"符后的字串
        var theRequest = new Object();
@@ -555,6 +610,11 @@
         }, false);
     };
     // 判断数组是否有重复值 true为有重复值 false没有重复值
+    /**
+     * [isRepeat description]
+     * @param  {[type]}  arr [description]
+     * @return {Boolean}     [description]
+     */
     myFrame.isRepeat = function (arr) {
         var hash = {};
         for (var i in arr) {
@@ -566,6 +626,11 @@
         return false;
     };
     // 判断是否为null
+    /**
+     * [isNull description]
+     * @param  {[type]}  name [description]
+     * @return {Boolean}      [description]
+     */
     myFrame.isNull = function(name){
         var stie = false;
         if (!name && typeof(name)!="undefined" && name!=0){ 
@@ -606,6 +671,11 @@
     };  
 
     //  layerDate 时间插件
+    /**
+     * [laydate description]
+     * @param  {[type]} option [description]
+     * @return {[type]}        [description]
+     */
     myFrame.laydate = function(option){
         require(["laydate"],function(laydate){
             laydate.render( {
@@ -713,14 +783,22 @@
     };
 
     // 滚动条插件
+    /**
+     * [jScrollPane description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     * 滚动条 初始化成功必须要有内容或高度
+     */
     myFrame.jScrollPane = function(options){
+
+    
         // 初始化
-        options.elem.jScrollPane({
+        var jspApi = options.elem.jScrollPane({
             showArrows: options.showArrows || false , // boolean (default false)//显示滑杆两边的箭头
             maintainPosition : options.maintainPosition || true, // boolean (default true)//保持原位置
             stickToBottom: options.stickToBottom || false , // boolean (default false)//滑到底部
             stickToRight: options.stickToRight || false , // boolean (default false)//滑到最右边
-            autoReinitialise: options.autoReinitialise || false , // boolean (default false)//自动加载出现滑杆
+            autoReinitialise: options.autoReinitialise || false , // boolean (default false)// 滚动元素内容动态增加及时更新滚动条 自动加载出现滑杆  
             autoReinitialiseDelay: options.autoReinitialiseDelay || 500 , // int (default 500)//自动加载的时间延迟
             verticalDragMinHeight: options.verticalDragMinHeight || 0 , // int (default 0)//垂直拖拽的最小高度
             verticalDragMaxHeight: options.verticalDragMaxHeight || 99999 , // int (default 99999)//处置拖拽的最大高度
@@ -745,6 +823,11 @@
             trackClickSpeed: options.trackClickSpeed || 30 , // int (default 30)//互动轨迹上的点击速度
             trackClickRepeatFreq: options.trackClickRepeatFreq ||  100 // int (default 100)//滑动轨迹上的重复频率 
         });
+
+        //获取滚动条  
+        var refreshApi=jspApi.data("jsp");
+        //重新加载刷新滚动条  
+        refreshApi.reinitialise(options);    
     };
     
     // 日期格式转换
@@ -777,6 +860,11 @@
     };
 
     // 判断 板块是否处于 浏览器可是区域内
+    /**
+     * [butArea description]
+     * @param  {[type]} dom [description]
+     * @return {[type]}     [description]
+     */
     myFrame.butArea = function(dom){
         if(dom.offset().top >= $(window).scrollTop() && dom.offset().top < ($(window).scrollTop()+$(window).height())){
             return true;
@@ -784,6 +872,23 @@
         return false;
     };
     
+    // 表单检验方法
+    /**
+     * [validator description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
+    myFrame.validator = function(options){
+        $(options.elem).validator({
+            submitBtnId:options.submitBtnId, // 提交按钮 ID 
+            backColor:[2, 'red'],// 提示框 方向 颜色
+            sure:function(that){  // 验证成功后的回调函数 that 当前提交按钮
+                if (typeof options.sure == "function") options.sure(that);
+            }
+        });
+    };
+
+
     //检测密码强度
     //checkPwd('12asdASAD')
     //3(强度等级为3)
@@ -916,7 +1021,8 @@ $.fn.paging = function() {
         jump: false, //跳转到指定页数
         jumpIptCls: 'jump-ipt', //文本框内容
         jumpBtnCls: 'jump-btn', //跳转按钮
-        jumpBtn: '跳转', //跳转按钮文本
+        // jumpBtn: '跳转', //跳转按钮文本
+        jumpBtn: '确定', //跳转按钮文本
         isCallback:true, // 是否初始化时进行回调
         callback: function() {} //回调
     };
@@ -992,11 +1098,12 @@ $.fn.paging = function() {
                 html.push(opts.coping ? '<li><a href="javascript:;" data-page="' + pageCount + '">' + end + '</a></li>' : '');
             }
 
-            // 添加输入框
-            html.push(opts.jump ? '<li><input type="text" class="form-control ' + opts.jumpIptCls + '" placeholder="跳转页" aria-describedby="sizing-addon1"></li><li><a href="javascript:;" class="' + opts.jumpBtnCls + '">' + opts.jumpBtn + '</a></li>' : '');
-
             // 显示当前页数/总页数
-            html.push(opts.position ? '<p class="paging-position">当前第<span class="now">1</span> /共 <span class="common"></span>页</p>' : "");
+            html.push(opts.position ? '<li><p class="paging-position">当前第<span class="now">1</span> /共 <span class="common"></span>页</p></li>' : "");
+
+            // 添加输入框
+            html.push(opts.jump ? '<li>到<input type="text" class="form-control ' + opts.jumpIptCls + '" placeholder="" aria-describedby="sizing-addon1">页</li><li><a href="javascript:;" class="' + opts.jumpBtnCls + '">' + opts.jumpBtn + '</a></li>' : '');
+
 
             $obj.empty().html('<nav aria-label="Page navigation"><ul class="pagination pagination-sm">' + html.join(" ") + '</ul></nav>');
            // 是否初始化时进行回调
@@ -1063,6 +1170,7 @@ $.fn.paging = function() {
         };
         this.init();
     };
+
 
     $.fn.pagination = function(parameter, callback) {
         if (typeof parameter == 'function') { //重载

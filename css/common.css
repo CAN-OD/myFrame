@@ -19,6 +19,20 @@ body.modal-open {
   overflow-x: hidden;
   overflow-y: auto;
 }
+.modal-body i.fa {
+  font-size: 26px;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+.modal-body i.fa-check {
+  color: #1ab394;
+}
+.modal-body i.fa-close {
+  color: #ca4440;
+}
+.modal-body i.fa-exclamation {
+  color: #f8ac59;
+}
 h3.nav-title,
 h4.nav-title,
 h6.nav-title {

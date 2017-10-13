@@ -182,7 +182,7 @@
 
 					container.find('>.jspVerticalBar,>.jspHorizontalBar').remove().end();
 				}
-
+				//debugger
 				pane.css('overflow', 'auto');
 				if (s.contentWidth) {
 					contentWidth = s.contentWidth;
@@ -199,12 +199,12 @@
 				isScrollableH = percentInViewH > 1;
 
 				//console.log(paneWidth, paneHeight, contentWidth, contentHeight, percentInViewH, percentInViewV, isScrollableH, isScrollableV);
-
+			
 				if (!(isScrollableH || isScrollableV)) {
 					elem.removeClass('jspScrollable');
 					pane.css({
-            top: 0,
-            left: 0,
+			            top: 0,
+			            left: 0,
 						width: container.width() - originalPaddingTotalWidth
 					});
 					removeMousewheel();
