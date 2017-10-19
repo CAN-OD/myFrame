@@ -12,6 +12,7 @@
 // myFrame = {
     myFrame.init = function() {
         _this = this;
+
         // myFrame.alert(555);
         // _this.pluginPath();
     };
@@ -41,6 +42,8 @@
      * @param href 请求页面地址
      * @param type 区别类型 用于 追加于还是覆盖容器
      * @param cont 追加容器
+     * @param data 请求接口参数
+     * @param dataVal 传递参数
      */
     myFrame.loadTab = function(options) {
         var _this = this,
@@ -74,6 +77,9 @@
                     options.cont.append(d);
                     if (typeof options.callBack == "function") options.callBack(options.cont, $(d));
                 }
+
+                options.cont.find(".myFrame_container").last().data(options.dataVal);  // 传值到页面
+                myFrame.pageCallBack(options.cont.find(".myFrame_container").last());  // 传回 当前 弹出框 dom节点
                 // _this.loadingHide();
             }
         });
@@ -326,6 +332,16 @@
         box.remove(); // 清楚已关闭的弹出框HTML
     };
 
+    // load加载、弹出页面加载回调对象
+    /**
+     * [pageCallBack description]
+     * @param  {[type]} container [ 容器对象节点]
+     * @return {[type]}           [description]
+     */
+    myFrame.pageCallBack = function(container){
+
+    };
+
     // 弹出框
     /**
      * @param title 弹出框标题
@@ -333,6 +349,7 @@
      * @param onReady 弹出框显示时回调函数
      * @param onShown  
      * @param closeClick 
+     * @param data   // 向弹出框页面传递参数
      */
     myFrame.dialog = function(options) {
         var _this = this;
@@ -345,6 +362,7 @@
             btnok: "确定",
             btncl: "取消",
             btn: false,
+            data: "",
             onReady: function(e) {},
             onShown: function(e) {},
             closeClick: function(e) {
@@ -419,7 +437,7 @@
      * @param width  宽度
      * @param height 高度
      */
-    myFrame.confirm = function(status,message, sure,notSure,title,mask, btnok, btncl, width, height) {
+    myFrame.confirm = function(message, sure,notSure,title,mask, btnok, btncl, width, height) {
         var _this = this;
         var close = close || function(){};
         var myAlert = myPopup.confirm({
@@ -431,7 +449,7 @@
             width: width || 800,
             height: height || 550,
             auto: false,
-            status: status,
+            // status: status,
             onReady: function(dom, e) {
 
             },
@@ -880,8 +898,8 @@
      */
     myFrame.validator = function(options){
         $(options.elem).validator({
-            submitBtnId:options.submitBtnId, // 提交按钮 ID 
-            backColor:[2, 'red'],// 提示框 方向 颜色
+            submitBtnId:options.submitBtnId || "", // 提交按钮 ID 
+            backColor:options.backColor || [2, 'red'],// 提示框 方向 颜色
             sure:function(that){  // 验证成功后的回调函数 that 当前提交按钮
                 if (typeof options.sure == "function") options.sure(that);
             }
@@ -940,267 +958,285 @@
 window.myFrame = myFrame;
 myFrame.init();
 // });
-
-// 获取对应 input、 select、textarea 的name value 值
-$.fn.getFormData = function() {
-    var result = {},
-        $this = $(this);
-    $(this).find("input,select,textarea").each(function() {
-
-        var name = $(this).attr("name"),
-            type = $(this).attr("type"),
-            value = "",
-            size = 0;
-
-        if (((type == "checkbox" || type == "radio") && result[name] != undefined) || $(this).attr("noreturn") != undefined) size = $this.find("[name=\"" + name + "\"]").size();
-
-        switch (($(this)[0].tagName).toLowerCase()) {
-            case "input":
-                if (type == "text" || type == "hidden" || type == "password") value = $(this).val();
-                else if (type == "radio") {
-                    var temp = $this.find("input[type=radio][name=" + name + "]:checked");
-                    if ($(this).attr("onlyvalue") == undefined || $(this).attr("onlyvalue") == "true")
-                        value = temp.val();
-                    else value = temp.val() + J.config.valueSeparated + $.trim(temp.parent().text());
-                } else if (type == "checkbox") {
-                    if ($(this).attr("onlyvalue") == undefined || $(this).attr("onlyvalue") == "true") {
-                        value = $this.find("input[type=checkbox][name=" + name + "]:checked").map(function() {
-                            return $(this).val();
-                        }).get().join(",");
-                    } else {
-                        value = $this.find("input[type=checkbox][name=" + name + "]:checked").map(function() {
-                            return $(this).val() + J.config.valueSeparated + $.trim($(this).parent().text());
-                        }).get().join(J.config.valueItemSeparated);
-                    }
-
-                }
-                break;
-            case "select":
-                if ($(this).attr("onlyvalue") == undefined || $(this).attr("onlyvalue") == "true")
-                    value = $(this).val();
-                else value = $(this).val() + J.config.valueSeparated + $(this).find("option:selected").text();
-                break;
-            case "textarea":
-                value = $(this).val();
-                break;
-        }
-
-        if (name) {
-            if (size > 1 && type != "checkbox" && type != "radio") {
-                result[name] = (result[name] ? result[name] : []);
-                result[name][result[name].length] = $.trim(value);
-            } else result[name] = $.trim(value);
-        }
-
-    });
-    return result;
-};
+ 
 
 $.fn.paging = function() {
 
 };
 
-// 分页
+// 扩展方法
 ;(function($, window, document, undefined) {
-    //配置参数
-    var defaults = {
-        url: "javascript:;", // 跳转a标签地址
-        pagesSize: 10, // 分页总数默认10页
-        current: 1, //当前第几页,默认为第1页
-        prevCls: 'page_prev', //上一页class
-        nextCls: 'page_next', //下一页class
-        prevContent: '<', //上一页按钮内容，可更改
-        nextContent: '>', //下一页按钮内容，可更改
-        activeCls: 'active', //当前页选中状态
-        coping: false, //首页和尾页
-        little: false, //点点省略
-        homePage: '首页', //首页节点内容
-        endPage: '末页', //尾页节点内容
-        count: 3, //当前页前后分页个数
-        position: false, //显示当前页数/总页数
-        jump: false, //跳转到指定页数
-        jumpIptCls: 'jump-ipt', //文本框内容
-        jumpBtnCls: 'jump-btn', //跳转按钮
-        // jumpBtn: '跳转', //跳转按钮文本
-        jumpBtn: '确定', //跳转按钮文本
-        isCallback:true, // 是否初始化时进行回调
-        callback: function() {} //回调
-    };
-    var Pagination = function(element, options) {
-        //全局变量
-        var opts = options, //配置
-            current = opts.current, //当前页
-            $document = $(document),
-            $obj = $(element); //容器
-        /**
-         * 获取总页数
-         * @return int pages 总页数
-         */
-        this.getTotalPage = function() {
-            // var pages = $obj.siblings('input[type="hidden"]').val();
-            var pages = opts.pagesSize;
-            return pages;
-        };
-        //获取当前页
-        this.getCurrent = function() {
-            return current;
-        };
-
-        /**
-         * 动态填充分页页码
-         * @param int index 页码
-         */
-        this.filling = function(index) {
-            var _self = this;
-            var html = [];
-            var home;
-            var ellipsis = opts.little ? '<li><span>...</span></li>' : '';
-            var pageCount = this.getTotalPage();
-
-            current = index || opts.current; //当前页码
-            // 首页
-            // if(current >= opts.count * 2 && current != 1 && pageCount != opts.count){
-            if (current != 1 && pageCount != opts.count) {
-                home = opts.coping && opts.homePage ? opts.homePage : '1';
-                html.push(opts.coping ? '<li><a href="javascript:;" data-page="1">' + home + '</a></li>' : '');
-            }
-
-            if (current > 1) { //上一页
-                html.push('<li><a href="javascript:;" class="' + opts.prevCls + '">' + opts.prevContent + '</a></li>' + ellipsis);
-            } else {
-                $obj.find('.' + opts.prevCls) && $obj.find('.' + opts.prevCls).remove();
-            }
-
-            var start = current - opts.count,
-                end = current + opts.count;
-            ((start > 1 && current < opts.count) || current == 1) && end++;
-            (current > pageCount - opts.count && current >= pageCount) && start++;
-            // 循环页数处理
-            for (; start <= end; start++) {
-                if (start <= pageCount && start >= 1) {
-                    if (start != current) {
-                        html.push('<li><a href="javascript:;" data-page="' + start + '">' + start + '</a></li>');
-                    } else {
-                        html.push('<li><span class="' + opts.activeCls + '">' + start + '</span></li>');
-                    }
-                }
-            }
-            if (current < pageCount) { //下一页
-                html.push(ellipsis + '<li><a href="javascript:;" class="' + opts.nextCls + '">' + opts.nextContent + '</a></li>');
-            } else {
-                $obj.find('.' + opts.nextCls) && $obj.find('.' + opts.nextCls).remove();
-            }
-
-            // 末页
-            // if(current + opts.count < pageCount && current >= 1 && pageCount > opts.count){
-            if (current < opts.pagesSize && current >= 1 && pageCount > opts.count) {
-                end = opts.coping && opts.endPage ? opts.endPage : pageCount;
-                html.push(opts.coping ? '<li><a href="javascript:;" data-page="' + pageCount + '">' + end + '</a></li>' : '');
-            }
-
-            // 显示当前页数/总页数
-            html.push(opts.position ? '<li><p class="paging-position">当前第<span class="now">1</span> /共 <span class="common"></span>页</p></li>' : "");
-
-            // 添加输入框
-            html.push(opts.jump ? '<li>到<input type="text" class="form-control ' + opts.jumpIptCls + '" placeholder="" aria-describedby="sizing-addon1">页</li><li><a href="javascript:;" class="' + opts.jumpBtnCls + '">' + opts.jumpBtn + '</a></li>' : '');
-
-
-            $obj.empty().html('<nav aria-label="Page navigation"><ul class="pagination pagination-sm">' + html.join(" ") + '</ul></nav>');
-           // 是否初始化时进行回调
-            if(opts.isCallback){
-                typeof opts.callback === 'function' && opts.callback.call(_self); 
-            }else{
-                $('.now').text(current);
-                $('.common').text(pageCount);
-            }
-        };
-
-        //绑定点击事件
-        this.eventBind = function() {
-            var _self = this;
-            var index;
-            var pageCount = this.getTotalPage(); //总页数
-            // 点击事件
-            $obj.off().on('click', 'a', function() {
-                if ($(this).hasClass(opts.nextCls)) {
-                    index = parseInt($obj.find('.' + opts.activeCls).text()) + 1;
-                } else if ($(this).hasClass(opts.prevCls)) {
-                    index = parseInt($obj.find('.' + opts.activeCls).text()) - 1;
-                } else if ($(this).hasClass(opts.jumpBtnCls)) {
-                    if ($obj.find('.' + opts.jumpIptCls).val() !== '') {
-                        index = parseInt($obj.find('.' + opts.jumpIptCls).val());
-                    } else {
-                        return;
-                    }
-                } else {
-                    index = parseInt($(this).data('page'));
-                }
-                _self.filling(index);
-              
-                typeof opts.callback === 'function' && opts.callback.call(_self);
-            });
-            //输入跳转的页码
-            $obj.on('input propertychange', '.' + opts.jumpIptCls, function() {
-                var $this = $(this);
-                var val = $this.val();
-                var reg = /[^\d]/g;
-                if (reg.test(val)) {
-                    $this.val(val.replace(reg, ''));
-                }
-                (parseInt(val) > pageCount) && $this.val(pageCount);
-                if (parseInt(val) === 0) { //最小值为1
-                    $this.val(1);
-                }
-            });
-            //回车跳转指定页码
-            $document.keydown(function(e) {
-                if (e.keyCode == 13 && $obj.find('.' + opts.jumpIptCls).val()) {
-                    index = parseInt($obj.find('.' + opts.jumpIptCls).val());
-                    _self.filling(index);
-                  
-                    typeof opts.callback === 'function' && opts.callback.call(_self);
-                }
-            });
-        };
-
-        //初始化
-        this.init = function() {
-            this.filling(opts.current);
-            this.eventBind();
-        };
-        this.init();
-    };
-
-
-    $.fn.pagination = function(parameter, callback) {
-        if (typeof parameter == 'function') { //重载
-            callback = parameter;
-            parameter = {};
-        } else {
-            parameter = parameter || {};
-            callback = callback || function() {};
-        }
-        var options = $.extend({}, defaults, parameter);
-        return this.each(function() {
-            var pagination = new Pagination(this, options);
-            callback(pagination);
-        });
-    };
-
-    // 表格合并单元格
-    /**
-     * [description]
-     * @param  {[type]} colIdx  要合并的列序号，从0开始
-     * @return {[type]} idNmae  需合并行区别标识符
-     */
+ 
     $.fn.extend({
-        "rowspan": function (colIdx,idNmae) {
+        // 分页
+        /**
+         * [description]
+         * @param  {[type]}   parameter [description]
+         * @param  {Function} callback  [description]
+         * @return {[type]}             [description]
+         */
+        "pagination":function(parameter, callback) {
+
+            //配置参数
+            var defaults = {
+                url: "javascript:;", // 跳转a标签地址
+                pagesSize: 10, // 分页总数默认10页
+                current: 1, //当前第几页,默认为第1页
+                prevCls: 'page_prev', //上一页class
+                nextCls: 'page_next', //下一页class
+                prevContent: '<', //上一页按钮内容，可更改
+                nextContent: '>', //下一页按钮内容，可更改
+                activeCls: 'active', //当前页选中状态
+                coping: false, //首页和尾页
+                little: false, //点点省略
+                homePage: '首页', //首页节点内容
+                endPage: '末页', //尾页节点内容
+                count: 3, //当前页前后分页个数
+                position: false, //显示当前页数/总页数
+                jump: false, //跳转到指定页数
+                jumpIptCls: 'jump-ipt', //文本框内容
+                jumpBtnCls: 'jump-btn', //跳转按钮
+                // jumpBtn: '跳转', //跳转按钮文本
+                jumpBtn: '确定', //跳转按钮文本
+                isCallback:true, // 是否初始化时进行回调
+                callback: function() {} //回调
+            };
+            var Pagination = function(element, options) {
+                //全局变量
+                var opts = options, //配置
+                    current = opts.current, //当前页
+                    $document = $(document),
+                    $obj = $(element); //容器
+                /**
+                 * 获取总页数
+                 * @return int pages 总页数
+                 */
+                this.getTotalPage = function() {
+                    // var pages = $obj.siblings('input[type="hidden"]').val();
+                    var pages = opts.pagesSize;
+                    return pages;
+                };
+                //获取当前页
+                this.getCurrent = function() {
+                    return current;
+                };
+
+                /**
+                 * 动态填充分页页码
+                 * @param int index 页码
+                 */
+                this.filling = function(index) {
+                    var _self = this;
+                    var html = [];
+                    var home;
+                    var ellipsis = opts.little ? '<li><span>...</span></li>' : '';
+                    var pageCount = this.getTotalPage();
+
+                    current = index || opts.current; //当前页码
+                    // 首页
+                    // if(current >= opts.count * 2 && current != 1 && pageCount != opts.count){
+                    if (current != 1 && pageCount != opts.count) {
+                        home = opts.coping && opts.homePage ? opts.homePage : '1';
+                        html.push(opts.coping ? '<li><a href="javascript:;" data-page="1">' + home + '</a></li>' : '');
+                    }
+
+                    if (current > 1) { //上一页
+                        html.push('<li><a href="javascript:;" class="' + opts.prevCls + '">' + opts.prevContent + '</a></li>' + ellipsis);
+                    } else {
+                        $obj.find('.' + opts.prevCls) && $obj.find('.' + opts.prevCls).remove();
+                    }
+
+                    var start = current - opts.count,
+                        end = current + opts.count;
+                    ((start > 1 && current < opts.count) || current == 1) && end++;
+                    (current > pageCount - opts.count && current >= pageCount) && start++;
+                    // 循环页数处理
+                    for (; start <= end; start++) {
+                        if (start <= pageCount && start >= 1) {
+                            if (start != current) {
+                                html.push('<li><a href="javascript:;" data-page="' + start + '">' + start + '</a></li>');
+                            } else {
+                                html.push('<li><span class="' + opts.activeCls + '">' + start + '</span></li>');
+                            }
+                        }
+                    }
+                    if (current < pageCount) { //下一页
+                        html.push(ellipsis + '<li><a href="javascript:;" class="' + opts.nextCls + '">' + opts.nextContent + '</a></li>');
+                    } else {
+                        $obj.find('.' + opts.nextCls) && $obj.find('.' + opts.nextCls).remove();
+                    }
+
+                    // 末页
+                    // if(current + opts.count < pageCount && current >= 1 && pageCount > opts.count){
+                    if (current < opts.pagesSize && current >= 1 && pageCount > opts.count) {
+                        end = opts.coping && opts.endPage ? opts.endPage : pageCount;
+                        html.push(opts.coping ? '<li><a href="javascript:;" data-page="' + pageCount + '">' + end + '</a></li>' : '');
+                    }
+
+                    // 显示当前页数/总页数
+                    html.push(opts.position ? '<li><p class="paging-position">当前第<span class="now">1</span> /共 <span class="common"></span>页</p></li>' : "");
+
+                    // 添加输入框
+                    html.push(opts.jump ? '<li>到<input type="text" class="form-control ' + opts.jumpIptCls + '" placeholder="" aria-describedby="sizing-addon1">页</li><li><a href="javascript:;" class="' + opts.jumpBtnCls + '">' + opts.jumpBtn + '</a></li>' : '');
+
+
+                    $obj.empty().html('<nav aria-label="Page navigation"><ul class="pagination pagination-sm">' + html.join(" ") + '</ul></nav>');
+                   // 是否初始化时进行回调
+                    if(opts.isCallback){
+                        typeof opts.callback === 'function' && opts.callback.call(_self); 
+                    }else{
+                        $('.now').text(current);
+                        $('.common').text(pageCount);
+                    }
+                };
+
+                //绑定点击事件
+                this.eventBind = function() {
+                    var _self = this;
+                    var index;
+                    var pageCount = this.getTotalPage(); //总页数
+                    // 点击事件
+                    $obj.off().on('click', 'a', function() {
+                        if ($(this).hasClass(opts.nextCls)) {
+                            index = parseInt($obj.find('.' + opts.activeCls).text()) + 1;
+                        } else if ($(this).hasClass(opts.prevCls)) {
+                            index = parseInt($obj.find('.' + opts.activeCls).text()) - 1;
+                        } else if ($(this).hasClass(opts.jumpBtnCls)) {
+                            if ($obj.find('.' + opts.jumpIptCls).val() !== '') {
+                                index = parseInt($obj.find('.' + opts.jumpIptCls).val());
+                            } else {
+                                return;
+                            }
+                        } else {
+                            index = parseInt($(this).data('page'));
+                        }
+                        _self.filling(index);
+                      
+                        typeof opts.callback === 'function' && opts.callback.call(_self);
+                    });
+                    //输入跳转的页码
+                    $obj.on('input propertychange', '.' + opts.jumpIptCls, function() {
+                        var $this = $(this);
+                        var val = $this.val();
+                        var reg = /[^\d]/g;
+                        if (reg.test(val)) {
+                            $this.val(val.replace(reg, ''));
+                        }
+                        (parseInt(val) > pageCount) && $this.val(pageCount);
+                        if (parseInt(val) === 0) { //最小值为1
+                            $this.val(1);
+                        }
+                    });
+                    //回车跳转指定页码
+                    $document.keydown(function(e) {
+                        if (e.keyCode == 13 && $obj.find('.' + opts.jumpIptCls).val()) {
+                            index = parseInt($obj.find('.' + opts.jumpIptCls).val());
+                            _self.filling(index);
+                          
+                            typeof opts.callback === 'function' && opts.callback.call(_self);
+                        }
+                    });
+                };
+
+                //初始化
+                this.init = function() {
+                    this.filling(opts.current);
+                    this.eventBind();
+                };
+                this.init();
+            };
+
+
+            
+            if (typeof parameter == 'function') { //重载
+                callback = parameter;
+                parameter = {};
+            } else {
+                parameter = parameter || {};
+                callback = callback || function() {};
+            }
+            var options = $.extend({}, defaults, parameter);
+            return this.each(function() {
+                var pagination = new Pagination(this, options);
+                callback(pagination);
+            });
+        },
+        // 获取对应 input、 select、textarea 的name value 值
+        /**
+         * [description]
+         * @return {[type]} [description]
+         */
+        "getFormData":function() {
+            var result = {},
+                $this = $(this);
+            $(this).find("input,select,textarea").each(function() {
+
+                var name = $(this).attr("name"),
+                    type = $(this).attr("type"),
+                    value = "",
+                    size = 0;
+
+                if (((type == "checkbox" || type == "radio") && result[name] != undefined) || $(this).attr("noreturn") != undefined) size = $this.find("[name=\"" + name + "\"]").size();
+
+                switch (($(this)[0].tagName).toLowerCase()) {
+                    case "input":
+                        if (type == "text" || type == "hidden" || type == "password") value = $(this).val();
+                        else if (type == "radio") {
+                            var temp = $this.find("input[type=radio][name=" + name + "]:checked");
+                            if ($(this).attr("onlyvalue") == undefined || $(this).attr("onlyvalue") == "true")
+                                value = temp.val();
+                            else value = temp.val() + J.config.valueSeparated + $.trim(temp.parent().text());
+                        } else if (type == "checkbox") {
+                            if ($(this).attr("onlyvalue") == undefined || $(this).attr("onlyvalue") == "true") {
+                                value = $this.find("input[type=checkbox][name=" + name + "]:checked").map(function() {
+                                    return $(this).val();
+                                }).get().join(",");
+                            } else {
+                                value = $this.find("input[type=checkbox][name=" + name + "]:checked").map(function() {
+                                    return $(this).val() + J.config.valueSeparated + $.trim($(this).parent().text());
+                                }).get().join(J.config.valueItemSeparated);
+                            }
+
+                        }
+                        break;
+                    case "select":
+                        if ($(this).attr("onlyvalue") == undefined || $(this).attr("onlyvalue") == "true")
+                            value = $(this).val();
+                        else value = $(this).val() + J.config.valueSeparated + $(this).find("option:selected").text();
+                        break;
+                    case "textarea":
+                        value = $(this).val();
+                        break;
+                }
+
+                if (name) {
+                    if (size > 1 && type != "checkbox" && type != "radio") {
+                        result[name] = (result[name] ? result[name] : []);
+                        result[name][result[name].length] = $.trim(value);
+                    } else result[name] = $.trim(value);
+                }
+
+            });
+            return result;
+        },
+        // 表格合并单元格
+        /**
+         * [description]
+         * @param  {[type]} colIdx  要合并的列序号，从0开始
+         * @return {[type]} idNmae  需合并行区别标识符
+         * @return {[type]} state  标识状态 
+         */
+        "rowspan": function (colIdx,idNmae,state) {
             return this.each(function () {
                 var that;
                 var id ;
                 $('tr', this).each(function (row) {
                     $('td:eq(' + colIdx + ')', this).filter(':visible').each(function (col) {
-                        id = idNmae?$(this).attr(idNmae) == $(that).attr(idNmae):$(this).html() == $(that).html();
+                        if(state){
+                            id = $(this).find(idNmae).attr(state)?$(this).find(idNmae).attr(state) == $(that).find(idNmae).attr(state):false;
+                        }else {
+                            id = idNmae?$(this).attr(idNmae) == $(that).attr(idNmae):$(this).html() == $(that).html();
+                        }
                         if (that != null && id) {
                             //console.log($(this).html()+' =='+ $(that).html())
                             rowspan = $(that).attr("rowSpan");
@@ -1211,12 +1247,59 @@ $.fn.paging = function() {
                             }
                             rowspan = Number(rowspan) + 1;
                             $(that).attr("rowSpan", rowspan);
+
                             $(this).hide();
                         } else {
                             that = this;
-                        }
+                        } 
+
                     });
                 });
+            });
+        },
+        // form表单submit 提交方法封装扩展
+        /**
+         * [description]
+         * @param  {[type]} options [description]
+         * @return {[type]}         [description]
+            $("#pageForm").formSubmit({
+                 success:function(that,data){ //提交成功的回调函数  
+                    if(data){//操作成功
+                        myFrame.alert("success","操作成功",function(){
+                            myFrame.closeBox(that);
+                        });
+                      
+                    }else{
+                        myFrame.alert("error","操作失败",function(){
+                            myFrame.closeBox(that);
+                        });
+                    }
+                },
+                error:function(that,info){
+                    myFrame.alert("error","操作失败",function(){
+                        myFrame.closeBox(that);
+                    });
+                }
+            });
+         */
+        "formSubmit":function(options){
+            var _this = this,
+                url = _this.attr("action");
+            myFrame.request({
+                // url: $$(url),
+                url: url,
+                async: false,
+                type: "GET",
+                data: _this.getFormData(),
+                markShow: true,
+                loading: false,
+                loadingBox: $("body"),
+                success: function(d) {
+                    if (typeof options.success == "function") options.success(_this,d);
+                },
+                error: function(d) {
+                    if (typeof options.error == "function") options.error(_this,d);
+                }
             });
         }
     });

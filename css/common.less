@@ -1,36 +1,36 @@
-@color1daed2:#1daed2;    // 蓝色
-@colorf7f7f8:#f7f7f8;    // 字体颜色
-@color47495e:#47495e;    // 字体颜色
-@colorf4f6f6:#f4f6f6;    // 字体颜色
-@color9dafc0:#9dafc0;    // 字体颜色
-@colord5d4d4:#d5d4d4;    // 字体颜色
-@colore4e3e3:#e4e3e3;    // 字体颜色
-@color494949:#494949;    // 字体颜色
-@colora8a8a8:#a8a8a8;    // 字体颜色
-@colorc6bfbf:#c6bfbf;    // 字体颜色
-@colore8e8e8:#e8e8e8;    // 字体颜色
-@colorc8c8c8:#c8c8c8;    // 字体颜色
-@color979797:#979797;    // 字体颜色
-@colorf9f9f9:#f9f9f9;    // 字体颜色
-@colorfbfbfb:#fbfbfb;    // 字体颜色
-@colorffa508:#ffa508;    // 字体颜色
-@colorff0814:#ff0814;    // 字体颜色
+@color1daed2:#1daed2;    /* 蓝色*/
+@colorf7f7f8:#f7f7f8;    /* 字体颜色*/
+@color47495e:#47495e;    /* 字体颜色*/
+@colorf4f6f6:#f4f6f6;    /* 字体颜色*/
+@color9dafc0:#9dafc0;    /* 字体颜色*/
+@colord5d4d4:#d5d4d4;    /* 字体颜色*/
+@colore4e3e3:#e4e3e3;    /* 字体颜色*/
+@color494949:#494949;    /* 字体颜色*/
+@colora8a8a8:#a8a8a8;    /* 字体颜色*/
+@colorc6bfbf:#c6bfbf;    /* 字体颜色*/
+@colore8e8e8:#e8e8e8;    /* 字体颜色*/
+@colorc8c8c8:#c8c8c8;    /* 字体颜色*/
+@color979797:#979797;    /* 字体颜色*/
+@colorf9f9f9:#f9f9f9;    /* 字体颜色*/
+@colorfbfbfb:#fbfbfb;    /* 字体颜色*/
+@colorffa508:#ffa508;    /* 字体颜色*/
+@colorff0814:#ff0814;    /* 字体颜色*/
 
-@color333:#333;    // 字体颜色
-@color999:#999;    // 字体颜色
-@colorddd:#ddd;    // 字体颜色
-@colorfff:#fff;    //白色
-@color666:#666;    // 字体颜色
-@colorccc:#ccc;    // 字体颜色
-@color1ab394:#1ab394;    // 字体颜色
-@colorf8ac59:#f8ac59;    // 字体颜色
-@colorca4440:#ca4440;    // 字体颜色
+@color333:#333;    /* 字体颜色*/
+@color999:#999;    /* 字体颜色*/
+@colorddd:#ddd;    /* 字体颜色*/
+@colorfff:#fff;    /*白色*/
+@color666:#666;    /* 字体颜色*/
+@colorccc:#ccc;    /* 字体颜色*/
+@color1ab394:#1ab394;    /* 字体颜色*/
+@colorf8ac59:#f8ac59;    /* 字体颜色*/
+@colorca4440:#ca4440;    /* 字体颜色*/
 
 
 
-// 公共样式集合
+/* 公共样式集合*/
 
-// 解决 bootstrap 位移问题 弹出框加body padding-right:17px问题
+/* 解决 bootstrap 位移问题 弹出框加body padding-right:17px问题*/
 body,
 body.modal-open {
     overflow-y: auto !important;
@@ -40,13 +40,13 @@ body.modal-open {
     
 
 }
-//模态框 垂直居中
+/*模态框 垂直居中*/
 .modal_wrapper{
     display: block;
-    //display: table;
-    //width:100%;
-    //height: 100%;
-   // margin: 0px auto;
+    /*display: table;*/
+    /*width:100%;*/
+    /*height: 100%;*/
+   /* margin: 0px auto;*/
 }
 
 .modal-dialog {
@@ -61,7 +61,7 @@ body.modal-open {
 .modal-body {
   overflow-x: hidden;
   overflow-y: auto;
-  // fa-check 成功 、fa-close 失败、fa-exclamation 默认感叹号 
+  /* fa-check 成功 、fa-close 失败、fa-exclamation 默认感叹号 */
   i.fa {
     font-size: 26px;
     vertical-align: middle;
@@ -79,7 +79,7 @@ body.modal-open {
 }
 
 
-// 标签
+/* 标签*/
 h3.nav-title,
 h4.nav-title,
 h6.nav-title,{
@@ -108,12 +108,12 @@ h3.nav-title,
 h4.nav-title,
 h6.nav-title{
      @color:#70B9B0;
-	&:before {
-	    top: 5px;
-	    width: 5px;
-	    height: 20px;
-	    background: @color;
-	}
+  &:before {
+      top: 5px;
+      width: 5px;
+      height: 20px;
+      background: @color;
+  }
 }
 h3.nav-title,
 h4.nav-title,
@@ -125,7 +125,7 @@ h6.nav-title {
           border-top: 1px @color solid;
      }
 }
-// 按钮
+/* 按钮*/
 .btn {
     border-radius: 3px;
 }
@@ -158,7 +158,7 @@ h6.nav-title {
      visibility: hidden;
 }
 
-// 暂无数据样式
+/* 暂无数据样式*/
 p.no-data {
     width: 100%;
     text-align: center;
@@ -167,7 +167,7 @@ p.no-data {
     color: #928585;
 }
 
-// 清楚标签默认样式
+/* 清楚标签默认样式*/
 ul,li {
     list-style: none;
     text-align: left;
@@ -175,7 +175,7 @@ ul,li {
 }
 
 
-// 路径导航
+/* 路径导航*/
 .service_route {
     width:100%;
     height:36px;
@@ -203,13 +203,13 @@ ul,li {
     }
 }
 
-// bottstrap 样式修改
+/* bottstrap 样式修改*/
 .center-block {
   float: none;
   position: static;
 } 
 
-// title 公用
+/* title 公用*/
 .home_title {
     margin: 50px 0 auto 0;
     position: relative;
