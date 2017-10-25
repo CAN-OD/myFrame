@@ -164,8 +164,8 @@
 			// //msg
 			// obj.find(".msg-content").text(message);
 
-
 			// 提示信息框	layer
+			
 			layer.tips(message,target,{//1.错误信息，2提示位置，3同时提示多个错误
 				tips: o.get("backColor") || [4, '#78BA32'],  // 方向 颜色
                 tipsMore:false//错误信息可以同时提示多个，...

@@ -128,7 +128,8 @@
      */
     myFrame.loadCSS = function(url) {
         var _this = this;
-        var cssUrl = require.toUrl(url);
+        // var cssUrl = require.toUrl(url);
+        var cssUrl = url;
         var isRepeat = false;
         //遍历控制  防止重复加载
         for (var i = 0; i < $("link").length; i++) {
@@ -383,7 +384,7 @@
      * @param width  宽度
      * @param height 高度
      */
-    myFrame.alert = function(status,message, sure, mask, title, btnok, btncl, width, height) {
+    myFrame.alert = function(message, sure, mask, title, btnok, btncl, width, height) {
         var _this = this;
         var myAlert = myPopup.alert({
             title: title || "系统提示",
@@ -394,7 +395,7 @@
             width: width || 800,
             height: height || 550,
             auto: false,
-            status: status,
+            status: undefined,
         });
         // 点击确定时触发
         myAlert.on(function() {
@@ -417,9 +418,9 @@
      * @param btnok  确定 文字
      * @param btncl  取消 文字
      * @param width  宽度
-     * @param height 高度
+     * @param height 高度 
      */
-    myFrame.confirm = function(status,message, sure,notSure,title,mask, btnok, btncl, width, height) {
+    myFrame.confirm = function(message, sure,notSure,title,mask, btnok, btncl, width, height) {
         var _this = this;
         var close = close || function(){};
         var myAlert = myPopup.confirm({
@@ -431,7 +432,7 @@
             width: width || 800,
             height: height || 550,
             auto: false,
-            status: status,
+            status: undefined,
             onReady: function(dom, e) {
 
             },
@@ -677,7 +678,7 @@
      * @return {[type]}        [description]
      */
     myFrame.laydate = function(option){
-        require(["laydate"],function(laydate){
+        // require(["laydate"],function(laydate){
             laydate.render( {
                 theme:option.theme || "defaults" ,// 主题  default（默认简约）、molv（墨绿背景）、#颜色值（自定义颜色背景）、grid（格子主题）
                 elem: option.elem , // 绑定元素
@@ -704,7 +705,7 @@
             });
             // var date = laydate.render({}); date.hint() 当前实例对象。其中包含一些成员属性和方法
             // laydate.getEndDate(month, year) 获取指定年月的最后一天
-        });
+        // });
     };
     // 时间日期区间选择 限制 插件
     /**
@@ -879,9 +880,10 @@
      * @return {[type]}         [description]
      */
     myFrame.validator = function(options){
+        
         $(options.elem).validator({
-            submitBtnId:options.submitBtnId, // 提交按钮 ID 
-            backColor:[2, 'red'],// 提示框 方向 颜色
+            submitBtnId:options.submitBtnId || "", // 提交按钮 ID 
+            backColor:options.backColor || [3,"#18a689"],// 提示框 方向 颜色
             sure:function(that){  // 验证成功后的回调函数 that 当前提交按钮
                 if (typeof options.sure == "function") options.sure(that);
             }
