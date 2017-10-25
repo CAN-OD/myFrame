@@ -1,7 +1,5 @@
-/*
- * CSS Styles that are used on the jScrollPane demo site - these are custom to the site and
+/* * CSS Styles that are used on the jScrollPane demo site - these are custom to the site and
  * you shouldn't need to use them in your own implementations of jScrollPane.
- */
 
 *
 {
@@ -75,14 +73,14 @@ body
 
 #container
 {
-/*	width: 760px;
+width: 760px;
 	background: #eeeef4;
 	padding: 20px;
 	margin: 20px auto;
 
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
-	border-radius: 5px;*/
+	border-radius: 5px;
 }
 
 h1
@@ -166,7 +164,7 @@ ul p
 	margin: 0;
 }
 
-/* For the form demo page */
+For the form demo page
 
 form
 {
@@ -225,3 +223,4 @@ pre
 	border-radius: 3px;
 	overflow: auto;
 }
+ */

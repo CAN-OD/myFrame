@@ -1,29 +1,29 @@
 /* 分页插件 */
 .jump-ipt {
-	width: 38px;
-	float: initial;
-	height: 30px;
-	border-color: #ddd; 
-	border-radius: 3px;
-	margin:auto 3px;
-	/*border-left: none;*/
-	display: inline-block;
+    width: 38px;
+    float: initial;
+    height: 30px;
+    border-color: #ddd; 
+    border-radius: 3px;
+    margin:auto 3px;
+    /*border-left: none;*/
+    display: inline-block;
 }
 .jump-btn {
-	border-top-right-radius: 3px;
+    border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
 }
 .paging-position {
-	display: inline-block;
+    display: inline-block;
     line-height: 30px;
     margin-left: 5px;
 }
 .paging-position span {
-	font-weight: bolder;
-	margin: 0 3px;
+    font-weight: bolder;
+    margin: 0 3px;
 }
 .page3  {
-	text-align:center;
+    text-align:center;
 }
 
 .pagination-sm>li {
@@ -39,7 +39,7 @@
     color:#7e7e7e;
 }
 .pagination-sm>li>a.active, .pagination-sm>li>span.active {
-   	color: #fff;
+    color: #fff;
     background-color: #4381e6;
 }
 .pagination-sm>li input {

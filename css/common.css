@@ -1,10 +1,40 @@
+/* 蓝色*/
+/* 字体颜色*/
+/* 字体颜色*/
+/* 字体颜色*/
+/* 字体颜色*/
+/* 字体颜色*/
+/* 字体颜色*/
+/* 字体颜色*/
+/* 字体颜色*/
+/* 字体颜色*/
+/* 字体颜色*/
+/* 字体颜色*/
+/* 字体颜色*/
+/* 字体颜色*/
+/* 字体颜色*/
+/* 字体颜色*/
+/* 字体颜色*/
+/* 字体颜色*/
+/* 字体颜色*/
+/* 字体颜色*/
+/*白色*/
+/* 字体颜色*/
+/* 字体颜色*/
+/* 字体颜色*/
+/* 字体颜色*/
+/* 字体颜色*/
+/* 公共样式集合*/
+/* 解决 bootstrap 位移问题 弹出框加body padding-right:17px问题*/
 body,
 body.modal-open {
   overflow-y: auto !important;
   padding-right: 0 !important;
 }
+/*模态框 垂直居中*/
 .modal_wrapper {
   display: block;
+  position: relative;
 }
 .modal-dialog {
   margin: auto;
@@ -18,6 +48,7 @@ body.modal-open {
 .modal-body {
   overflow-x: hidden;
   overflow-y: auto;
+  /* fa-check 成功 、fa-close 失败、fa-exclamation 默认感叹号 */
 }
 .modal-body i.fa {
   font-size: 26px;
@@ -33,6 +64,7 @@ body.modal-open {
 .modal-body i.fa-exclamation {
   color: #f8ac59;
 }
+/* 标签*/
 h3.nav-title,
 h4.nav-title,
 h6.nav-title {
@@ -71,6 +103,7 @@ h6.nav-title:after {
   top: 36px;
   border-top: 1px #ececec solid;
 }
+/* 按钮*/
 .btn {
   border-radius: 3px;
 }
@@ -102,6 +135,7 @@ h6.nav-title:after {
   content: ".";
   visibility: hidden;
 }
+/* 暂无数据样式*/
 p.no-data {
   width: 100%;
   text-align: center;
@@ -109,12 +143,14 @@ p.no-data {
   font-size: 16px;
   color: #928585;
 }
+/* 清楚标签默认样式*/
 ul,
 li {
   list-style: none;
   text-align: left;
   padding: 0;
 }
+/* 路径导航*/
 .service_route {
   width: 100%;
   height: 36px;
@@ -141,10 +177,12 @@ li {
 .service_route .breadcrumb i {
   margin: 0  5px;
 }
+/* bottstrap 样式修改*/
 .center-block {
   float: none;
   position: static;
 }
+/* title 公用*/
 .home_title {
   margin: 50px 0 auto 0;
   position: relative;

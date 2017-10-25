@@ -238,7 +238,8 @@
                 height: 550,
                 btnok: "确定",
                 btncl: "取消",
-                btn: false
+                btn: false,
+                data: options.data
             }, options || {});
             var modalId = _this.generateId();
             var content = dialogdHtml.replace(reg, function(node, key) {
@@ -259,7 +260,10 @@
                 target.find('.modal-footer').remove();
             }
             // 加载页面碎片地址
-            target.find('.modal-body').load(options.url).css({
+            target.find('.modal-body').load(options.url,function(response,status,xhr){ // response - 包含来自请求的结果数据、status - 包含请求的状态 、xhr - 包含 XMLHttpRequest 对象
+                target.find('.modal-body').data(options.data);  // 传值到页面
+                myFrame.pageCallBack(target.find('.modal-body'));  // 传回 当前 弹出框 dom节点
+            }).css({
                 height: options.height // 改变弹出框内容高度  
             });
 
