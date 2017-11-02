@@ -9,10 +9,9 @@
         temp:{}
     };
     var _this; 
-// myFrame = {
+    // myFrame = {
     myFrame.init = function() {
         _this = this;
-
         // myFrame.alert(555);
         // _this.pluginPath();
     };
@@ -80,6 +79,8 @@
 
                 options.cont.find(".myFrame_container").last().data(options.dataVal);  // 传值到页面
                 myFrame.pageCallBack(options.cont.find(".myFrame_container").last());  // 传回 当前 弹出框 dom节点
+
+                myFrame.alignmentRow();
                 // _this.loadingHide();
             }
         });
@@ -228,7 +229,8 @@
         var _this = this,
             ajaxTimeoutTest, result = "",
             async = (option.async === false ? false : true);
-        //if (option.loading != false) _this.loadingShow(option.markShow, option.loadingBox || $("body"));
+        if (option.loading ) _this.loadingShow(option.markShow, option.loadingBox || $("body"));
+        if (option.loading != false) _this.loadingShow(option.markShow, option.loadingBox || $("body"));
         ajaxTimeoutTest = $.ajax({
             type: option.type || 'POST',
             data: option.data || {},
@@ -241,7 +243,7 @@
             },
             success: function(data) {
                 result = data;
-                // if (option.loading != false) _this.loadingHide(option.loadingBox);
+                if (option.loading != false) _this.loadingHide(option.loadingBox);
 
                 if (typeof option.success == 'function') option.success(data);
             },
@@ -330,8 +332,9 @@
         layer.closeAll('tips'); // 关闭验证提示框
         box.next(".modal-backdrop").remove(); // 清楚已关闭的弹出框HTML
         box.remove(); // 清楚已关闭的弹出框HTML
+        // debugger
+        // $("#edui_fixedlayer").remove();
     };
-
     // load加载、弹出页面加载回调对象
     /**
      * [pageCallBack description]
@@ -695,34 +698,32 @@
      * @return {[type]}        [description]
      */
     myFrame.laydate = function(option){
-        require(["laydate"],function(laydate){
-            laydate.render( {
-                theme:option.theme || "defaults" ,// 主题  default（默认简约）、molv（墨绿背景）、#颜色值（自定义颜色背景）、grid（格子主题）
-                elem: option.elem , // 绑定元素
-                dateState: option.dateState || false, // 时间范围 默认 false 开始时间 startState \ 结束时间 endState
-                sectionId: option.sectionId || false, // 比较区间 对象ID 默认 false 
-                format: option.format || 'YYYY-MM-DD hh:mm:ss', //自定义格式
-                type: option.type  || "date", // year 年、month年月、date 日期、time 时间、 datetime 日期时间选择器
-                range: option.range  || false, //开启左右面板范围选择
-                value: option.value  || new Date(), // 初始值
-                min: option.min || '1900-1-1',  // 最小日期范围      
-                max: option.max || '2099-12-31',   // 最大日期范围 
-                trigger: option.trigger || "focus", // 自定义弹出控件的事件
-                show: option.show || false, // 是否默认弹出显示
-                position: option.position || "absolute", // 定位方式
-                zIndex: option.zIndex || 66666666, //层叠顺序
-                showBottom: option.showBottom || true,// 是否显示底部栏
-                btns: option.btns || ['clear', 'now', 'confirm'], // 工具按钮 顺序
-                lang: option.lang || 'cn' , // 默认中文 en国际英文版
-                calendar: option.calendar || false, // 是否显示公历节日
-                mark: option.mark || {}, // '2017-8-21': '发布' 公历标注重要日子 年变成0 则是每年显示
-                ready: option.ready,// 插件初始化回调  fixed 固定定位 、 static 静态定位
-                change: option.change, //改变日期回调  value 得到日期生成的值, date 得到日期时间对象, endDate 得结束的日期时间对象，开启范围选择（range: true）才会返回。对象成员同上
-                done: option.done, //  选择日期后回调 
-            });
-            // var date = laydate.render({}); date.hint() 当前实例对象。其中包含一些成员属性和方法
-            // laydate.getEndDate(month, year) 获取指定年月的最后一天
+        laydate.render( {
+            theme:option.theme || "defaults" ,// 主题  default（默认简约）、molv（墨绿背景）、#颜色值（自定义颜色背景）、grid（格子主题）
+            elem: option.elem , // 绑定元素
+            dateState: option.dateState || false, // 时间范围 默认 false 开始时间 startState \ 结束时间 endState
+            sectionId: option.sectionId || false, // 比较区间 对象ID 默认 false 
+            format: option.format || 'YYYY-MM-DD hh:mm:ss', //自定义格式
+            type: option.type  || "date", // year 年、month年月、date 日期、time 时间、 datetime 日期时间选择器
+            range: option.range  || false, //开启左右面板范围选择
+            value: option.value  || new Date(), // 初始值
+            min: option.min || '1900-1-1',  // 最小日期范围      
+            max: option.max || '2099-12-31',   // 最大日期范围 
+            trigger: option.trigger || "focus", // 自定义弹出控件的事件
+            show: option.show || false, // 是否默认弹出显示
+            position: option.position || "absolute", // 定位方式
+            zIndex: option.zIndex || 66666666, //层叠顺序
+            showBottom: option.showBottom || true,// 是否显示底部栏
+            btns: option.btns || ['clear', 'now', 'confirm'], // 工具按钮 顺序
+            lang: option.lang || 'cn' , // 默认中文 en国际英文版
+            calendar: option.calendar || false, // 是否显示公历节日
+            mark: option.mark || {}, // '2017-8-21': '发布' 公历标注重要日子 年变成0 则是每年显示
+            ready: option.ready,// 插件初始化回调  fixed 固定定位 、 static 静态定位
+            change: option.change, //改变日期回调  value 得到日期生成的值, date 得到日期时间对象, endDate 得结束的日期时间对象，开启范围选择（range: true）才会返回。对象成员同上
+            done: option.done, //  选择日期后回调 
         });
+        // var date = laydate.render({}); date.hint() 当前实例对象。其中包含一些成员属性和方法
+        // laydate.getEndDate(month, year) 获取指定年月的最后一天
     };
     // 时间日期区间选择 限制 插件
     /**
@@ -839,7 +840,8 @@
             hideFocus: options.hideFocus || false , // boolean (default false)//隐藏焦点
             clickOnTrack: options.clickOnTrack || true , // boolean (default true)//路径上点击操作
             trackClickSpeed: options.trackClickSpeed || 30 , // int (default 30)//互动轨迹上的点击速度
-            trackClickRepeatFreq: options.trackClickRepeatFreq ||  100 // int (default 100)//滑动轨迹上的重复频率 
+            trackClickRepeatFreq: options.trackClickRepeatFreq ||  100, // int (default 100)//滑动轨迹上的重复频率 
+            showCallback: options.showCallback  // 滚动条出现时 的回调函数
         });
 
         //获取滚动条  
@@ -930,7 +932,7 @@
         return nowLv;
     };
 
-    //表单提交，jsp返回页面方法
+    // [特殊性] 表单提交，jsp返回页面方法
     /**
      * [submit description]
      * @param  {[type]} url      [请求地址]
@@ -939,11 +941,95 @@
      * @param  {[type]} dataType [数据返回类型]
      * @return {[type]}          [description]
      */
-    myFrame.submit = function(url,formDom,contDom,dataType){
-        var data = myFrame.getJson($$(url), "GET", $(formDom).getFormData(), dataType);
+    myFrame.submit = function(formDom,url,urlData,contDom,dataType){
+        // var data = myFrame.getJson($$(url), "GET", $(formDom).getFormData(), dataType);
+        url = url?$$(url):$(formDom).attr("action");
+        if(urlData){
+           url = url+urlData; 
+        }
+        if(!url)return;
+        var data = myFrame.getJson(url, "GET", $(formDom).getFormData(), dataType);
         $(contDom).html(data);
         console.log(data);
     };
+
+    // [特殊性] jsp页面 分页封装 + 请求数据回调
+    /**
+     * [pages description]
+     * @param  {[type]} options [description]
+     * @return {[type]}  options.htmlPage      [分页显示容器]
+     * @return {[type]}  options.conditionPage      [分页参数集合]
+     * @return {[type]}  options.conditionSubmit      [form提交参数集合]
+     * @return {[type]}  options.callback      [回调函数]
+     */
+    myFrame.pages = function(options){
+        var conditionPage = options.conditionPage, // 分页参数集合
+            conditionSubmit = options.conditionSubmit,  // form提交参数集合
+            pageHtml = '<div id="" class="col-md-12 page3  center-block clearfix"></div>';
+        $(options.htmlPage).append(pageHtml);
+        $('.page3').pagination( {
+            pagesSize:conditionPage.pagesSize, // 分页总数默认10页 *必填
+            current:conditionPage.current, //当前第几页,默认为第1页 *必填
+            count:3, //当前页前后分页个数 可填
+            jump:true,
+            position:true,
+            prevContent:'上一页',
+            nextContent:'下一页',
+            isCallback:false,
+            callback:function(dat){
+                var now = this.getCurrent();
+                var common = this.getTotalPage();
+                // 表单提交，jsp返回页面方法
+                myFrame.submit(conditionSubmit.formDom,conditionSubmit.url,conditionSubmit.urlData+now,conditionSubmit.contDom,conditionSubmit.dataType);
+                if( typeof options.callback == "function") options.callback(now,common) ;
+            }
+        });
+    };
+
+    // 表单 整行对齐 js控制
+    myFrame.alignmentRow = function(){
+        var rowDom = $(".alignment_row"),
+            formDom = rowDom.parents("form"),
+            formGroup = formDom.find(".form-group"),
+            formGroupEq,
+            labelWidth,
+            paddLeft=0; 
+        for(var i=0;i<formGroup.length;i++){
+            formGroupEq = formGroup.eq(i);
+            if(parseInt(rowDom.css("padding-left"))<0){
+              paddLeft = parseInt(formGroupEq.css("padding-left"));  
+            }
+            if(!formGroupEq.hasClass('alignment_row') && formGroupEq.find('alignment_row').length==0 ){
+                labelWidth = formGroupEq.children('label').outerWidth(true) + paddLeft-1; 
+                rowDom.find('.alignment_row_left').css("width",labelWidth+"px");    
+                // rowDom.find('.alignment_row_right').css("width",rowDom.outerWidth(true)-labelWidth-20+"px");    
+                formDom.find(".edui-editor").css("width",'100%');
+                break;
+            }      
+        }
+    };
+
+
+    // 
+    myFrame.sizeDom = "";
+    // iframe 循环查找相应dom
+    myFrame.iframeCont = function(state,childIframe){
+        var iframe = childIframe || $("iframe"),
+            name;
+        for(var i=0;i<iframe.length;i++){
+            name = iframe.eq(i).attr("id");
+            if(name == state){
+                _this.sizeDom = iframe.eq(i);
+                break;
+            }
+            if(iframe.eq(i).contents().find("iframe").length>0){
+                _this.iframeCont(state,iframe.eq(i).contents().find("iframe"));
+            }
+        }
+        return _this.sizeDom;
+    };
+
+
 // };
 
 
