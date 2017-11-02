@@ -135,7 +135,8 @@
      */
     myFrame.loadCSS = function(url) {
         var _this = this;
-        var cssUrl = require.toUrl(url);
+        // var cssUrl = require.toUrl(url);
+        var cssUrl = url;
         var isRepeat = false;
         //遍历控制  防止重复加载
         for (var i = 0; i < $("link").length; i++) {
@@ -404,7 +405,7 @@
      * @param width  宽度
      * @param height 高度
      */
-    myFrame.alert = function(status,message, sure, mask, title, btnok, btncl, width, height) {
+    myFrame.alert = function(message, sure, mask, title, btnok, btncl, width, height) {
         var _this = this;
         var myAlert = myPopup.alert({
             title: title || "系统提示",
@@ -415,7 +416,7 @@
             width: width || 800,
             height: height || 550,
             auto: false,
-            status: status,
+            status: undefined,
         });
         // 点击确定时触发
         myAlert.on(function() {
@@ -438,7 +439,7 @@
      * @param btnok  确定 文字
      * @param btncl  取消 文字
      * @param width  宽度
-     * @param height 高度
+     * @param height 高度 
      */
     myFrame.confirm = function(message, sure,notSure,title,mask, btnok, btncl, width, height) {
         var _this = this;
@@ -452,6 +453,7 @@
             width: width || 800,
             height: height || 550,
             auto: false,
+            // status: undefined,
             // status: status,
             onReady: function(dom, e) {
 
@@ -698,6 +700,7 @@
      * @return {[type]}        [description]
      */
     myFrame.laydate = function(option){
+<<<<<<< HEAD
         laydate.render( {
             theme:option.theme || "defaults" ,// 主题  default（默认简约）、molv（墨绿背景）、#颜色值（自定义颜色背景）、grid（格子主题）
             elem: option.elem , // 绑定元素
@@ -724,6 +727,36 @@
         });
         // var date = laydate.render({}); date.hint() 当前实例对象。其中包含一些成员属性和方法
         // laydate.getEndDate(month, year) 获取指定年月的最后一天
+=======
+        // require(["laydate"],function(laydate){
+            laydate.render( {
+                theme:option.theme || "defaults" ,// 主题  default（默认简约）、molv（墨绿背景）、#颜色值（自定义颜色背景）、grid（格子主题）
+                elem: option.elem , // 绑定元素
+                dateState: option.dateState || false, // 时间范围 默认 false 开始时间 startState \ 结束时间 endState
+                sectionId: option.sectionId || false, // 比较区间 对象ID 默认 false 
+                format: option.format || 'YYYY-MM-DD hh:mm:ss', //自定义格式
+                type: option.type  || "date", // year 年、month年月、date 日期、time 时间、 datetime 日期时间选择器
+                range: option.range  || false, //开启左右面板范围选择
+                value: option.value  || new Date(), // 初始值
+                min: option.min || '1900-1-1',  // 最小日期范围      
+                max: option.max || '2099-12-31',   // 最大日期范围 
+                trigger: option.trigger || "focus", // 自定义弹出控件的事件
+                show: option.show || false, // 是否默认弹出显示
+                position: option.position || "absolute", // 定位方式
+                zIndex: option.zIndex || 66666666, //层叠顺序
+                showBottom: option.showBottom || true,// 是否显示底部栏
+                btns: option.btns || ['clear', 'now', 'confirm'], // 工具按钮 顺序
+                lang: option.lang || 'cn' , // 默认中文 en国际英文版
+                calendar: option.calendar || false, // 是否显示公历节日
+                mark: option.mark || {}, // '2017-8-21': '发布' 公历标注重要日子 年变成0 则是每年显示
+                ready: option.ready,// 插件初始化回调  fixed 固定定位 、 static 静态定位
+                change: option.change, //改变日期回调  value 得到日期生成的值, date 得到日期时间对象, endDate 得结束的日期时间对象，开启范围选择（range: true）才会返回。对象成员同上
+                done: option.done, //  选择日期后回调 
+            });
+            // var date = laydate.render({}); date.hint() 当前实例对象。其中包含一些成员属性和方法
+            // laydate.getEndDate(month, year) 获取指定年月的最后一天
+        // });
+>>>>>>> 3450bf9105aacb164d358f008acfe53bbce4c5ed
     };
     // 时间日期区间选择 限制 插件
     /**
@@ -899,6 +932,7 @@
      * @return {[type]}         [description]
      */
     myFrame.validator = function(options){
+        
         $(options.elem).validator({
             submitBtnId:options.submitBtnId || "", // 提交按钮 ID 
             backColor:options.backColor || [2, 'red'],// 提示框 方向 颜色
