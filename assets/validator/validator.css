@@ -100,13 +100,13 @@
 }
 	/*error input*/
 input.validator-input-error,textarea.validator-input-error{
-	border:solid 1px #FF0000!important;
+	/*border:solid 1px #FF0000!important;*/
 	background-image:none;
-	background-color:#fff3f3!important;
+	/*background-color:#fff3f3!important;*/
 	box-shadow:none;
 }
 .validator-input-error:focus{
-	box-shadow:0 0 5px #FF0000!important;
+	/*box-shadow:0 0 5px #FF0000!important;*/
 }
 
 /*tips*/

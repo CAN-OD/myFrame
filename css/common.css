@@ -18,23 +18,161 @@
 /* 字体颜色*/
 /* 字体颜色*/
 /* 字体颜色*/
+/* 字体颜色*/
+/* 字体颜色*/
+/* 字体颜色*/
 /*白色*/
 /* 字体颜色*/
 /* 字体颜色*/
 /* 字体颜色*/
 /* 字体颜色*/
 /* 字体颜色*/
-/* 公共样式集合*/
-/* 解决 bootstrap 位移问题 弹出框加body padding-right:17px问题*/
+/*--------------------------------- 公共样式集合----------------------------------*/
+.wh100 {
+  width: 100px;
+}
+.wh110 {
+  width: 110px;
+}
+.wh120 {
+  width: 120px;
+}
+.wh130 {
+  width: 130px;
+}
+.wh140 {
+  width: 140px;
+}
+.wh150 {
+  width: 150px;
+}
+.wh160 {
+  width: 160px;
+}
+.wh170 {
+  width: 170px;
+}
+.wh180 {
+  width: 180px;
+}
+.wh190 {
+  width: 190px;
+}
+.wh200 {
+  width: 200px;
+}
+.hg20 {
+  height: 20px;
+}
+.hg25 {
+  height: 25px;
+}
+.hg30 {
+  height: 30px;
+}
+.hg35 {
+  height: 35px;
+}
+.hg40 {
+  height: 40px;
+}
+.hg45 {
+  height: 45px;
+}
+.hg50 {
+  height: 50px;
+}
+.hg55 {
+  height: 55px;
+}
+.hg60 {
+  height: 60px;
+}
+.hg65 {
+  height: 65px;
+}
+.hg70 {
+  height: 70px;
+}
+.hg75 {
+  height: 75px;
+}
+.hg80 {
+  height: 80px;
+}
+.paddingL0 {
+  padding-left: 0 !important;
+}
+.paddingR0 {
+  padding-right: 0 !important;
+}
+.paddingLR0 {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.paddingT0 {
+  padding-top: 0 !important;
+}
+.paddingB0 {
+  padding-bottom: 0 !important;
+}
+.paddingTB0 {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+.paddingTRBL0 {
+  padding: 0 !important;
+}
+.tAlignC {
+  text-align: center !important;
+}
+.tAlignL {
+  text-align: left !important;
+}
+.tAlignR {
+  text-align: right !important;
+}
+/* -------------- page loading加载 style ------------------------------- */
+.page-loading {
+  width: 316px;
+  height: 134px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-top: -67px;
+  margin-left: -158px;
+  z-index: 10000;
+  background: url('../../common/img/loading-bg.png') no-repeat;
+}
+.page-loading span {
+  width: 50px;
+  height: 54px;
+  position: absolute;
+  left: 128px;
+  bottom: 17px;
+  background: url("../../common/img/loading.gif") no-repeat;
+}
+/*mask style*/
+.mask {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  opacity: 0.15;
+  filter: alpha(opacity=15);
+  background-color: #666;
+}
+/*---------------------------- 解决 bootstrap 位移问题 弹出框加body padding-right:17px问题----------------------------------*/
 body,
 body.modal-open {
   overflow-y: auto !important;
   padding-right: 0 !important;
 }
-/*模态框 垂直居中*/
+/*-------------------------------------模态框 垂直居中----------------------------------------*/
 .modal_wrapper {
   display: block;
-  position: relative;
 }
 .modal-dialog {
   margin: auto;
@@ -50,7 +188,9 @@ body.modal-open {
   overflow-y: auto;
   /* fa-check 成功 、fa-close 失败、fa-exclamation 默认感叹号 */
 }
-.modal-body i.fa {
+.modal-body i.fa-check,
+.modal-body i.fa-close,
+.modal-body i.fa-exclamation {
   font-size: 26px;
   vertical-align: middle;
   margin-right: 10px;
@@ -64,7 +204,18 @@ body.modal-open {
 .modal-body i.fa-exclamation {
   color: #f8ac59;
 }
-/* 标签*/
+.modal-body .modal-contP {
+  word-break: break-all;
+  word-wrap: break-word;
+}
+/*----------------------------------- 弹出框层级控制避免与 UEditor 自带控件层级冲突----------------------------*/
+.modal {
+  z-index: 1001;
+}
+.modal-backdrop {
+  z-index: 1000;
+}
+/*--------------------------------------- 标签---------------------------------------*/
 h3.nav-title,
 h4.nav-title,
 h6.nav-title {
@@ -103,7 +254,11 @@ h6.nav-title:after {
   top: 36px;
   border-top: 1px #ececec solid;
 }
-/* 按钮*/
+/*------------------------------ 提交按钮板块 -----------------------------------------------*/
+.sub_btn {
+  text-align: center;
+  margin: 20px auto;
+}
 .btn {
   border-radius: 3px;
 }
@@ -125,7 +280,7 @@ h6.nav-title:after {
 .btn-w-m {
   min-width: 120px;
 }
-/*清除浮动*/
+/*--------------------------------清除浮动------------------------------*/
 .clearfix:after {
   clear: both;
   display: block;
@@ -135,7 +290,7 @@ h6.nav-title:after {
   content: ".";
   visibility: hidden;
 }
-/* 暂无数据样式*/
+/*------------------------ 暂无数据样式-----------------------------*/
 p.no-data {
   width: 100%;
   text-align: center;
@@ -143,14 +298,14 @@ p.no-data {
   font-size: 16px;
   color: #928585;
 }
-/* 清楚标签默认样式*/
+/*-------------------------- 清楚标签默认样式-----------------------*/
 ul,
 li {
   list-style: none;
   text-align: left;
   padding: 0;
 }
-/* 路径导航*/
+/*------------------------ 路径导航-----------------------------*/
 .service_route {
   width: 100%;
   height: 36px;
@@ -177,12 +332,25 @@ li {
 .service_route .breadcrumb i {
   margin: 0  5px;
 }
-/* bottstrap 样式修改*/
+/*-------------------------------- bottstrap 样式修改-----------------------------*/
 .center-block {
   float: none;
   position: static;
 }
-/* title 公用*/
+.col-sm-12Padd0 {
+  widgth: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+.btn-link:focus,
+.btn-link:active:focus,
+.btn-link.active:focus,
+.btn-link.focus,
+.btn-link:active.focus,
+.btn-link.active.focus {
+  outline: none;
+}
+/*------------------------- title 公用------------------------------*/
 .home_title {
   margin: 50px 0 auto 0;
   position: relative;
@@ -219,4 +387,82 @@ li {
   font-size: 18px;
   line-height: 45px;
   color: #999999;
+}
+/*------------------------- form 表单  整行 对齐-------------------------------*/
+.alignment_row .alignment_row_left {
+  float: left;
+  text-align: right;
+  padding-left: 0;
+  padding-right: 0;
+}
+.alignment_row .alignment_row_right {
+  float: left;
+  padding-right: 10px;
+}
+.form-group {
+  font-size: 13px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.form-group .control-label {
+  text-align: right;
+  color: #666666;
+  padding: 0;
+  line-height: 28px;
+  margin: 0;
+  width: 140px;
+}
+.form-group .form-control {
+  height: 28px;
+  padding: 3px 12px;
+  border-color: #dbdbdb;
+  color: #666666;
+}
+.form-group textarea.form-control {
+  width: 100%;
+  height: 60px;
+  resize: none;
+}
+.form-group .form-group-left {
+  width: 140px;
+  float: left;
+}
+.form-group .form-group-right {
+  overflow: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.form-disabled .control-label {
+  color: #a3a5a7 !important;
+}
+.form-disabled .form-control {
+  border-color: #f6f6f6 !important;
+  color: #a3a5a7 !important;
+}
+.form-disabled .form-control[disabled],
+.form-disabled .form-control[readonly],
+.form-disabled fieldset[disabled] .form-control {
+  background-color: #ffffff !important;
+}
+/*-------------------------- 富文本编辑框 默认样式---------------------------*/
+.edui-editor-iframeholder {
+  min-height: 70px;
+}
+/*------------------------------chrom input输入框黄色背景去除-----------------------------*/
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #fff inset;
+  -webkit-text-fill-color: #333;
+}
+input[type=text]:focus,
+input[type=password]:focus,
+textarea:focus {
+  -webkit-box-shadow: 0 0 0 1000px #fff  inset;
+  -webkit-text-fill-color: #333;
+}
+/*------------------------------字体图标样式--------------------------------------------------*/
+i.fa {
+  padding: 0 2px;
+  cursor: pointer;
 }

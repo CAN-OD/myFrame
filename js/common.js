@@ -12,7 +12,6 @@
     // myFrame = {
     myFrame.init = function() {
         _this = this;
-
         // myFrame.alert(555);
         // _this.pluginPath();
     };
@@ -80,6 +79,7 @@
 
                 options.cont.find(".myFrame_container").last().data(options.dataVal); // 传值到页面
                 myFrame.pageCallBack(options.cont.find(".myFrame_container").last()); // 传回 当前 弹出框 dom节点
+
                 // _this.loadingHide();
             }
         });
@@ -229,7 +229,8 @@
         var _this = this,
             ajaxTimeoutTest, result = "",
             async = (option.async === false ? false : true);
-        //if (option.loading != false) _this.loadingShow(option.markShow, option.loadingBox || $("body"));
+        if (!option.loading) myFrame.loadingShow();
+
         ajaxTimeoutTest = $.ajax({
             type: option.type || 'POST',
             data: option.data || {},
@@ -242,21 +243,19 @@
             },
             success: function(data) {
                 result = data;
-                // if (option.loading != false) _this.loadingHide(option.loadingBox);
-
                 if (typeof option.success == 'function') option.success(data);
+                if (!option.loading) setTimeout(myFrame.loadingHide, 300);
             },
             error: function(ex) {
-                // myFrame.loadingHide();
+                myFrame.loadingHide();
                 switch (ex.status) {
                     case 0:
                         var msg = "服务器已经停止运行，请通知系统管理员检查并解决。";
 
                         if ($(".alert-alert").last().text().indexOf(msg) < 0) {
-                            // myFrame.alert(msg, function() { //如果有菜单遮罩 移除
-                            //     _this.partMaskHide();
-                            //     _this.loadingHide(option.loadingBox);
-                            // });
+                            myFrame.alert("error", msg, function() { //如果有菜单遮罩 移除
+                                // myFrame.loadingHide(option.loadingBox);
+                            });
                         }
                         break;
                     case 401:
@@ -274,15 +273,12 @@
                         break;
                 }
                 if (typeof option.error == 'function') option.error(ex);
-                // _this.loadingHide(option.loadingBox);
-                // _this.partMaskHide();
             },
             complete: function(XMLHttpRequest, status) { //请求完成后最终执行参数
                 if (status == 'timeout') { //超时,status还有success,error等值的情况
                     ajaxTimeoutTest.abort();
                     myFrame.alert("超时");
-                    _this.partMaskHide();
-                    _this.loadingHide(option.loadingBox);
+                    myFrame.loadingHide();
                 }
             }
         });
@@ -331,8 +327,9 @@
         layer.closeAll('tips'); // 关闭验证提示框
         box.next(".modal-backdrop").remove(); // 清楚已关闭的弹出框HTML
         box.remove(); // 清楚已关闭的弹出框HTML
+        // debugger
+        // $("#edui_fixedlayer").remove();
     };
-
     // load加载、弹出页面加载回调对象
     /**
      * [pageCallBack description]
@@ -393,6 +390,7 @@
     };
     // 错误与成功提示框
     /**
+     * @param status 提示图标
      * @param message 提示内容
      * @param sure 点击确定按钮回调函数
      * @param mask loading效果 遮罩
@@ -402,7 +400,14 @@
      * @param width  宽度
      * @param height 高度
      */
-    myFrame.alert = function(message, sure, mask, title, btnok, btncl, width, height) {
+    myFrame.alert = function(status, message, sure, mask, title, btnok, btncl, width, height) {
+
+        if (arguments[0] == "success" || arguments[0] == "error") {
+            status = arguments[0];
+        } else {
+            message = status;
+            status = undefined;
+        }
         var _this = this;
         var myAlert = myPopup.alert({
             title: title || "系统提示",
@@ -413,7 +418,7 @@
             width: width || 800,
             height: height || 550,
             auto: false,
-            status: undefined,
+            status: status,
         });
         // 点击确定时触发
         myAlert.on(function() {
@@ -428,6 +433,7 @@
     };
     // 再次确认提示框
     /**
+     * @param status 提示图标
      * @param message 提示内容
      * @param sure 点击确定按钮回调函数
      * @param close 点击取消按钮回调函数
@@ -438,7 +444,7 @@
      * @param width  宽度
      * @param height 高度 
      */
-    myFrame.confirm = function(message, sure, notSure, title, mask, btnok, btncl, width, height) {
+    myFrame.confirm = function(status, message, sure, notSure, title, mask, btnok, btncl, width, height) {
         var _this = this;
         var close = close || function() {};
         var myAlert = myPopup.confirm({
@@ -451,7 +457,7 @@
             height: height || 550,
             auto: false,
             // status: undefined,
-            // status: status,
+            status: undefined,
             onReady: function(dom, e) {
 
             },
@@ -581,6 +587,57 @@
             }
         });
     };
+
+
+    // 显示加载提示框
+    /**
+     * [loadingShow description]
+     * @param  {[type]}   maskShow   [ 遮罩层是否显示]
+     * @param  {[type]}   loadingBox [加载显示容器]
+     * @param  {Function} callback   [加载后回调函数]
+     * @return {[type]}              [description]
+     */
+    myFrame.loadingShow = function(maskShow, loadingBox, callback) {
+        loadingBox = loadingBox || $("body");
+        var w = loadingBox.width(),
+            h = loadingBox.height(),
+            loadingDom = loadingBox.children('.page-loading');
+        if (loadingDom.length > 0) {
+            loadingDom.show();
+        } else {
+            loadingBox.append($("<div  class=\"page-loading\"><span class=\"text-hide\">加载中，请稍后...</span></div>"));
+        }
+        if (!maskShow) myFrame.maskShow(loadingBox);
+        if (typeof callback == "function") callback();
+    };
+
+    // 隐藏加载提示框
+    /**
+     * [loadingHide description]
+     * @param  {[type]} loadingBox [需要隐藏的加载层容器]
+     * @return {[type]}            [description]
+     */
+    myFrame.loadingHide = function(loadingBox) {
+        myFrame.maskHide();
+        loadingBox ? loadingBox.find(".page-loading").fadeOut("fast") : $("body").children(".page-loading").fadeOut("fast");
+    };
+
+    // 遮罩层 显示
+    myFrame.maskShow = function(maskDOm) {
+        var mask = $(".mask");
+        if (mask.size() > 0) {
+            mask.eq(0).show();
+        } else {
+            $("body").append("<div class=\"mask\"></div>");
+        }
+    };
+    // 遮罩层 隐藏
+    myFrame.maskHide = function() {
+        $(".mask").css("filter", "alpha(opacity=15)");
+        $(".mask").fadeOut("fast");
+    };
+
+
     //解析url参数
     /**
      * [getUrlString description]
@@ -697,7 +754,6 @@
      * @return {[type]}        [description]
      */
     myFrame.laydate = function(option) {
-        // require(["laydate"],function(laydate){
         laydate.render({
             theme: option.theme || "defaults", // 主题  default（默认简约）、molv（墨绿背景）、#颜色值（自定义颜色背景）、grid（格子主题）
             elem: option.elem, // 绑定元素
@@ -706,7 +762,7 @@
             format: option.format || 'YYYY-MM-DD hh:mm:ss', //自定义格式
             type: option.type || "date", // year 年、month年月、date 日期、time 时间、 datetime 日期时间选择器
             range: option.range || false, //开启左右面板范围选择
-            value: option.value || new Date(), // 初始值
+            value: option.value || new Date(), // 初始值  
             min: option.min || '1900-1-1', // 最小日期范围      
             max: option.max || '2099-12-31', // 最大日期范围 
             trigger: option.trigger || "focus", // 自定义弹出控件的事件
@@ -724,7 +780,6 @@
         });
         // var date = laydate.render({}); date.hint() 当前实例对象。其中包含一些成员属性和方法
         // laydate.getEndDate(month, year) 获取指定年月的最后一天
-        // });
     };
     // 时间日期区间选择 限制 插件
     /**
@@ -841,7 +896,8 @@
             hideFocus: options.hideFocus || false, // boolean (default false)//隐藏焦点
             clickOnTrack: options.clickOnTrack || true, // boolean (default true)//路径上点击操作
             trackClickSpeed: options.trackClickSpeed || 30, // int (default 30)//互动轨迹上的点击速度
-            trackClickRepeatFreq: options.trackClickRepeatFreq || 100 // int (default 100)//滑动轨迹上的重复频率 
+            trackClickRepeatFreq: options.trackClickRepeatFreq || 100, // int (default 100)//滑动轨迹上的重复频率 
+            showCallback: options.showCallback // 滚动条出现时 的回调函数
         });
 
         //获取滚动条  
@@ -887,9 +943,9 @@
      */
     myFrame.butArea = function(dom) {
         if (dom.offset().top >= $(window).scrollTop() && dom.offset().top < ($(window).scrollTop() + $(window).height())) {
-            return true;
+            return true; // 在可视区域
         }
-        return false;
+        return false; // 不在可视区域
     };
 
     // 表单检验方法
@@ -899,11 +955,10 @@
      * @return {[type]}         [description]
      */
     myFrame.validator = function(options) {
-
         $(options.elem).validator({
             submitBtnId: options.submitBtnId || "", // 提交按钮 ID 
             scrollDom: options.scrollDom, // 提交验证时定位
-            backColor: options.backColor || [3, "#18a689"], // 提示框 方向 颜色
+            backColor: options.backColor || [3, '#78BA32'], // 提示框 方向 颜色
             sure: function(that) { // 验证成功后的回调函数 that 当前提交按钮
                 if (typeof options.sure == "function") options.sure(that);
             }
@@ -934,7 +989,7 @@
         return nowLv;
     };
 
-    //表单提交，jsp返回页面方法
+    // [特殊性] 表单提交，jsp返回页面方法
     /**
      * [submit description]
      * @param  {[type]} url      [请求地址]
@@ -943,11 +998,72 @@
      * @param  {[type]} dataType [数据返回类型]
      * @return {[type]}          [description]
      */
-    myFrame.submit = function(url, formDom, contDom, dataType) {
-        var data = myFrame.getJson($$(url), "GET", $(formDom).getFormData(), dataType);
+    myFrame.submit = function(formDom, url, urlData, contDom, dataType) {
+        // var data = myFrame.getJson($$(url), "GET", $(formDom).getFormData(), dataType);
+        url = url ? $$(url) : $(formDom).attr("action");
+        if (urlData) {
+            url = url + urlData;
+        }
+        if (!url) return;
+        var data = myFrame.getJson(url, "GET", $(formDom).getFormData(), dataType);
         $(contDom).html(data);
         console.log(data);
     };
+
+    // [特殊性] jsp页面 分页封装 + 请求数据回调
+    /**
+     * [pages description]
+     * @param  {[type]} options [description]
+     * @return {[type]}  options.htmlPage      [分页显示容器]
+     * @return {[type]}  options.conditionPage      [分页参数集合]
+     * @return {[type]}  options.conditionSubmit      [form提交参数集合]
+     * @return {[type]}  options.callback      [回调函数]
+     */
+    myFrame.pages = function(options) {
+        var conditionPage = options.conditionPage, // 分页参数集合
+            conditionSubmit = options.conditionSubmit, // form提交参数集合
+            pageHtml = '<div id="" class="col-md-12 page3  center-block clearfix"></div>';
+        $(options.htmlPage).append(pageHtml);
+        $('.page3').pagination({
+            pagesSize: conditionPage.pagesSize, // 分页总数默认10页 *必填
+            current: conditionPage.current, //当前第几页,默认为第1页 *必填
+            count: 3, //当前页前后分页个数 可填
+            jump: true,
+            position: true,
+            prevContent: '上一页',
+            nextContent: '下一页',
+            isCallback: false,
+            callback: function(dat) {
+                var now = this.getCurrent();
+                var common = this.getTotalPage();
+                // 表单提交，jsp返回页面方法
+                myFrame.submit(conditionSubmit.formDom, conditionSubmit.url, conditionSubmit.urlData + now, conditionSubmit.contDom, conditionSubmit.dataType);
+                if (typeof options.callback == "function") options.callback(now, common);
+            }
+        });
+    };
+
+
+
+    // iframe 循环查找相应dom
+    myFrame.sizeDom = ""; // 用于记录 找到的iframe节点对象 
+    myFrame.iframeCont = function(state, childIframe) {
+        var iframe = childIframe || $("iframe"),
+            name;
+        for (var i = 0; i < iframe.length; i++) {
+            name = iframe.eq(i).attr("id");
+            if (name == state) {
+                _this.sizeDom = iframe.eq(i);
+                break;
+            }
+            if (iframe.eq(i).contents().find("iframe").length > 0) {
+                _this.iframeCont(state, iframe.eq(i).contents().find("iframe"));
+            }
+        }
+        return _this.sizeDom;
+    };
+
+
     // };
 
 
@@ -1214,10 +1330,32 @@
                     }
 
                     if (name) {
+                        // wwb 2017-11-3 当name属性名字重复时，传递值以数组形式传递
+                        var ary = [];
+                        for (var i in result) {
+                            if (name === i) {
+                                ary.push(result[i]);
+                                result[i] = ary;
+                            }
+                        }
+
                         if (size > 1 && type != "checkbox" && type != "radio") {
-                            result[name] = (result[name] ? result[name] : []);
-                            result[name][result[name].length] = $.trim(value);
-                        } else result[name] = $.trim(value);
+                            // 判断是否已存在key值，存在就以数组形式存储
+                            if (result[name]) {
+                                result[name].push((result[name] ? result[name] : []));
+                                result[name][result[name].length].push($.trim(value));
+                            } else {
+                                result[name] = (result[name] ? result[name] : []);
+                                result[name][result[name].length] = $.trim(value);
+                            }
+                        } else {
+                            // 判断是否已存在key值，存在就以数组形式存储
+                            if (result[name]) {
+                                result[name].push($.trim(value));
+                            } else {
+                                result[name] = $.trim(value);
+                            }
+                        }
                     }
 
                 });

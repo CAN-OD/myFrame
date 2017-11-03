@@ -262,6 +262,13 @@
 				originalScrollLeft && elem.scrollLeft(0) && scrollToX(originalScrollLeft, false);
 
 				elem.trigger('jsp-initialised', [isScrollableH || isScrollableV]);
+
+				//  设置内容与滚动条不冲突
+				//container.find('.jspPane').css({"width":"100%"});
+				// 初始化之后的回调函数
+				if(typeof settings.showCallback  == "function"){
+					settings.showCallback(container);
+				}
 			}
 
 			function initialiseVerticalScroll()

@@ -25,6 +25,9 @@
 .page3  {
     text-align:center;
 }
+.page3 li p {
+    margin: auto;
+}
 
 .pagination-sm>li {
     margin: auto 3px;
