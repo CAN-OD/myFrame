@@ -20,6 +20,7 @@
 				submitBtnId:"",
 				msgDirection:"right",
 				backColor:[], // 方向 颜色
+				scrollDom:false, // 提交验证时定位
 				keyup:function(){},
 				sure:function(){}, // 确认回调
 				msgShow:true,
@@ -165,12 +166,19 @@
 			// obj.find(".msg-content").text(message);
 
 			// 提示信息框	layer
+
+			if(o.get("scrollDom") && !myFrame.butArea(target)){
+				$(o.get("scrollDom")).stop(true,false).animate({  
+                    scrollTop: target.offset().top 
+                }, 500); 
+			}
 			
+
 			layer.tips(message,target,{//1.错误信息，2提示位置，3同时提示多个错误
-				tips: o.get("backColor") || [4, '#78BA32'],  // 方向 颜色
+				tips: o.get("backColor").length>0?o.get("backColor"):[4, '#78BA32'],  // 方向 颜色
                 tipsMore:false//错误信息可以同时提示多个，...
             });
-
+			
 
 			var xSize,ySize;
 			//msg direction

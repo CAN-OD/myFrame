@@ -1,15 +1,15 @@
- //get form data 获取form input等数据
+//get form data 获取form input等数据
 // define(["pagination"], function(pagination) {
-(function (window, undefined) {
+(function(window, undefined) {
     //framework library
     var myFrame = {
-        version:"V1.0",
-        config:(window.myFrame && window.myFrame.config) || {},
-        module:(window.myFrame && window.myFrame.module) || {},
-        temp:{}
+        version: "V1.0",
+        config: (window.myFrame && window.myFrame.config) || {},
+        module: (window.myFrame && window.myFrame.module) || {},
+        temp: {}
     };
-    var _this; 
-// myFrame = {
+    var _this;
+    // myFrame = {
     myFrame.init = function() {
         _this = this;
 
@@ -55,7 +55,7 @@
             myFrame.loadCSS(filePath + pageUrl);
         }
         // 加载请求 jsp文件路径 css
-        if (options.hrefType && options.hrefType!="") {
+        if (options.hrefType && options.hrefType != "") {
             myFrame.loadCSS($$(options.hrefType + ".css"));
         }
 
@@ -78,8 +78,8 @@
                     if (typeof options.callBack == "function") options.callBack(options.cont, $(d));
                 }
 
-                options.cont.find(".myFrame_container").last().data(options.dataVal);  // 传值到页面
-                myFrame.pageCallBack(options.cont.find(".myFrame_container").last());  // 传回 当前 弹出框 dom节点
+                options.cont.find(".myFrame_container").last().data(options.dataVal); // 传值到页面
+                myFrame.pageCallBack(options.cont.find(".myFrame_container").last()); // 传回 当前 弹出框 dom节点
                 // _this.loadingHide();
             }
         });
@@ -107,7 +107,7 @@
             var pageUrl = option.url.split(".html")[0] + ".css";
             state = myFrame.loadCSS(pageUrl);
         }
-        if(state){
+        if (state) {
             $.ajax({
                 type: "GET",
                 async: false,
@@ -155,7 +155,7 @@
                     link.type = "text/css";
                     link.href = cssUrl; // document.getElementsByTagName("head")[0].appendChild(link);
                     var likDom = $("head").find('link'); // 获取所有link节点
-                    return  _this.insertAfter(link, likDom[likDom.length - 1]);
+                    return _this.insertAfter(link, likDom[likDom.length - 1]);
                 }
             });
 
@@ -163,10 +163,10 @@
     };
     // 通过接口下载 方法
     /**
-    * @param api [string]：下载接口url地址。
-    * @param params [object]：传给后台api接口的参数。
-    */
-    myFrame.downLoad = function (api, params) {
+     * @param api [string]：下载接口url地址。
+     * @param params [object]：传给后台api接口的参数。
+     */
+    myFrame.downLoad = function(api, params) {
         var form = $("<form target=\"_blank\" method=\"post\" action=\"" + api + "\" name=\"downLoad\"></form>");
         for (key in params) {
             form.append("<input type=\"hidden\" name=\"" + key + "\" value=\"" + params[key] + "\"/>");
@@ -327,7 +327,7 @@
      * @return {[type]}     [description]
      */
     myFrame.closeBox = function(dom) {
-        var box= dom.parents(".modal");
+        var box = dom.parents(".modal");
         layer.closeAll('tips'); // 关闭验证提示框
         box.next(".modal-backdrop").remove(); // 清楚已关闭的弹出框HTML
         box.remove(); // 清楚已关闭的弹出框HTML
@@ -339,7 +339,7 @@
      * @param  {[type]} container [ 容器对象节点]
      * @return {[type]}           [description]
      */
-    myFrame.pageCallBack = function(container){
+    myFrame.pageCallBack = function(container) {
 
     };
 
@@ -371,7 +371,7 @@
             }
         }, options || {});
 
-       var myAlert = myPopup.dialog(options);
+        var myAlert = myPopup.dialog(options);
 
 
         // 弹出框初始化 之后操作回调
@@ -438,9 +438,9 @@
      * @param width  宽度
      * @param height 高度 
      */
-    myFrame.confirm = function(message, sure,notSure,title,mask, btnok, btncl, width, height) {
+    myFrame.confirm = function(message, sure, notSure, title, mask, btnok, btncl, width, height) {
         var _this = this;
-        var close = close || function(){};
+        var close = close || function() {};
         var myAlert = myPopup.confirm({
             title: title || "系统提示",
             message: message || "提示内容",
@@ -467,7 +467,7 @@
         // 点击关闭时触发
         myAlert.onClose(function(target) {
             if (typeof sure == "function") {
-               if (typeof notSure == "function") return notSure(target);
+                if (typeof notSure == "function") return notSure(target);
             }
         });
         // 关闭按钮
@@ -512,12 +512,12 @@
      * @param  {[type]} dataObjectName [description]
      * @return {[type]}                [description]
      */
-    myFrame.buildFormValue = function (target, data, dataObjectName) {
+    myFrame.buildFormValue = function(target, data, dataObjectName) {
         if (typeof data != "object") return;
         var obj,
             type,
             value;
-        target.find("input,textarea,select").each(function () {
+        target.find("input,textarea,select").each(function() {
             if ($(this).attr("noreturn")) return;
             var name = $(this).attr("name");
             if (name && data[name.replace(dataObjectName, "")] != undefined) {
@@ -588,9 +588,9 @@
      * @return {[type]}      [description]
      */
     myFrame.getUrlString = function(name) {
-        var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
         var result = window.location.search.substr(1).match(reg);
-        return result?decodeURIComponent(result[2]):null;
+        return result ? decodeURIComponent(result[2]) : null;
     };
     // 获取url地址栏参数
     /**
@@ -598,17 +598,17 @@
      * @param  {[type]} urlDat [description]
      * @return {[type]}        [description]
      */
-    myFrame.getRequest = function (urlDat) {
-       var url = urlDat || location.search; //获取url中"?"符后的字串
-       var theRequest = new Object();
-       if (url.indexOf("?") != -1) {
-          var str = url.substr(1);
-          strs = str.split("&");
-          for(var i = 0; i < strs.length; i ++) {
-             theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
-          }
-       }
-       return theRequest;
+    myFrame.getRequest = function(urlDat) {
+        var url = urlDat || location.search; //获取url中"?"符后的字串
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for (var i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+            }
+        }
+        return theRequest;
     };
     // 监听浏览器 前进 后退 按钮 刷新页面
     myFrame.initialize = function() {
@@ -635,7 +635,7 @@
      * @param  {[type]}  arr [description]
      * @return {Boolean}     [description]
      */
-    myFrame.isRepeat = function (arr) {
+    myFrame.isRepeat = function(arr) {
         var hash = {};
         for (var i in arr) {
             if (hash[arr[i]]) {
@@ -651,10 +651,10 @@
      * @param  {[type]}  name [description]
      * @return {Boolean}      [description]
      */
-    myFrame.isNull = function(name){
+    myFrame.isNull = function(name) {
         var stie = false;
-        if (!name && typeof(name)!="undefined" && name!=0){ 
-            stie = true; 
+        if (!name && typeof(name) != "undefined" && name != 0) {
+            stie = true;
         }
 
         // return !name && name!==0 && typeof name!=="boolean"?true:false;
@@ -668,27 +668,27 @@
      * @param  {[+/-]} operator [description]
      * myFrame.dateOperator("2014-01-01",1,"-")
      */
-    myFrame.dateOperator = function(date,days,operator){  
-        date = date.replace(/-/g,"/"); //更改日期格式  
-        var nd = new Date(date);  
-        nd = nd.valueOf();  
-        if(operator=="+"){  
-         nd = nd + days * 24 * 60 * 60 * 1000;  
-        }else if(operator=="-"){  
-            nd = nd - days * 24 * 60 * 60 * 1000;  
-        }else{  
-            return false;  
-        }  
-        nd = new Date(nd);  
-      
-        var y = nd.getFullYear();  
-        var m = nd.getMonth()+1;  
-        var d = nd.getDate();  
-        if(m <= 9) m = "0"+m;  
-        if(d <= 9) d = "0"+d;   
-        var cdate = y+"-"+m+"-"+d;  
-        return cdate;  
-    };  
+    myFrame.dateOperator = function(date, days, operator) {
+        date = date.replace(/-/g, "/"); //更改日期格式  
+        var nd = new Date(date);
+        nd = nd.valueOf();
+        if (operator == "+") {
+            nd = nd + days * 24 * 60 * 60 * 1000;
+        } else if (operator == "-") {
+            nd = nd - days * 24 * 60 * 60 * 1000;
+        } else {
+            return false;
+        }
+        nd = new Date(nd);
+
+        var y = nd.getFullYear();
+        var m = nd.getMonth() + 1;
+        var d = nd.getDate();
+        if (m <= 9) m = "0" + m;
+        if (d <= 9) d = "0" + d;
+        var cdate = y + "-" + m + "-" + d;
+        return cdate;
+    };
 
     //  layerDate 时间插件
     /**
@@ -696,34 +696,34 @@
      * @param  {[type]} option [description]
      * @return {[type]}        [description]
      */
-    myFrame.laydate = function(option){
+    myFrame.laydate = function(option) {
         // require(["laydate"],function(laydate){
-            laydate.render( {
-                theme:option.theme || "defaults" ,// 主题  default（默认简约）、molv（墨绿背景）、#颜色值（自定义颜色背景）、grid（格子主题）
-                elem: option.elem , // 绑定元素
-                dateState: option.dateState || false, // 时间范围 默认 false 开始时间 startState \ 结束时间 endState
-                sectionId: option.sectionId || false, // 比较区间 对象ID 默认 false 
-                format: option.format || 'YYYY-MM-DD hh:mm:ss', //自定义格式
-                type: option.type  || "date", // year 年、month年月、date 日期、time 时间、 datetime 日期时间选择器
-                range: option.range  || false, //开启左右面板范围选择
-                value: option.value  || new Date(), // 初始值
-                min: option.min || '1900-1-1',  // 最小日期范围      
-                max: option.max || '2099-12-31',   // 最大日期范围 
-                trigger: option.trigger || "focus", // 自定义弹出控件的事件
-                show: option.show || false, // 是否默认弹出显示
-                position: option.position || "absolute", // 定位方式
-                zIndex: option.zIndex || 66666666, //层叠顺序
-                showBottom: option.showBottom || true,// 是否显示底部栏
-                btns: option.btns || ['clear', 'now', 'confirm'], // 工具按钮 顺序
-                lang: option.lang || 'cn' , // 默认中文 en国际英文版
-                calendar: option.calendar || false, // 是否显示公历节日
-                mark: option.mark || {}, // '2017-8-21': '发布' 公历标注重要日子 年变成0 则是每年显示
-                ready: option.ready,// 插件初始化回调  fixed 固定定位 、 static 静态定位
-                change: option.change, //改变日期回调  value 得到日期生成的值, date 得到日期时间对象, endDate 得结束的日期时间对象，开启范围选择（range: true）才会返回。对象成员同上
-                done: option.done, //  选择日期后回调 
-            });
-            // var date = laydate.render({}); date.hint() 当前实例对象。其中包含一些成员属性和方法
-            // laydate.getEndDate(month, year) 获取指定年月的最后一天
+        laydate.render({
+            theme: option.theme || "defaults", // 主题  default（默认简约）、molv（墨绿背景）、#颜色值（自定义颜色背景）、grid（格子主题）
+            elem: option.elem, // 绑定元素
+            dateState: option.dateState || false, // 时间范围 默认 false 开始时间 startState \ 结束时间 endState
+            sectionId: option.sectionId || false, // 比较区间 对象ID 默认 false 
+            format: option.format || 'YYYY-MM-DD hh:mm:ss', //自定义格式
+            type: option.type || "date", // year 年、month年月、date 日期、time 时间、 datetime 日期时间选择器
+            range: option.range || false, //开启左右面板范围选择
+            value: option.value || new Date(), // 初始值
+            min: option.min || '1900-1-1', // 最小日期范围      
+            max: option.max || '2099-12-31', // 最大日期范围 
+            trigger: option.trigger || "focus", // 自定义弹出控件的事件
+            show: option.show || false, // 是否默认弹出显示
+            position: option.position || "absolute", // 定位方式
+            zIndex: option.zIndex || 66666666, //层叠顺序
+            showBottom: option.showBottom || true, // 是否显示底部栏
+            btns: option.btns || ['clear', 'now', 'confirm'], // 工具按钮 顺序
+            lang: option.lang || 'cn', // 默认中文 en国际英文版
+            calendar: option.calendar || false, // 是否显示公历节日
+            mark: option.mark || {}, // '2017-8-21': '发布' 公历标注重要日子 年变成0 则是每年显示
+            ready: option.ready, // 插件初始化回调  fixed 固定定位 、 static 静态定位
+            change: option.change, //改变日期回调  value 得到日期生成的值, date 得到日期时间对象, endDate 得结束的日期时间对象，开启范围选择（range: true）才会返回。对象成员同上
+            done: option.done, //  选择日期后回调 
+        });
+        // var date = laydate.render({}); date.hint() 当前实例对象。其中包含一些成员属性和方法
+        // laydate.getEndDate(month, year) 获取指定年月的最后一天
         // });
     };
     // 时间日期区间选择 限制 插件
@@ -734,72 +734,72 @@
      * @param  {[type]} endDom   [object] 结束时间 dom节点
      * @param  {[type]} endSet   [substring] myFrame.laydate() 结束时间插件配置
      */
-    myFrame.datetimeLimit = function(startDom,startSet,endDom,endSet){
+    myFrame.datetimeLimit = function(startDom, startSet, endDom, endSet) {
         startSet = $.extend({}, {
             elem: startDom,
-            format: 'yyyy-MM-dd', 
-            theme:"#1756af",
+            format: 'yyyy-MM-dd',
+            theme: "#1756af",
             max: $(endDom).val(),
             show: true, //直,接显示
             closeStop: startDom, //这里代表的意思是：点击 test1 所在元素阻止关闭事件冒泡。如果不设定，则无法弹出控件
             btns: ['now', 'confirm'],
-            done:function(value,date,endDate){//改变日期触发事件
-            
+            done: function(value, date, endDate) { //改变日期触发事件
+
             }
         }, startSet || {});
 
         endSet = $.extend({}, {
             elem: endDom,
             format: 'yyyy-MM-dd',
-            theme:"#1756af",
+            theme: "#1756af",
             min: $(startDom).val(),
             btns: ['now', 'confirm'],
             show: true, //直接显示
             closeStop: endDom, //这里代表的意思是：点击 test1 所在元素阻止关闭事件冒泡。如果不设定，则无法弹出控件
-            done:function(value,date,endDate){
-               
+            done: function(value, date, endDate) {
+
             }
         }, startSet || {});
 
         //外部事件调用
-        $(startDom).on('click', function(e){ //假设 test1 是一个按钮
-            startSet.max= $(endDom).val();
+        $(startDom).on('click', function(e) { //假设 test1 是一个按钮
+            startSet.max = $(endDom).val();
             myFrame.laydate(startSet);
         });
-        $(endDom).on('click', function(e){ //假设 test1 是一个按钮
+        $(endDom).on('click', function(e) { //假设 test1 是一个按钮
             endSet.min = $(startDom).val();
             myFrame.laydate(endSet);
         });
     };
     // 加载插件方法 引入js 、css文件
-    myFrame.pluginPath = function(){
+    myFrame.pluginPath = function() {
         var config = myFrame.config,
             assetsPath = config.assetsPath,
-            link = "" , 
-            scripts = "" , 
+            link = "",
+            scripts = "",
             // aryJs = [],aryCss = [],
             head = document.getElementsByTagName("head").item(0),
             linkDom = head.getElementsByTagName("link").item(0),
             body = document.getElementsByTagName("body").item(0),
             scriptDom = body.getElementsByTagName("script").item(0);
-        config.assets.map(function(data,index){
+        config.assets.map(function(data, index) {
             // js
-            if( data.js && data.js !=""){
+            if (data.js && data.js != "") {
                 scripts = document.createElement("script");
                 scripts.type = "text/javascript";
                 scripts.src = assetsPath + data.js;
-                body.appendChild(scripts); 
+                body.appendChild(scripts);
             }
             // css
-            if( data.css && data.css !=""){
+            if (data.css && data.css != "") {
                 link = document.createElement("link");
                 link.rel = "stylesheet";
                 link.type = "text/css";
                 link.href = assetsPath + data.css;
-                head.insertBefore(link,linkDom); 
+                head.insertBefore(link, linkDom);
             }
-     
-        }); 
+
+        });
     };
 
     // 滚动条插件
@@ -809,53 +809,53 @@
      * @return {[type]}         [description]
      * 滚动条 初始化成功必须要有内容或高度
      */
-    myFrame.jScrollPane = function(options){
+    myFrame.jScrollPane = function(options) {
 
-    
+
         // 初始化
         var jspApi = options.elem.jScrollPane({
-            showArrows: options.showArrows || false , // boolean (default false)//显示滑杆两边的箭头
-            maintainPosition : options.maintainPosition || true, // boolean (default true)//保持原位置
-            stickToBottom: options.stickToBottom || false , // boolean (default false)//滑到底部
-            stickToRight: options.stickToRight || false , // boolean (default false)//滑到最右边
-            autoReinitialise: options.autoReinitialise || false , // boolean (default false)// 滚动元素内容动态增加及时更新滚动条 自动加载出现滑杆  
-            autoReinitialiseDelay: options.autoReinitialiseDelay || 500 , // int (default 500)//自动加载的时间延迟
-            verticalDragMinHeight: options.verticalDragMinHeight || 0 , // int (default 0)//垂直拖拽的最小高度
-            verticalDragMaxHeight: options.verticalDragMaxHeight || 99999 , // int (default 99999)//处置拖拽的最大高度
-            horizontalDragMinWidth : options.horizontalDragMinWidth || 0 , // int (default 0)//水平拖拽的长度
-            horizontalDragMaxWidth: options.horizontalDragMaxWidth || 99999 , // int (default 99999)//水平拖拽的最大长度
-            contentWidth: options.contentWidth ||  undefined , // int (default undefined)//内幕内用的宽度
-            animateScroll: options.animateScroll || false , // boolean (default false)//滚动动画
-            animateDuration : options.animateDuration || 300 , // int (default 300)//动画延迟
-            animateEase: options.animateEase || 'linear' , // string (default 'linear')//动画轨迹
-            hijackInternalLinks: options.hijackInternalLinks || false , // boolean (default false)//截获内部链接
-            verticalGutter : options.verticalGutter || 4 , // int (default 4)//处置不掉长度
-            horizontalGutter : options.horizontalGutter || 4 , // int (default 4)//水平不掉长度
-            mouseWheelSpeed: options.mouseWheelSpeed || 10 , // int (default 10)//鼠标疼速度
-            arrowButtonSpeed : options.arrowButtonSpeed || 10 , // int (default 10)//方向键按钮的速度
-            arrowRepeatFreq: options.arrowRepeatFreq || 100 , // int (default 100)//按钮事件重复频率
-            arrowScrollOnHover: options.arrowScrollOnHover || false , // boolean (default false)//接手鼠标在方向键上滑过的动作
-            verticalArrowPositions: options.verticalArrowPositions || "split" , // string [split|before|after|os] (default split)//垂直方向上按钮的位置
-            horizontalArrowPositions: options.horizontalArrowPositions || "split" , // string [split|before|after|os] (default split)//水平方向上按钮的位置
-            enableKeyboardNavigation: options.enableKeyboardNavigation || true , // boolean (default true)//是否接受键盘操作 
-            hideFocus: options.hideFocus || false , // boolean (default false)//隐藏焦点
-            clickOnTrack: options.clickOnTrack || true , // boolean (default true)//路径上点击操作
-            trackClickSpeed: options.trackClickSpeed || 30 , // int (default 30)//互动轨迹上的点击速度
-            trackClickRepeatFreq: options.trackClickRepeatFreq ||  100 // int (default 100)//滑动轨迹上的重复频率 
+            showArrows: options.showArrows || false, // boolean (default false)//显示滑杆两边的箭头
+            maintainPosition: options.maintainPosition || true, // boolean (default true)//保持原位置
+            stickToBottom: options.stickToBottom || false, // boolean (default false)//滑到底部
+            stickToRight: options.stickToRight || false, // boolean (default false)//滑到最右边
+            autoReinitialise: options.autoReinitialise || false, // boolean (default false)// 滚动元素内容动态增加及时更新滚动条 自动加载出现滑杆  
+            autoReinitialiseDelay: options.autoReinitialiseDelay || 500, // int (default 500)//自动加载的时间延迟
+            verticalDragMinHeight: options.verticalDragMinHeight || 0, // int (default 0)//垂直拖拽的最小高度
+            verticalDragMaxHeight: options.verticalDragMaxHeight || 99999, // int (default 99999)//处置拖拽的最大高度
+            horizontalDragMinWidth: options.horizontalDragMinWidth || 0, // int (default 0)//水平拖拽的长度
+            horizontalDragMaxWidth: options.horizontalDragMaxWidth || 99999, // int (default 99999)//水平拖拽的最大长度
+            contentWidth: options.contentWidth || undefined, // int (default undefined)//内幕内用的宽度
+            animateScroll: options.animateScroll || false, // boolean (default false)//滚动动画
+            animateDuration: options.animateDuration || 300, // int (default 300)//动画延迟
+            animateEase: options.animateEase || 'linear', // string (default 'linear')//动画轨迹
+            hijackInternalLinks: options.hijackInternalLinks || false, // boolean (default false)//截获内部链接
+            verticalGutter: options.verticalGutter || 4, // int (default 4)//处置不掉长度
+            horizontalGutter: options.horizontalGutter || 4, // int (default 4)//水平不掉长度
+            mouseWheelSpeed: options.mouseWheelSpeed || 10, // int (default 10)//鼠标疼速度
+            arrowButtonSpeed: options.arrowButtonSpeed || 10, // int (default 10)//方向键按钮的速度
+            arrowRepeatFreq: options.arrowRepeatFreq || 100, // int (default 100)//按钮事件重复频率
+            arrowScrollOnHover: options.arrowScrollOnHover || false, // boolean (default false)//接手鼠标在方向键上滑过的动作
+            verticalArrowPositions: options.verticalArrowPositions || "split", // string [split|before|after|os] (default split)//垂直方向上按钮的位置
+            horizontalArrowPositions: options.horizontalArrowPositions || "split", // string [split|before|after|os] (default split)//水平方向上按钮的位置
+            enableKeyboardNavigation: options.enableKeyboardNavigation || true, // boolean (default true)//是否接受键盘操作 
+            hideFocus: options.hideFocus || false, // boolean (default false)//隐藏焦点
+            clickOnTrack: options.clickOnTrack || true, // boolean (default true)//路径上点击操作
+            trackClickSpeed: options.trackClickSpeed || 30, // int (default 30)//互动轨迹上的点击速度
+            trackClickRepeatFreq: options.trackClickRepeatFreq || 100 // int (default 100)//滑动轨迹上的重复频率 
         });
 
         //获取滚动条  
-        var refreshApi=jspApi.data("jsp");
+        var refreshApi = jspApi.data("jsp");
         //重新加载刷新滚动条  
-        refreshApi.reinitialise(options);    
+        refreshApi.reinitialise(options);
     };
-    
+
     // 日期格式转换
     /*
-    *    date 日期时间
-    *    fmt 需转换的格式
+     *    date 日期时间
+     *    fmt 需转换的格式
      */
-    myFrame.DateFormat = function(date,fmt){
+    myFrame.DateFormat = function(date, fmt) {
         // 对Date的扩展，将 Date 转化为指定格式的String
         // 月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符， 
         // 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字) 
@@ -874,7 +874,7 @@
         };
         if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
         for (var k in o)
-        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
         return fmt;
         // };
     };
@@ -885,25 +885,26 @@
      * @param  {[type]} dom [description]
      * @return {[type]}     [description]
      */
-    myFrame.butArea = function(dom){
-        if(dom.offset().top >= $(window).scrollTop() && dom.offset().top < ($(window).scrollTop()+$(window).height())){
+    myFrame.butArea = function(dom) {
+        if (dom.offset().top >= $(window).scrollTop() && dom.offset().top < ($(window).scrollTop() + $(window).height())) {
             return true;
         }
         return false;
     };
-    
+
     // 表单检验方法
     /**
      * [validator description]
      * @param  {[type]} options [description]
      * @return {[type]}         [description]
      */
-    myFrame.validator = function(options){
-        
+    myFrame.validator = function(options) {
+
         $(options.elem).validator({
-            submitBtnId:options.submitBtnId || "", // 提交按钮 ID 
-            backColor:options.backColor || [2, 'red'],// 提示框 方向 颜色
-            sure:function(that){  // 验证成功后的回调函数 that 当前提交按钮
+            submitBtnId: options.submitBtnId || "", // 提交按钮 ID 
+            scrollDom: options.scrollDom, // 提交验证时定位
+            backColor: options.backColor || [3, "#18a689"], // 提示框 方向 颜色
+            sure: function(that) { // 验证成功后的回调函数 that 当前提交按钮
                 if (typeof options.sure == "function") options.sure(that);
             }
         });
@@ -913,7 +914,7 @@
     //检测密码强度
     //checkPwd('12asdASAD')
     //3(强度等级为3)
-    myFrame.checkPwd  = function (str) {
+    myFrame.checkPwd = function(str) {
         var nowLv = 0;
         if (str.length < 6) {
             return nowLv;
@@ -942,371 +943,371 @@
      * @param  {[type]} dataType [数据返回类型]
      * @return {[type]}          [description]
      */
-    myFrame.submit = function(url,formDom,contDom,dataType){
+    myFrame.submit = function(url, formDom, contDom, dataType) {
         var data = myFrame.getJson($$(url), "GET", $(formDom).getFormData(), dataType);
         $(contDom).html(data);
         console.log(data);
     };
-// };
+    // };
 
 
 
+    // 访问地址路径封装
+    // var contextPath = window.location.origin;
+    // window.$$ = function(uri) {
+    //     return (contextPath+ uri).replace(/\/{2}/, '/');
+    // }; 
+    // window.filePath=window.uir = contextPath+"/static/bigScreen";
+    window.myFrame = myFrame;
+    myFrame.init();
+    // });
 
-// 访问地址路径封装
-// var contextPath = window.location.origin;
-// window.$$ = function(uri) {
-//     return (contextPath+ uri).replace(/\/{2}/, '/');
-// }; 
-// window.filePath=window.uir = contextPath+"/static/bigScreen";
-window.myFrame = myFrame;
-myFrame.init();
-// });
- 
 
-$.fn.paging = function() {
+    $.fn.paging = function() {
 
-};
+    };
 
-// 扩展方法
-;(function($, window, document, undefined) {
- 
-    $.fn.extend({
-        // 分页
-        /**
-         * [description]
-         * @param  {[type]}   parameter [description]
-         * @param  {Function} callback  [description]
-         * @return {[type]}             [description]
-         */
-        "pagination":function(parameter, callback) {
+    // 扩展方法
+    ;
+    (function($, window, document, undefined) {
 
-            //配置参数
-            var defaults = {
-                url: "javascript:;", // 跳转a标签地址
-                pagesSize: 10, // 分页总数默认10页
-                current: 1, //当前第几页,默认为第1页
-                prevCls: 'page_prev', //上一页class
-                nextCls: 'page_next', //下一页class
-                prevContent: '<', //上一页按钮内容，可更改
-                nextContent: '>', //下一页按钮内容，可更改
-                activeCls: 'active', //当前页选中状态
-                coping: false, //首页和尾页
-                little: false, //点点省略
-                homePage: '首页', //首页节点内容
-                endPage: '末页', //尾页节点内容
-                count: 3, //当前页前后分页个数
-                position: false, //显示当前页数/总页数
-                jump: false, //跳转到指定页数
-                jumpIptCls: 'jump-ipt', //文本框内容
-                jumpBtnCls: 'jump-btn', //跳转按钮
-                // jumpBtn: '跳转', //跳转按钮文本
-                jumpBtn: '确定', //跳转按钮文本
-                isCallback:true, // 是否初始化时进行回调
-                callback: function() {} //回调
-            };
-            var Pagination = function(element, options) {
-                //全局变量
-                var opts = options, //配置
-                    current = opts.current, //当前页
-                    $document = $(document),
-                    $obj = $(element); //容器
-                /**
-                 * 获取总页数
-                 * @return int pages 总页数
-                 */
-                this.getTotalPage = function() {
-                    // var pages = $obj.siblings('input[type="hidden"]').val();
-                    var pages = opts.pagesSize;
-                    return pages;
+        $.fn.extend({
+            // 分页
+            /**
+             * [description]
+             * @param  {[type]}   parameter [description]
+             * @param  {Function} callback  [description]
+             * @return {[type]}             [description]
+             */
+            "pagination": function(parameter, callback) {
+
+                //配置参数
+                var defaults = {
+                    url: "javascript:;", // 跳转a标签地址
+                    pagesSize: 10, // 分页总数默认10页
+                    current: 1, //当前第几页,默认为第1页
+                    prevCls: 'page_prev', //上一页class
+                    nextCls: 'page_next', //下一页class
+                    prevContent: '<', //上一页按钮内容，可更改
+                    nextContent: '>', //下一页按钮内容，可更改
+                    activeCls: 'active', //当前页选中状态
+                    coping: false, //首页和尾页
+                    little: false, //点点省略
+                    homePage: '首页', //首页节点内容
+                    endPage: '末页', //尾页节点内容
+                    count: 3, //当前页前后分页个数
+                    position: false, //显示当前页数/总页数
+                    jump: false, //跳转到指定页数
+                    jumpIptCls: 'jump-ipt', //文本框内容
+                    jumpBtnCls: 'jump-btn', //跳转按钮
+                    // jumpBtn: '跳转', //跳转按钮文本
+                    jumpBtn: '确定', //跳转按钮文本
+                    isCallback: true, // 是否初始化时进行回调
+                    callback: function() {} //回调
                 };
-                //获取当前页
-                this.getCurrent = function() {
-                    return current;
-                };
+                var Pagination = function(element, options) {
+                    //全局变量
+                    var opts = options, //配置
+                        current = opts.current, //当前页
+                        $document = $(document),
+                        $obj = $(element); //容器
+                    /**
+                     * 获取总页数
+                     * @return int pages 总页数
+                     */
+                    this.getTotalPage = function() {
+                        // var pages = $obj.siblings('input[type="hidden"]').val();
+                        var pages = opts.pagesSize;
+                        return pages;
+                    };
+                    //获取当前页
+                    this.getCurrent = function() {
+                        return current;
+                    };
 
-                /**
-                 * 动态填充分页页码
-                 * @param int index 页码
-                 */
-                this.filling = function(index) {
-                    var _self = this;
-                    var html = [];
-                    var home;
-                    var ellipsis = opts.little ? '<li><span>...</span></li>' : '';
-                    var pageCount = this.getTotalPage();
+                    /**
+                     * 动态填充分页页码
+                     * @param int index 页码
+                     */
+                    this.filling = function(index) {
+                        var _self = this;
+                        var html = [];
+                        var home;
+                        var ellipsis = opts.little ? '<li><span>...</span></li>' : '';
+                        var pageCount = this.getTotalPage();
 
-                    current = index || opts.current; //当前页码
-                    // 首页
-                    // if(current >= opts.count * 2 && current != 1 && pageCount != opts.count){
-                    if (current != 1 && pageCount != opts.count) {
-                        home = opts.coping && opts.homePage ? opts.homePage : '1';
-                        html.push(opts.coping ? '<li><a href="javascript:;" data-page="1">' + home + '</a></li>' : '');
-                    }
-
-                    if (current > 1) { //上一页
-                        html.push('<li><a href="javascript:;" class="' + opts.prevCls + '">' + opts.prevContent + '</a></li>' + ellipsis);
-                    } else {
-                        $obj.find('.' + opts.prevCls) && $obj.find('.' + opts.prevCls).remove();
-                    }
-
-                    var start = current - opts.count,
-                        end = current + opts.count;
-                    ((start > 1 && current < opts.count) || current == 1) && end++;
-                    (current > pageCount - opts.count && current >= pageCount) && start++;
-                    // 循环页数处理
-                    for (; start <= end; start++) {
-                        if (start <= pageCount && start >= 1) {
-                            if (start != current) {
-                                html.push('<li><a href="javascript:;" data-page="' + start + '">' + start + '</a></li>');
-                            } else {
-                                html.push('<li><span class="' + opts.activeCls + '">' + start + '</span></li>');
-                            }
+                        current = index || opts.current; //当前页码
+                        // 首页
+                        // if(current >= opts.count * 2 && current != 1 && pageCount != opts.count){
+                        if (current != 1 && pageCount != opts.count) {
+                            home = opts.coping && opts.homePage ? opts.homePage : '1';
+                            html.push(opts.coping ? '<li><a href="javascript:;" data-page="1">' + home + '</a></li>' : '');
                         }
-                    }
-                    if (current < pageCount) { //下一页
-                        html.push(ellipsis + '<li><a href="javascript:;" class="' + opts.nextCls + '">' + opts.nextContent + '</a></li>');
-                    } else {
-                        $obj.find('.' + opts.nextCls) && $obj.find('.' + opts.nextCls).remove();
-                    }
 
-                    // 末页
-                    // if(current + opts.count < pageCount && current >= 1 && pageCount > opts.count){
-                    if (current < opts.pagesSize && current >= 1 && pageCount > opts.count) {
-                        end = opts.coping && opts.endPage ? opts.endPage : pageCount;
-                        html.push(opts.coping ? '<li><a href="javascript:;" data-page="' + pageCount + '">' + end + '</a></li>' : '');
-                    }
-
-                    // 显示当前页数/总页数
-                    html.push(opts.position ? '<li><p class="paging-position">当前第<span class="now">1</span> /共 <span class="common"></span>页</p></li>' : "");
-
-                    // 添加输入框
-                    html.push(opts.jump ? '<li>到<input type="text" class="form-control ' + opts.jumpIptCls + '" placeholder="" aria-describedby="sizing-addon1">页</li><li><a href="javascript:;" class="' + opts.jumpBtnCls + '">' + opts.jumpBtn + '</a></li>' : '');
-
-
-                    $obj.empty().html('<nav aria-label="Page navigation"><ul class="pagination pagination-sm">' + html.join(" ") + '</ul></nav>');
-                   // 是否初始化时进行回调
-                    if(opts.isCallback){
-                        typeof opts.callback === 'function' && opts.callback.call(_self); 
-                    }else{
-                        $('.now').text(current);
-                        $('.common').text(pageCount);
-                    }
-                };
-
-                //绑定点击事件
-                this.eventBind = function() {
-                    var _self = this;
-                    var index;
-                    var pageCount = this.getTotalPage(); //总页数
-                    // 点击事件
-                    $obj.off().on('click', 'a', function() {
-                        if ($(this).hasClass(opts.nextCls)) {
-                            index = parseInt($obj.find('.' + opts.activeCls).text()) + 1;
-                        } else if ($(this).hasClass(opts.prevCls)) {
-                            index = parseInt($obj.find('.' + opts.activeCls).text()) - 1;
-                        } else if ($(this).hasClass(opts.jumpBtnCls)) {
-                            if ($obj.find('.' + opts.jumpIptCls).val() !== '') {
-                                index = parseInt($obj.find('.' + opts.jumpIptCls).val());
-                            } else {
-                                return;
-                            }
+                        if (current > 1) { //上一页
+                            html.push('<li><a href="javascript:;" class="' + opts.prevCls + '">' + opts.prevContent + '</a></li>' + ellipsis);
                         } else {
-                            index = parseInt($(this).data('page'));
+                            $obj.find('.' + opts.prevCls) && $obj.find('.' + opts.prevCls).remove();
                         }
-                        _self.filling(index);
-                      
-                        typeof opts.callback === 'function' && opts.callback.call(_self);
-                    });
-                    //输入跳转的页码
-                    $obj.on('input propertychange', '.' + opts.jumpIptCls, function() {
-                        var $this = $(this);
-                        var val = $this.val();
-                        var reg = /[^\d]/g;
-                        if (reg.test(val)) {
-                            $this.val(val.replace(reg, ''));
+
+                        var start = current - opts.count,
+                            end = current + opts.count;
+                        ((start > 1 && current < opts.count) || current == 1) && end++;
+                        (current > pageCount - opts.count && current >= pageCount) && start++;
+                        // 循环页数处理
+                        for (; start <= end; start++) {
+                            if (start <= pageCount && start >= 1) {
+                                if (start != current) {
+                                    html.push('<li><a href="javascript:;" data-page="' + start + '">' + start + '</a></li>');
+                                } else {
+                                    html.push('<li><span class="' + opts.activeCls + '">' + start + '</span></li>');
+                                }
+                            }
                         }
-                        (parseInt(val) > pageCount) && $this.val(pageCount);
-                        if (parseInt(val) === 0) { //最小值为1
-                            $this.val(1);
+                        if (current < pageCount) { //下一页
+                            html.push(ellipsis + '<li><a href="javascript:;" class="' + opts.nextCls + '">' + opts.nextContent + '</a></li>');
+                        } else {
+                            $obj.find('.' + opts.nextCls) && $obj.find('.' + opts.nextCls).remove();
                         }
-                    });
-                    //回车跳转指定页码
-                    $document.keydown(function(e) {
-                        if (e.keyCode == 13 && $obj.find('.' + opts.jumpIptCls).val()) {
-                            index = parseInt($obj.find('.' + opts.jumpIptCls).val());
-                            _self.filling(index);
-                          
+
+                        // 末页
+                        // if(current + opts.count < pageCount && current >= 1 && pageCount > opts.count){
+                        if (current < opts.pagesSize && current >= 1 && pageCount > opts.count) {
+                            end = opts.coping && opts.endPage ? opts.endPage : pageCount;
+                            html.push(opts.coping ? '<li><a href="javascript:;" data-page="' + pageCount + '">' + end + '</a></li>' : '');
+                        }
+
+                        // 显示当前页数/总页数
+                        html.push(opts.position ? '<li><p class="paging-position">当前第<span class="now">1</span> /共 <span class="common"></span>页</p></li>' : "");
+
+                        // 添加输入框
+                        html.push(opts.jump ? '<li>到<input type="text" class="form-control ' + opts.jumpIptCls + '" placeholder="" aria-describedby="sizing-addon1">页</li><li><a href="javascript:;" class="' + opts.jumpBtnCls + '">' + opts.jumpBtn + '</a></li>' : '');
+
+
+                        $obj.empty().html('<nav aria-label="Page navigation"><ul class="pagination pagination-sm">' + html.join(" ") + '</ul></nav>');
+                        // 是否初始化时进行回调
+                        if (opts.isCallback) {
                             typeof opts.callback === 'function' && opts.callback.call(_self);
-                        }
-                    });
-                };
-
-                //初始化
-                this.init = function() {
-                    this.filling(opts.current);
-                    this.eventBind();
-                };
-                this.init();
-            };
-
-
-            
-            if (typeof parameter == 'function') { //重载
-                callback = parameter;
-                parameter = {};
-            } else {
-                parameter = parameter || {};
-                callback = callback || function() {};
-            }
-            var options = $.extend({}, defaults, parameter);
-            return this.each(function() {
-                var pagination = new Pagination(this, options);
-                callback(pagination);
-            });
-        },
-        // 获取对应 input、 select、textarea 的name value 值
-        /**
-         * [description]
-         * @return {[type]} [description]
-         */
-        "getFormData":function() {
-            var result = {},
-                $this = $(this);
-            $(this).find("input,select,textarea").each(function() {
-
-                var name = $(this).attr("name"),
-                    type = $(this).attr("type"),
-                    value = "",
-                    size = 0;
-
-                if (((type == "checkbox" || type == "radio") && result[name] != undefined) || $(this).attr("noreturn") != undefined) size = $this.find("[name=\"" + name + "\"]").size();
-
-                switch (($(this)[0].tagName).toLowerCase()) {
-                    case "input":
-                        if (type == "text" || type == "hidden" || type == "password") value = $(this).val();
-                        else if (type == "radio") {
-                            var temp = $this.find("input[type=radio][name=" + name + "]:checked");
-                            if ($(this).attr("onlyvalue") == undefined || $(this).attr("onlyvalue") == "true")
-                                value = temp.val();
-                            else value = temp.val() + J.config.valueSeparated + $.trim(temp.parent().text());
-                        } else if (type == "checkbox") {
-                            if ($(this).attr("onlyvalue") == undefined || $(this).attr("onlyvalue") == "true") {
-                                value = $this.find("input[type=checkbox][name=" + name + "]:checked").map(function() {
-                                    return $(this).val();
-                                }).get().join(",");
-                            } else {
-                                value = $this.find("input[type=checkbox][name=" + name + "]:checked").map(function() {
-                                    return $(this).val() + J.config.valueSeparated + $.trim($(this).parent().text());
-                                }).get().join(J.config.valueItemSeparated);
-                            }
-
-                        }
-                        break;
-                    case "select":
-                        if ($(this).attr("onlyvalue") == undefined || $(this).attr("onlyvalue") == "true")
-                            value = $(this).val();
-                        else value = $(this).val() + J.config.valueSeparated + $(this).find("option:selected").text();
-                        break;
-                    case "textarea":
-                        value = $(this).val();
-                        break;
-                }
-
-                if (name) {
-                    if (size > 1 && type != "checkbox" && type != "radio") {
-                        result[name] = (result[name] ? result[name] : []);
-                        result[name][result[name].length] = $.trim(value);
-                    } else result[name] = $.trim(value);
-                }
-
-            });
-            return result;
-        },
-        // 表格合并单元格
-        /**
-         * [description]
-         * @param  {[type]} colIdx  要合并的列序号，从0开始
-         * @return {[type]} idNmae  需合并行区别标识符
-         * @return {[type]} state  标识状态 
-         */
-        "rowspan": function (colIdx,idNmae,state) {
-            return this.each(function () {
-                var that;
-                var id ;
-                $('tr', this).each(function (row) {
-                    $('td:eq(' + colIdx + ')', this).filter(':visible').each(function (col) {
-                        if(state){
-                            id = $(this).find(idNmae).attr(state)?$(this).find(idNmae).attr(state) == $(that).find(idNmae).attr(state):false;
-                        }else {
-                            id = idNmae?$(this).attr(idNmae) == $(that).attr(idNmae):$(this).html() == $(that).html();
-                        }
-                        if (that != null && id) {
-                            //console.log($(this).html()+' =='+ $(that).html())
-                            rowspan = $(that).attr("rowSpan");
-                            // 默认添加
-                            if (rowspan == undefined) {
-                                $(that).attr("rowSpan", 1);
-                                rowspan = $(that).attr("rowSpan");
-                            }
-                            rowspan = Number(rowspan) + 1;
-                            $(that).attr("rowSpan", rowspan);
-
-                            $(this).hide();
                         } else {
-                            that = this;
-                        } 
+                            $('.now').text(current);
+                            $('.common').text(pageCount);
+                        }
+                    };
 
+                    //绑定点击事件
+                    this.eventBind = function() {
+                        var _self = this;
+                        var index;
+                        var pageCount = this.getTotalPage(); //总页数
+                        // 点击事件
+                        $obj.off().on('click', 'a', function() {
+                            if ($(this).hasClass(opts.nextCls)) {
+                                index = parseInt($obj.find('.' + opts.activeCls).text()) + 1;
+                            } else if ($(this).hasClass(opts.prevCls)) {
+                                index = parseInt($obj.find('.' + opts.activeCls).text()) - 1;
+                            } else if ($(this).hasClass(opts.jumpBtnCls)) {
+                                if ($obj.find('.' + opts.jumpIptCls).val() !== '') {
+                                    index = parseInt($obj.find('.' + opts.jumpIptCls).val());
+                                } else {
+                                    return;
+                                }
+                            } else {
+                                index = parseInt($(this).data('page'));
+                            }
+                            _self.filling(index);
+
+                            typeof opts.callback === 'function' && opts.callback.call(_self);
+                        });
+                        //输入跳转的页码
+                        $obj.on('input propertychange', '.' + opts.jumpIptCls, function() {
+                            var $this = $(this);
+                            var val = $this.val();
+                            var reg = /[^\d]/g;
+                            if (reg.test(val)) {
+                                $this.val(val.replace(reg, ''));
+                            }
+                            (parseInt(val) > pageCount) && $this.val(pageCount);
+                            if (parseInt(val) === 0) { //最小值为1
+                                $this.val(1);
+                            }
+                        });
+                        //回车跳转指定页码
+                        $document.keydown(function(e) {
+                            if (e.keyCode == 13 && $obj.find('.' + opts.jumpIptCls).val()) {
+                                index = parseInt($obj.find('.' + opts.jumpIptCls).val());
+                                _self.filling(index);
+
+                                typeof opts.callback === 'function' && opts.callback.call(_self);
+                            }
+                        });
+                    };
+
+                    //初始化
+                    this.init = function() {
+                        this.filling(opts.current);
+                        this.eventBind();
+                    };
+                    this.init();
+                };
+
+
+
+                if (typeof parameter == 'function') { //重载
+                    callback = parameter;
+                    parameter = {};
+                } else {
+                    parameter = parameter || {};
+                    callback = callback || function() {};
+                }
+                var options = $.extend({}, defaults, parameter);
+                return this.each(function() {
+                    var pagination = new Pagination(this, options);
+                    callback(pagination);
+                });
+            },
+            // 获取对应 input、 select、textarea 的name value 值
+            /**
+             * [description]
+             * @return {[type]} [description]
+             */
+            "getFormData": function() {
+                var result = {},
+                    $this = $(this);
+                $(this).find("input,select,textarea").each(function() {
+
+                    var name = $(this).attr("name"),
+                        type = $(this).attr("type"),
+                        value = "",
+                        size = 0;
+
+                    if (((type == "checkbox" || type == "radio") && result[name] != undefined) || $(this).attr("noreturn") != undefined) size = $this.find("[name=\"" + name + "\"]").size();
+
+                    switch (($(this)[0].tagName).toLowerCase()) {
+                        case "input":
+                            if (type == "text" || type == "hidden" || type == "password") value = $(this).val();
+                            else if (type == "radio") {
+                                var temp = $this.find("input[type=radio][name=" + name + "]:checked");
+                                if ($(this).attr("onlyvalue") == undefined || $(this).attr("onlyvalue") == "true")
+                                    value = temp.val();
+                                else value = temp.val() + J.config.valueSeparated + $.trim(temp.parent().text());
+                            } else if (type == "checkbox") {
+                                if ($(this).attr("onlyvalue") == undefined || $(this).attr("onlyvalue") == "true") {
+                                    value = $this.find("input[type=checkbox][name=" + name + "]:checked").map(function() {
+                                        return $(this).val();
+                                    }).get().join(",");
+                                } else {
+                                    value = $this.find("input[type=checkbox][name=" + name + "]:checked").map(function() {
+                                        return $(this).val() + J.config.valueSeparated + $.trim($(this).parent().text());
+                                    }).get().join(J.config.valueItemSeparated);
+                                }
+
+                            }
+                            break;
+                        case "select":
+                            if ($(this).attr("onlyvalue") == undefined || $(this).attr("onlyvalue") == "true")
+                                value = $(this).val();
+                            else value = $(this).val() + J.config.valueSeparated + $(this).find("option:selected").text();
+                            break;
+                        case "textarea":
+                            value = $(this).val();
+                            break;
+                    }
+
+                    if (name) {
+                        if (size > 1 && type != "checkbox" && type != "radio") {
+                            result[name] = (result[name] ? result[name] : []);
+                            result[name][result[name].length] = $.trim(value);
+                        } else result[name] = $.trim(value);
+                    }
+
+                });
+                return result;
+            },
+            // 表格合并单元格
+            /**
+             * [description]
+             * @param  {[type]} colIdx  要合并的列序号，从0开始
+             * @return {[type]} idNmae  需合并行区别标识符
+             * @return {[type]} state  标识状态 
+             */
+            "rowspan": function(colIdx, idNmae, state) {
+                return this.each(function() {
+                    var that;
+                    var id;
+                    $('tr', this).each(function(row) {
+                        $('td:eq(' + colIdx + ')', this).filter(':visible').each(function(col) {
+                            if (state) {
+                                id = $(this).find(idNmae).attr(state) ? $(this).find(idNmae).attr(state) == $(that).find(idNmae).attr(state) : false;
+                            } else {
+                                id = idNmae ? $(this).attr(idNmae) == $(that).attr(idNmae) : $(this).html() == $(that).html();
+                            }
+                            if (that != null && id) {
+                                //console.log($(this).html()+' =='+ $(that).html())
+                                rowspan = $(that).attr("rowSpan");
+                                // 默认添加
+                                if (rowspan == undefined) {
+                                    $(that).attr("rowSpan", 1);
+                                    rowspan = $(that).attr("rowSpan");
+                                }
+                                rowspan = Number(rowspan) + 1;
+                                $(that).attr("rowSpan", rowspan);
+
+                                $(this).hide();
+                            } else {
+                                that = this;
+                            }
+
+                        });
                     });
                 });
-            });
-        },
-        // form表单submit 提交方法封装扩展
-        /**
-         * [description]
-         * @param  {[type]} options [description]
-         * @return {[type]}         [description]
-            $("#pageForm").formSubmit({
-                 success:function(that,data){ //提交成功的回调函数  
-                    if(data){//操作成功
-                        myFrame.alert("success","操作成功",function(){
-                            myFrame.closeBox(that);
-                        });
-                      
-                    }else{
+            },
+            // form表单submit 提交方法封装扩展
+            /**
+             * [description]
+             * @param  {[type]} options [description]
+             * @return {[type]}         [description]
+                $("#pageForm").formSubmit({
+                     success:function(that,data){ //提交成功的回调函数  
+                        if(data){//操作成功
+                            myFrame.alert("success","操作成功",function(){
+                                myFrame.closeBox(that);
+                            });
+                          
+                        }else{
+                            myFrame.alert("error","操作失败",function(){
+                                myFrame.closeBox(that);
+                            });
+                        }
+                    },
+                    error:function(that,info){
                         myFrame.alert("error","操作失败",function(){
                             myFrame.closeBox(that);
                         });
                     }
-                },
-                error:function(that,info){
-                    myFrame.alert("error","操作失败",function(){
-                        myFrame.closeBox(that);
-                    });
-                }
-            });
-         */
-        "formSubmit":function(options){
-            var _this = this,
-                url = _this.attr("action");
-            myFrame.request({
-                // url: $$(url),
-                url: url,
-                async: false,
-                type: "GET",
-                data: _this.getFormData(),
-                markShow: true,
-                loading: false,
-                loadingBox: $("body"),
-                success: function(d) {
-                    if (typeof options.success == "function") options.success(_this,d);
-                },
-                error: function(d) {
-                    if (typeof options.error == "function") options.error(_this,d);
-                }
-            });
-        }
-    });
+                });
+             */
+            "formSubmit": function(options) {
+                var _this = this,
+                    url = _this.attr("action");
+                myFrame.request({
+                    // url: $$(url),
+                    url: url,
+                    async: false,
+                    type: "GET",
+                    data: _this.getFormData(),
+                    markShow: true,
+                    loading: false,
+                    loadingBox: $("body"),
+                    success: function(d) {
+                        if (typeof options.success == "function") options.success(_this, d);
+                    },
+                    error: function(d) {
+                        if (typeof options.error == "function") options.error(_this, d);
+                    }
+                });
+            }
+        });
 
-})(jQuery, window, document);
-// });
+    })(jQuery, window, document);
+    // });
 })(window);

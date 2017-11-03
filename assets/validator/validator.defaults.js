@@ -32,6 +32,7 @@
 				chineseLetterNum:/^(?!\d)[\(\)（）a-zA-Z0-9_\u4e00-\u9fa5]*$/,
 				postcode:/^[0-9]{6}$/
 
+
 			},
 			messages:{
 				integer:"请输入正整数。",
@@ -55,7 +56,8 @@
 				password:"密码长度为6-20位，必须同时具备字母 和 数字。",
 				mon:"请输入金额，整数位数最多8位，精确到小数点后两位。",
 				chineseLetterNum:"只能输入汉字、字母、数字、下划线、括号，且不能以数字开头。",
-				postcode:"请输入正确的邮编"
+				postcode:"请输入正确的邮编",
+				chineseOrEnglish:"请输入中文或英文"
 			}
 		};
 	}
