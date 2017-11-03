@@ -8,7 +8,7 @@
            '<h4 class="modal-title" id="modalLabel">[Title]</h4>' +
            '</div>' +
            '<div class="modal-body clearfix">' +
-           '<p><i class="fa [status]" aria-hidden="true"></i>[Message]</p>' +
+           '<p class="modal-contP"><i class="fa [status]" aria-hidden="true"></i>[Message]</p>' +
            '</div>' +
            '<div class="modal-footer">' +
            '<button type="button" class="btn btn-default cancel" data-dismiss="modal">[BtnCancel]</button>' +
@@ -45,21 +45,19 @@
                    btncl: "取消",
                    width: 200,
                    auto: false,
-                   mask: true, // 是否显示遮罩
-                   status: "fa-exclamation" // 提示图标
+                   mask: true // 是否显示遮罩
+                   // status: "fa-exclamation" // 提示图标
                }, options || {});
                var modalId = _this.generateId();
                // options.status ||  // fa-check 成功 、fa-close 失败、fa-exclamation 默认感叹号  
-               // 
+
 
                if (options.status == "error") {
-                   options.status = 'fa-close'
-               }
-               if (options.status == "success") {
-                   options.status = 'fa-check'
-               }
-               if (options.status == "error") {
-                   options.status = 'fa-close'
+                  options.status = 'fa-close';
+               } else if (options.status == "success") {
+                  options.status = 'fa-check';
+               } else {
+                  options.status = 'fa-exclamation'; 
                }
 
                //
@@ -74,27 +72,27 @@
                    }[key];
                });
                $('body').append(content);
-
+               var target = $('#' + modalId);
                // bootStrap 自带模态框js 显示隐藏方法
-               $('#' + modalId).modal({
+               target.modal({
                    width: options.width,
                    // backdrop: 'static'
                    backdrop: options.mask ? false : 'static'
                });
-
+               
                // hidden.bs.modal的意思就是当弹出的模态框消失的时候，接下来回调的函数
-               $('#' + modalId).on('hide.bs.modal', function(e) {
+               target.on('hide.bs.modal', function(e) {
                    $('body').find('#' + modalId).next(".modal-backdrop").remove(); // 清楚已关闭的弹出框HTML
                    $('body').find('#' + modalId).remove(); // 清楚已关闭的弹出框HTML
 
                });
-               $('#' + modalId).on('hidden.bs.modal', function(e) {
+               target.on('hidden.bs.modal', function(e) {
                    $('body').find('#' + modalId).next(".modal-backdrop").remove(); // 清楚已关闭的弹出框HTML
                    $('body').find('#' + modalId).remove();
                });
                // 当模态框对用户可见时触发（将等待 CSS 过渡效果完成）。初始化时的回调函数
-               $('#' + modalId).on('shown.bs.modal', function(e) {
-                   _this.center($(this));
+               target.on('shown.bs.modal', function(e) {
+                  _this.center($(this));
                });
                return modalId;
            },
@@ -266,10 +264,10 @@
                    target.find('.modal-footer').remove();
                }
                // 加载页面碎片地址
+               myFrame.loadingShow(options.maskShow, options.loadingBox, options.loadingCallback); 
                target.find('.modal-body').load(options.url, function(response, status, xhr) { // response - 包含来自请求的结果数据、status - 包含请求的状态 、xhr - 包含 XMLHttpRequest 对象
                    target.find('.modal-body').data(options.data); // 传值到页面
                    myFrame.pageCallBack(target.find('.modal-body')); // 传回 当前 弹出框 dom节点
-                   myFrame.alignmentRow();
                }).css({
                    height: options.height // 改变弹出框内容高度  
                });
@@ -299,6 +297,7 @@
                            // 当模态框对用户可见时触发（shown.bs.modal将等待 CSS 过渡效果完成）。初始化时的回调函数
                            target.on('shown.bs.modal ', function(e) {
                                _this.center($(this));
+                               setTimeout(myFrame.loadingHide(options.loadingBox),300);
                                if (options.onReady(e)) options.onReady.call(target, e);
                            });
                        }
