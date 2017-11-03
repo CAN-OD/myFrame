@@ -80,7 +80,6 @@
                 options.cont.find(".myFrame_container").last().data(options.dataVal);  // 传值到页面
                 myFrame.pageCallBack(options.cont.find(".myFrame_container").last());  // 传回 当前 弹出框 dom节点
 
-                myFrame.alignmentRow();
                 // _this.loadingHide();
             }
         });
@@ -230,8 +229,8 @@
         var _this = this,
             ajaxTimeoutTest, result = "",
             async = (option.async === false ? false : true);
-        if (option.loading ) _this.loadingShow(option.markShow, option.loadingBox || $("body"));
-        if (option.loading != false) _this.loadingShow(option.markShow, option.loadingBox || $("body"));
+        if (!option.loading) myFrame.loadingShow();
+       
         ajaxTimeoutTest = $.ajax({
             type: option.type || 'POST',
             data: option.data || {},
@@ -244,21 +243,19 @@
             },
             success: function(data) {
                 result = data;
-                if (option.loading != false) _this.loadingHide(option.loadingBox);
-
                 if (typeof option.success == 'function') option.success(data);
+                if (!option.loading) setTimeout(myFrame.loadingHide,300);
             },
             error: function(ex) {
-                // myFrame.loadingHide();
+                myFrame.loadingHide();
                 switch (ex.status) {
                     case 0:
                         var msg = "服务器已经停止运行，请通知系统管理员检查并解决。";
 
                         if ($(".alert-alert").last().text().indexOf(msg) < 0) {
-                            // myFrame.alert(msg, function() { //如果有菜单遮罩 移除
-                            //     _this.partMaskHide();
-                            //     _this.loadingHide(option.loadingBox);
-                            // });
+                            myFrame.alert("error",msg, function() { //如果有菜单遮罩 移除
+                                // myFrame.loadingHide(option.loadingBox);
+                            });
                         }
                         break;
                     case 401:
@@ -276,15 +273,12 @@
                         break;
                 }
                 if (typeof option.error == 'function') option.error(ex);
-                // _this.loadingHide(option.loadingBox);
-                // _this.partMaskHide();
             },
             complete: function(XMLHttpRequest, status) { //请求完成后最终执行参数
                 if (status == 'timeout') { //超时,status还有success,error等值的情况
                     ajaxTimeoutTest.abort();
                     myFrame.alert("超时");
-                    _this.partMaskHide();
-                    _this.loadingHide(option.loadingBox);
+                    myFrame.loadingHide();
                 }
             }
         });
@@ -396,6 +390,7 @@
     };
     // 错误与成功提示框
     /**
+     * @param status 提示图标
      * @param message 提示内容
      * @param sure 点击确定按钮回调函数
      * @param mask loading效果 遮罩
@@ -405,7 +400,14 @@
      * @param width  宽度
      * @param height 高度
      */
-    myFrame.alert = function(message, sure, mask, title, btnok, btncl, width, height) {
+    myFrame.alert = function(status,message, sure, mask, title, btnok, btncl, width, height) {
+
+        if(arguments[0] == "success" || arguments[0] == "error"){
+            status = arguments[0];
+        }else {
+            message = status;
+            status = undefined;
+        }
         var _this = this;
         var myAlert = myPopup.alert({
             title: title || "系统提示",
@@ -416,7 +418,7 @@
             width: width || 800,
             height: height || 550,
             auto: false,
-            status: undefined,
+            status: status,
         });
         // 点击确定时触发
         myAlert.on(function() {
@@ -431,6 +433,7 @@
     };
     // 再次确认提示框
     /**
+     * @param status 提示图标
      * @param message 提示内容
      * @param sure 点击确定按钮回调函数
      * @param close 点击取消按钮回调函数
@@ -441,7 +444,7 @@
      * @param width  宽度
      * @param height 高度 
      */
-    myFrame.confirm = function(message, sure,notSure,title,mask, btnok, btncl, width, height) {
+    myFrame.confirm = function(status,message, sure,notSure,title,mask, btnok, btncl, width, height) {
         var _this = this;
         var close = close || function(){};
         var myAlert = myPopup.confirm({
@@ -454,7 +457,7 @@
             height: height || 550,
             auto: false,
             // status: undefined,
-            // status: status,
+            status: undefined, 
             onReady: function(dom, e) {
 
             },
@@ -584,6 +587,57 @@
             }
         });
     };
+
+
+    // 显示加载提示框
+    /**
+     * [loadingShow description]
+     * @param  {[type]}   maskShow   [ 遮罩层是否显示]
+     * @param  {[type]}   loadingBox [加载显示容器]
+     * @param  {Function} callback   [加载后回调函数]
+     * @return {[type]}              [description]
+     */
+    myFrame.loadingShow = function (maskShow, loadingBox, callback) {
+        loadingBox = loadingBox || $("body");
+        var w = loadingBox.width(),
+            h = loadingBox.height(),
+            loadingDom = loadingBox.children('.page-loading');
+        if (loadingDom.length > 0) {
+            loadingDom.show();
+        } else {
+            loadingBox.append($("<div  class=\"page-loading\"><span class=\"text-hide\">加载中，请稍后...</span></div>"));
+        }
+        if(!maskShow) myFrame.maskShow(loadingBox);
+        if (typeof callback == "function") callback();
+    };
+    
+    // 隐藏加载提示框
+    /**
+     * [loadingHide description]
+     * @param  {[type]} loadingBox [需要隐藏的加载层容器]
+     * @return {[type]}            [description]
+     */
+    myFrame.loadingHide = function (loadingBox) {
+        myFrame.maskHide();
+        loadingBox ? loadingBox.find(".page-loading").fadeOut("fast") : $("body").children(".page-loading").fadeOut("fast");
+    };
+    
+    // 遮罩层 显示
+    myFrame.maskShow = function (maskDOm) {
+        var mask = $(".mask");
+        if (mask.size() > 0) {
+            mask.eq(0).show();
+        } else {
+            $("body").append("<div class=\"mask\"></div>");
+        }
+    };
+    // 遮罩层 隐藏
+    myFrame.maskHide = function () {
+        $(".mask").css("filter", "alpha(opacity=15)");
+        $(".mask").fadeOut("fast");
+    };
+
+
     //解析url参数
     /**
      * [getUrlString description]
@@ -901,10 +955,9 @@
      * @return {[type]}         [description]
      */
     myFrame.validator = function(options){
-        
         $(options.elem).validator({
             submitBtnId:options.submitBtnId || "", // 提交按钮 ID 
-            backColor:options.backColor || [2, 'red'],// 提示框 方向 颜色
+            backColor:options.backColor || [3, '#78BA32'],// 提示框 方向 颜色
             sure:function(that){  // 验证成功后的回调函数 that 当前提交按钮
                 if (typeof options.sure == "function") options.sure(that);
             }
@@ -989,33 +1042,10 @@
         });
     };
 
-    // 表单 整行对齐 js控制
-    myFrame.alignmentRow = function(){
-        var rowDom = $(".alignment_row"),
-            formDom = rowDom.parents("form"),
-            formGroup = formDom.find(".form-group"),
-            formGroupEq,
-            labelWidth,
-            paddLeft=0; 
-        for(var i=0;i<formGroup.length;i++){
-            formGroupEq = formGroup.eq(i);
-            if(parseInt(rowDom.css("padding-left"))<0){
-              paddLeft = parseInt(formGroupEq.css("padding-left"));  
-            }
-            if(!formGroupEq.hasClass('alignment_row') && formGroupEq.find('alignment_row').length==0 ){
-                labelWidth = formGroupEq.children('label').outerWidth(true) + paddLeft-1; 
-                rowDom.find('.alignment_row_left').css("width",labelWidth+"px");    
-                // rowDom.find('.alignment_row_right').css("width",rowDom.outerWidth(true)-labelWidth-20+"px");    
-                formDom.find(".edui-editor").css("width",'100%');
-                break;
-            }      
-        }
-    };
 
-
-    // 
-    myFrame.sizeDom = "";
+ 
     // iframe 循环查找相应dom
+    myFrame.sizeDom = ""; // 用于记录 找到的iframe节点对象 
     myFrame.iframeCont = function(state,childIframe){
         var iframe = childIframe || $("iframe"),
             name;

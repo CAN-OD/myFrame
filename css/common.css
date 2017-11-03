@@ -132,6 +132,38 @@
 .tAlignR {
   text-align: right !important;
 }
+/* -------------- page loading加载 style ------------------------------- */
+.page-loading {
+  width: 316px;
+  height: 134px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-top: -67px;
+  margin-left: -158px;
+  z-index: 10000;
+  background: url('../../common/img/loading-bg.png') no-repeat;
+}
+.page-loading span {
+  width: 50px;
+  height: 54px;
+  position: absolute;
+  left: 128px;
+  bottom: 17px;
+  background: url("../../common/img/loading.gif") no-repeat;
+}
+/*mask style*/
+.mask {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  opacity: 0.15;
+  filter: alpha(opacity=15);
+  background-color: #666;
+}
 /*---------------------------- 解决 bootstrap 位移问题 弹出框加body padding-right:17px问题----------------------------------*/
 body,
 body.modal-open {
@@ -141,10 +173,6 @@ body.modal-open {
 /*-------------------------------------模态框 垂直居中----------------------------------------*/
 .modal_wrapper {
   display: block;
-  /*display: table;*/
-  /*width:100%;*/
-  /*height: 100%;*/
-  /* margin: 0px auto;*/
 }
 .modal-dialog {
   margin: auto;
@@ -175,6 +203,10 @@ body.modal-open {
 }
 .modal-body i.fa-exclamation {
   color: #f8ac59;
+}
+.modal-body .modal-contP {
+  word-break: break-all;
+  word-wrap: break-word;
 }
 /*----------------------------------- 弹出框层级控制避免与 UEditor 自带控件层级冲突----------------------------*/
 .modal {
