@@ -64,7 +64,6 @@
             type: "GET",
             dataType: "html",
             data: options.data || "",
-            markShow: true,
             loading: {
                 show: options.show || true,
                 maskShow:options.maskShow || true,
@@ -201,15 +200,21 @@
      * @param  {Function} callback [description]
      * @return {[type]}            [description]
      */
-    myFrame.fileIsExist = function(filepath, callback) {
+    myFrame.fileIsExist = function(filepath, callback,loading) {
+        if(loading){
+            var laod = {
+                show: loading.show || false,
+                maskShow:loading.maskShow || false,
+                loadingBox:loading.loadingBox,
+                callback:loading.callback 
+            };
+        }
         return this.request({
             url: filepath,
             async: false,
             type: "GET",
             dataType: "html",
-            markShow: true,
-            loading: false,
-            loadingBox: $("body"),
+            loading: laod,
             error: function() {
                 if (typeof callback == "function") callback(false);
             },
@@ -229,7 +234,7 @@
             ajaxTimeoutTest, result = "",
             async = (option.async === false ? false : true),
             loading = option.loading;
-        if (loading.show) myFrame.loadingShow(loading.maskShow,loading.loadingBox,loading.callback);
+        if (loading && loading.show) myFrame.loadingShow(loading.maskShow,loading.loadingBox,loading.callback);
 
         ajaxTimeoutTest = $.ajax({
             type: option.type || 'POST',
@@ -293,16 +298,22 @@
      * @param loadingBox loading效果展示容器
      * @param markShow loading效果 遮罩
      */
-    myFrame.getJson = function(url, type, data, dataType, loading, loadingBox, markShow) {
+    myFrame.getJson = function(url, type, data, dataType, loading) {
+        if(loading){
+            var laod = {
+                show: loading.show || false,
+                maskShow:loading.maskShow || false,
+                loadingBox:loading.loadingBox,
+                callback:loading.callback 
+            };
+        }
         return this.request({
             url: url,
             data: data || {},
             async: false,
             type: type || "get",
             dataType: dataType || "json",
-            markShow: markShow || true,
-            loading: loading || false,
-            loadingBox: loadingBox || $("body")
+            loading: laod,
         });
     };
     // 解析清地址或接口地址
@@ -445,6 +456,12 @@
      * @param height 高度 
      */
     myFrame.confirm = function(status, message, sure, notSure, title, mask, btnok, btncl, width, height) {
+        if (arguments[0] == "success" || arguments[0] == "error") {
+            status = arguments[0];
+        } else {
+            message = status;
+            status = undefined;
+        }
         var _this = this;
         var close = close || function() {};
         var myAlert = myPopup.confirm({
@@ -457,7 +474,7 @@
             height: height || 550,
             auto: false,
             // status: undefined,
-            status: undefined,
+            status: status,
             onReady: function(dom, e) {
 
             },
@@ -1443,16 +1460,22 @@
              */
             "formSubmit": function(options) {
                 var _this = this,
-                    url = _this.attr("action");
+                    url = _this.attr("action"),
+                    loading = options.loading;
+                if(loading){
+                    var laod = {
+                        show: loading.show || true,
+                        maskShow:loading.maskShow || true,
+                        loadingBox:loading.loadingBox,
+                        callback:loading.callback 
+                    };
+                }
                 myFrame.request({
-                    // url: $$(url),
                     url: url,
                     async: false,
                     type: "GET",
                     data: _this.getFormData(),
-                    markShow: true,
-                    loading: false,
-                    loadingBox: $("body"),
+                    loading:laod,
                     success: function(d) {
                         if (typeof options.success == "function") options.success(_this, d);
                     },

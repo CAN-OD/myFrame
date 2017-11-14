@@ -313,7 +313,6 @@
 			} else if (label == "select") {
 				msg = (msg ? msg : o.getMessage("required"));
 				name = target.attr("name");
-				debugger
 				// if(target.next(".controls-select").is("hidden")){
 				// 	o.passed[name]=true;
 				// }
@@ -511,7 +510,7 @@
 				// 检验成功时的回调方法 ，处理后续方法
 				if (o.result()) {
 					var succ = o.get("sure");
-					succ.call($(this));
+					succ($(this));
 				}
 				return o.result();
 			});
