@@ -58,7 +58,6 @@
             myFrame.loadCSS($$(options.hrefType + ".css"));
         }
 
-        // _this.loadingShow(true, $("body"));
         return _this.request({
             url: $$(options.href),
             async: false,
@@ -66,8 +65,12 @@
             dataType: "html",
             data: options.data || "",
             markShow: true,
-            loading: false,
-            loadingBox: $("body"),
+            loading: {
+                show: options.show || true,
+                maskShow:options.maskShow || true,
+                loadingBox:options.loadingBox,
+                callback:options.callback 
+            },
             success: function(d) {
                 if (options.type == "html") {
                     options.cont.html(d);
@@ -79,8 +82,6 @@
 
                 options.cont.find(".myFrame_container").last().data(options.dataVal); // 传值到页面
                 myFrame.pageCallBack(options.cont.find(".myFrame_container").last()); // 传回 当前 弹出框 dom节点
-
-                // _this.loadingHide();
             }
         });
     };
@@ -101,7 +102,6 @@
             _this = this;
         var option = $.extend({}, defaultOption, option);
         var state = false;
-        // _this.loadingShow(true, $("body"));
         //先加载 css文件  后渲染  html 模块  保障用户体验
         if (option.url.indexOf(".html") > 0) {
             var pageUrl = option.url.split(".html")[0] + ".css";
@@ -120,7 +120,6 @@
                         }
                     });
                     option.el.append(d);
-                    _this.loadingHide();
                     if (typeof callBack == "function") callBack(option.el, $(d));
                 }
             });
@@ -228,8 +227,9 @@
     myFrame.request = function(option) {
         var _this = this,
             ajaxTimeoutTest, result = "",
-            async = (option.async === false ? false : true);
-        if (!option.loading) myFrame.loadingShow();
+            async = (option.async === false ? false : true),
+            loading = option.loading;
+        if (loading.show) myFrame.loadingShow(loading.maskShow,loading.loadingBox,loading.callback);
 
         ajaxTimeoutTest = $.ajax({
             type: option.type || 'POST',
@@ -242,9 +242,9 @@
                 if (typeof option.beforeSend == "function") option.beforeSend();
             },
             success: function(data) {
+                myFrame.loadingHide();
                 result = data;
                 if (typeof option.success == 'function') option.success(data);
-                if (!option.loading) setTimeout(myFrame.loadingHide, 300);
             },
             error: function(ex) {
                 myFrame.loadingHide();
@@ -275,10 +275,10 @@
                 if (typeof option.error == 'function') option.error(ex);
             },
             complete: function(XMLHttpRequest, status) { //请求完成后最终执行参数
+                myFrame.loadingHide();
                 if (status == 'timeout') { //超时,status还有success,error等值的情况
                     ajaxTimeoutTest.abort();
                     myFrame.alert("超时");
-                    myFrame.loadingHide();
                 }
             }
         });
@@ -607,7 +607,7 @@
         } else {
             loadingBox.append($("<div  class=\"page-loading\"><span class=\"text-hide\">加载中，请稍后...</span></div>"));
         }
-        if (!maskShow) myFrame.maskShow(loadingBox);
+        if (maskShow) myFrame.maskShow(loadingBox);
         if (typeof callback == "function") callback();
     };
 
@@ -618,8 +618,10 @@
      * @return {[type]}            [description]
      */
     myFrame.loadingHide = function(loadingBox) {
-        myFrame.maskHide();
-        loadingBox ? loadingBox.find(".page-loading").fadeOut("fast") : $("body").children(".page-loading").fadeOut("fast");
+        setTimeout(function(){
+            myFrame.maskHide();
+            loadingBox ? loadingBox.find(".page-loading").fadeOut("fast") : $("body").children(".page-loading").fadeOut("fast");
+        }, 300);
     };
 
     // 遮罩层 显示
@@ -1047,17 +1049,21 @@
 
     // iframe 循环查找相应dom
     myFrame.sizeDom = ""; // 用于记录 找到的iframe节点对象 
+    /**
+    * state 需要查找的iframe 的名字节点ID
+    * childIframe  递归函数所需要的参数值 （可不传）
+    */
     myFrame.iframeCont = function(state, childIframe) {
-        var iframe = childIframe || $("iframe"),
+        var iframe = childIframe || $(window.parent.document).find("iframe"),
             name;
-        for (var i = 0; i < iframe.length; i++) {
+        for(var i=0;i<iframe.length;i++){
             name = iframe.eq(i).attr("id");
-            if (name == state) {
+            if(name == state){
                 _this.sizeDom = iframe.eq(i);
                 break;
             }
-            if (iframe.eq(i).contents().find("iframe").length > 0) {
-                _this.iframeCont(state, iframe.eq(i).contents().find("iframe"));
+            if(iframe.eq(i).contents().find("iframe").length>0){
+                _this.iframeCont(state,iframe.eq(i).contents().find("iframe"));
             }
         }
         return _this.sizeDom;
