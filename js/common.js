@@ -412,29 +412,36 @@
      * @param height 高度
      */
     myFrame.alert = function(status, message, sure, mask, title, btnok, btncl, width, height) {
-
         if (arguments[0] == "success" || arguments[0] == "error") {
-            status = arguments[0];
+            var status2 = arguments[0];
         } else {
-            message = status;
-            status = undefined;
+            var message2 = arguments[0],
+                status2 = undefined,
+                sure2 = arguments[1],
+                mask2 = arguments[2],
+                title2 = arguments[3],
+                btnok2 = arguments[4],
+                btncl2 = arguments[5],
+                width2 = arguments[6],
+                height2 = arguments[7];
         }
+
         var _this = this;
         var myAlert = myPopup.alert({
-            title: title || "系统提示",
-            message: message || "提示内容",
-            mask: mask,
-            btnok: btnok || "确定",
-            btncl: btncl || "取消",
-            width: width || 800,
-            height: height || 550,
+            title: title2 || "系统提示",
+            message: message2 || "提示内容",
+            mask: mask2,
+            btnok: btnok2 || "确定",
+            btncl: btncl2 || "取消",
+            width: width2 || 800,
+            height: height2 || 550,
             auto: false,
-            status: status,
+            status: status2,
         });
         // 点击确定时触发
         myAlert.on(function() {
-            if (typeof sure == "function") {
-                sure();
+            if (typeof sure2 == "function") {
+                sure2();
             }
         });
         // 关闭按钮
@@ -457,24 +464,32 @@
      */
     myFrame.confirm = function(status, message, sure, notSure, title, mask, btnok, btncl, width, height) {
         if (arguments[0] == "success" || arguments[0] == "error") {
-            status = arguments[0];
+            status2 = arguments[0];
         } else {
-            message = status;
-            status = undefined;
+            var message2 = arguments[0],
+                status2 = undefined,
+                sure2 = arguments[1],
+                notSure2 = arguments[2],
+                title2 = arguments[3],
+                mask2 = arguments[4],
+                btnok2 = arguments[5],
+                btncl2 = arguments[6],
+                width2 = arguments[7],
+                height2 = arguments[8];
         }
         var _this = this;
         var close = close || function() {};
         var myAlert = myPopup.confirm({
-            title: title || "系统提示",
-            message: message || "提示内容",
-            mask: mask,
-            btnok: btnok || "确定",
-            btncl: btncl || "取消",
-            width: width || 800,
-            height: height || 550,
+            title: title2 || "系统提示",
+            message: message2 || "提示内容",
+            mask: mask2,
+            btnok: btnok2 || "确定",
+            btncl: btncl2 || "取消",
+            width: width2 || 800,
+            height: height2 || 550,
             auto: false,
             // status: undefined,
-            status: status,
+            status: status2,
             onReady: function(dom, e) {
 
             },
@@ -485,13 +500,11 @@
 
         // 点击确定时触发
         myAlert.onSure(function(target) {
-            if (typeof sure == "function") return sure(target);
+            if (typeof sure2 == "function") return sure2(target);
         });
         // 点击关闭时触发
         myAlert.onClose(function(target) {
-            if (typeof sure == "function") {
-                if (typeof notSure == "function") return notSure(target);
-            }
+            if (typeof notSure2 == "function") return notSure2(target);
         });
         // 关闭按钮
         myAlert.hide(function() {
