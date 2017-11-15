@@ -412,18 +412,27 @@
      * @param height 高度
      */
     myFrame.alert = function(status, message, sure, mask, title, btnok, btncl, width, height) {
+        var status2, message2, sure2, mask2, title2, btnok2, btncl2, width2, height2;
         if (arguments[0] == "success" || arguments[0] == "error") {
-            var status2 = arguments[0];
+            status2 = arguments[0];
+            message2 = arguments[1];
+            sure2 = arguments[2];
+            mask2 = arguments[3];
+            title2 = arguments[4];
+            btnok2 = arguments[5];
+            btncl2 = arguments[6];
+            width2 = arguments[7];
+            height2 = arguments[8];
         } else {
-            var message2 = arguments[0],
-                status2 = undefined,
-                sure2 = arguments[1],
-                mask2 = arguments[2],
-                title2 = arguments[3],
-                btnok2 = arguments[4],
-                btncl2 = arguments[5],
-                width2 = arguments[6],
-                height2 = arguments[7];
+            status2 = undefined;
+            message2 = arguments[0];
+            sure2 = arguments[1];
+            mask2 = arguments[2];
+            title2 = arguments[3];
+            btnok2 = arguments[4];
+            btncl2 = arguments[5];
+            width2 = arguments[6];
+            height2 = arguments[7];
         }
 
         var _this = this;
@@ -463,19 +472,29 @@
      * @param height 高度 
      */
     myFrame.confirm = function(status, message, sure, notSure, title, mask, btnok, btncl, width, height) {
+        var status2, message2, sure2, notSure2, title2, mask2, btnok2, btncl2, width2, height2;
         if (arguments[0] == "success" || arguments[0] == "error") {
             status2 = arguments[0];
+            message2 = arguments[1];
+            sure2 = arguments[2];
+            notSure2 = arguments[3];
+            title2 = arguments[4];
+            mask2 = arguments[5];
+            btnok2 = arguments[6];
+            btncl2 = arguments[7];
+            width2 = arguments[8];
+            height2 = arguments[9];
         } else {
-            var message2 = arguments[0],
-                status2 = undefined,
-                sure2 = arguments[1],
-                notSure2 = arguments[2],
-                title2 = arguments[3],
-                mask2 = arguments[4],
-                btnok2 = arguments[5],
-                btncl2 = arguments[6],
-                width2 = arguments[7],
-                height2 = arguments[8];
+            status2 = undefined;
+            message2 = arguments[0];
+            sure2 = arguments[1];
+            notSure2 = arguments[2];
+            title2 = arguments[3];
+            mask2 = arguments[4];
+            btnok2 = arguments[5];
+            btncl2 = arguments[6];
+            width2 = arguments[7];
+            height2 = arguments[8];
         }
         var _this = this;
         var close = close || function() {};
