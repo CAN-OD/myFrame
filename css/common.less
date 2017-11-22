@@ -71,6 +71,13 @@
 .tAlignL{text-align: left !important;}
 .tAlignR{text-align: right !important;}
 
+// input 清除内边框
+*:focus {outline: none;}
+input {
+  outline: none;
+  &:focus {outline:none}
+}
+
 /* -------------- page loading加载 style ------------------------------- */
 .page-loading {
     width: 316px;
@@ -219,6 +226,7 @@ h6.nav-title {
 }
 .btn {
     border-radius: 3px;
+    outline: none;
 }
 .btn-white {
      color: inherit;

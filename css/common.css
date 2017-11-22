@@ -132,6 +132,15 @@
 .tAlignR {
   text-align: right !important;
 }
+*:focus {
+  outline: none;
+}
+input {
+  outline: none;
+}
+input:focus {
+  outline: none;
+}
 /* -------------- page loading加载 style ------------------------------- */
 .page-loading {
   width: 316px;
@@ -261,6 +270,7 @@ h6.nav-title:after {
 }
 .btn {
   border-radius: 3px;
+  outline: none;
 }
 .btn-white {
   color: inherit;
