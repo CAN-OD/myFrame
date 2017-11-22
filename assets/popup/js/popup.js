@@ -269,10 +269,10 @@
                    target.find('.modal-body').data(options.data); // 传值到页面
                    myFrame.pageCallBack(target.find('.modal-body')); // 传回 当前 弹出框 dom节点
                    // 滚动条加载
-                    myFrame.jScrollPane({
-                      elem:target.find('.modal-body'),
-                      autoReinitialise:true
-                    });
+//                    myFrame.jScrollPane({
+//                      elem:target.find('.modal-body'),
+//                      autoReinitialise:true
+//                    });
                }).css({
                    height: options.height // 改变弹出框内容高度  
                });
