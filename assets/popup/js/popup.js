@@ -277,11 +277,13 @@
                    height: options.height // 改变弹出框内容高度  
                });
 
-               target.modal('show').find(".modal-dialog").css({
+           
+               target.modal({backdrop:options.backdrop, keyboard: options.keyboard,show:true}).find(".modal-dialog").css({
                    "width": options.width // 改变弹出框内容宽度 
                });
+          
 
-               target.on('hidden.bs.modal', function(e) {
+              target.on('hidden.bs.modal', function(e) {
                    $('body').find('#' + modalId).next(".modal-backdrop").remove(); // 清楚已关闭的弹出框HTML
                    $('body').find(target).remove();
                    layer.closeAll('tips');
