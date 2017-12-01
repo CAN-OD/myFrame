@@ -1008,14 +1008,15 @@
      * @return {[type]}         [description]
      */
     myFrame.validator = function(options) {
-        $(options.elem).validator({
+        var option = $.extend({}, {
             submitBtnId: options.submitBtnId || "", // 提交按钮 ID 
             scrollDom: options.scrollDom, // 提交验证时定位
             backColor: options.backColor || [3, '#78BA32'], // 提示框 方向 颜色
             sure: function(that) { // 验证成功后的回调函数 that 当前提交按钮
                 if (typeof options.sure == "function") options.sure(that);
             }
-        });
+        }, options || {});
+        $(options.elem).validator(option);
     };
 
 
