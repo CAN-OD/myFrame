@@ -1170,6 +1170,112 @@
         WebpageZoomDetect.start(option); 
     };
 
+    /**
+     * 轮播图移动方法
+     * /
+     * @param  {[type]} contDom   [description] 轮播大容器节点
+     * @param  {[type]} scrollDom [description] 内部ul容器节点
+     * @param  {[type]} leftDom   [description] 向左按钮
+     * @param  {[type]} rightDom  [description] 向右按钮
+     * @param  {[type]} automatic [description] 是否启动无缝滚动效果
+     * @param  {[type]} time      [description] 动画时间
+     * @param  {[type]} speed     [description] 每次动画移动距离
+     * @param  {[type]} number    [description] 显示个数
+     * @return {[type]}           [description]
+     */
+    myFrame.slideMove = function(options){
+        var options =  $.extend({}, {
+            number : false, //显示个数    
+            seamless : false, //是否启动无缝滚动效果  
+            time : 2000  ,     //动画时间
+            speed : false       //每次动画移动距离
+        }, options || {});
+        var oDiv= $(options.contDom), 
+            contDom = oDiv.find(options.scrollDom),   //最外层div
+            oUl= contDom.find('ul'),                 //中间层ul
+            oLi= oUl.find('li'),                //每一个板块li
+            speed,oli,Length,oUlwidth;                         
+        // 是否计算显示区域,均等分布li宽度                                
+        if(options.number){
+            oLi.css({"width":contDom.outerWidth(true)/options.number-30+"px"});  
+        }
+       
+        // 复制两份ul里面的内容到ul中，为的是实现无缝
+        if(options.seamless){
+            oLi.clone(true).appendTo(oUl);
+        }
+
+        speed=  options.speed || -oLi.outerWidth(true);  // 每次动画移动距离
+        oli = oUl.children("li");                     // 单个li节点
+        Length = oli.length ;                         // li标签个数
+        oUlwidth = oli.eq(0).outerWidth(true)*Length;     // ul的总宽aaaa度
+        oUl.css("width",oUlwidth+"px");  // 计算新的ul的长度
+
+        //----------动画移动方法集合 -------------
+        var animation = {
+           // 无缝滚动情况下 向左移动
+           move:function (){
+                if(oUl[0].offsetLeft<=-oUl[0].offsetWidth/2){
+                    oUl[0].style.left='0';
+                }
+                //设置ul的left值
+                oUl[0].style.left=oUl[0].offsetLeft+speed+'px';      //每次增加移动距离
+            },
+            //向左移动
+            moveLeft:function (){
+                // 开启无缝滚动式 点击切换也是无缝效果
+                if(options.seamless){
+                    if(oUl[0].offsetLeft<=-oUl[0].offsetWidth/2){
+                        oUl[0].style.left='0';
+                    }
+                }
+                // ul总宽度 - ul已经移动的left长度 > 显示板块容器宽度
+                if(oUlwidth-Math.abs(oUl[0].offsetLeft)>contDom.outerWidth(true)){ 
+                    //设置ul的left值
+                    oUl[0].style.left=oUl[0].offsetLeft+speed+'px';      //每次增加移动距离
+                }
+            },
+            //向右移动
+            moveRight:function (){
+                // 开启无缝滚动式 点击切换也是无缝效果
+                if(options.seamless){
+                    if(oUl[0].offsetLeft ==0){
+                        oUl[0].style.left= -oUl[0].offsetWidth/2+'px';
+                    }
+                }
+                //  ul已经移动的left长度 >= li自身宽度
+                if(Math.abs(oUl[0].offsetLeft)>=oLi.outerWidth(true) ){ 
+                    //设置ul的left值
+                    oUl[0].style.left = oUl[0].offsetLeft-speed+'px';      //每次增加移动距离
+                }
+            }
+        }; 
+     
+        // 向右移动点击事件
+        oDiv.find(options.leftDom).on("click",function(){
+            animation.moveLeft();
+        });
+
+        // 向左移动点击事件
+        oDiv.find(options.rightDom).on("click",function(){
+            animation.moveRight();
+        });
+
+        // 是否 自动移动
+        if(options.automatic){
+            var timer=setInterval(animation.move,options.time);
+            //阻止动画效果
+            oDiv.hover(function(){
+                clearInterval(timer); // 清除动画
+            },function(){
+                clearInterval(timer); // 清除动画
+                timer=setInterval(animation.move,options.time); // 再次启动动画
+            }); 
+        }
+    };
+
+
+
     // 访问地址路径封装
     // var contextPath = window.location.origin;
     // window.$$ = function(uri) {
