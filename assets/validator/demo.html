@@ -5,7 +5,6 @@
 <title>demo</title>
 <link type="text/css" rel="stylesheet" href="validator.css"/>
 <script src="http://code.jquery.com/jquery-1.7.2.min.js" type="text/javascript"></script>
-
 <script src="validator.js" type="text/javascript"></script>
 <script src="validator.defaults.js" type="text/javascript"></script>
 <script src="../layer/layer.min.js" type="text/javascript"></script>
@@ -23,16 +22,16 @@ div{margin:5px 0;}
     <div><label>测试1：</label><input type="text" name="four"/></div>
     <div><label>测试1：</label><input type="text" name="five"/></div>
     <div><label>测试1：</label><input type="text" name="sex"/></div>
-    <div><label>测试1：</label><input type="text" name="seven" style="width:240px;" required="required" rule="chinese" tips=""/></div>
+    <!-- <div><label>测试1：</label><input type="text" name="seven" style="width:240px;" required rule="chinese" tips=""/></div> -->
     <div><label>测试1：</label><input type="text" name="nighth"/></div>
     <div><label>测试1：</label><input type="text" name="test111"/>
-    	<select name="" id="" required >
+    	<select name="asss" required  id="" required >
     		<option value=""></option>
 	    	<option value="1">1</option>
 	    	<option value="2">2</option>
 	    </select>
 	</div>
-    <input type="text"  class=""  maxlength="256"  value="" required  rule="idcard" name="name"/>
+    <!-- <input type="text"  class="" id='card' maxlength="18" required  value="" name="card"/> -->
     <button id="J-submit">提交</button>
 </form>
 <script type="text/javascript">
@@ -40,7 +39,24 @@ div{margin:5px 0;}
 myFrame.validator({
 	elem:"#pageForm", // 表单容器 id或class名字
     submitBtnId:"J-submit", // 提交按钮 ID 
-    sure:function(that){  // 验证成功后的回调函数
+    sure:function(that,o){  // 验证成功后的回调函数
+    	$("#pageForm").validatorCustom( {
+            dom : "#card",// 验证dom
+            rule : /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,// 正则表达式
+            message : "请输入有效的身份证号码。",// 中文提示语句
+            callback : function(target){ // 回调
+            	if(target.val().indexOf("******")!=-1){
+					// layer.tips("萨达萨达", target, { //1.错误信息，2提示位置，3同时提示多个错误
+					// 	tips: [4, '#78BA32'], // 方向 颜色
+					// 	tipsMore: false //错误信息可以同时提示多个，...
+					// });
+					alert(111111)
+					return false;
+            	}else {
+					return true;
+            	}
+            },// 每隔1s检测一次  
+        });
 
     }
 });
