@@ -20,9 +20,11 @@
 			submitBtnId: "",
 			msgDirection: "right",
 			backColor: [], // 方向 颜色
+			tipsMore: false, // 提示框是否显示多个
 			scrollDom: false, // 提交验证时定位
+			forRegular: [],  // 循环处理自定义添加的数据
 			keyup: function() {},
-			sure: function() {}, // 确认回调
+			sure: function() {}, // 确认验证通过回调
 			msgShow: true,
 			always: false,
 			fields: []
@@ -48,6 +50,7 @@
 		set: function(name, value) {
 			this.setting[name] = value;
 		},
+		// 获取默认正则表达式列表
 		getDefaults: function() {
 			if (!validator.defaults) {
 				validator.defaults = {
@@ -90,8 +93,18 @@
 				var label = ($(this)[0].tagName).toLowerCase();
 				if (((label == "input") && ($(this).attr("type") == "text" || $(this).attr("type") == "password" || $(this).attr("type") == "hidden" || $(this).attr("type") == "file")) || (label == "textarea")) {
 					$(this).blur();
-				} else o.controlValidate($(this), label);
-				if (o.get("target").find(".validator-" + label + "-error").length > 0) result = false;
+					if($(this).hasClass('validator-input-error')){
+				 		return false; //跳出循环
+					}
+				} else {
+					o.controlValidate($(this), label);
+					if($(this).hasClass('validator-input-error')){
+				 		return false; //跳出循环
+					}
+				};
+
+				// 判断自定义提示框是否存在
+				//if (o.get("target").find(".validator-" + label + "-error").length > 0) result = false;
 			});
 
 
@@ -127,6 +140,7 @@
 			var msg = $(".validator-msg[mark=" + target.attr("mark") + "]");
 			if (msg.length == 1) msg.hide();
 		},
+		// 显示提示框信息
 		show: function(target, type) {
 			var minLength = target.attr("minlength"),
 				maxLength = target.attr("maxlength"),
@@ -178,9 +192,10 @@
 
 			layer.tips(message, target, { //1.错误信息，2提示位置，3同时提示多个错误
 				tips: o.get("backColor") || [4, '#78BA32'], // 方向 颜色
-				tipsMore: false //错误信息可以同时提示多个，...
+				tipsMore:  o.get("tipsMore") || false //错误信息可以同时提示多个，...
 			});
 
+			// ------------------ 自定义提示框 计算位置定位显示 
 			var xSize, ySize;
 			//msg direction
 			switch (msgDirection) {
@@ -224,12 +239,14 @@
 			//show
 			$(".validator-msg[mark=" + mark + "]").show();
 		},
+		// 验证错误后的 默认操作
 		error: function(target, message) {
 			target.attr("validator-msg", message).addClass("validator-input-error");
 			if (this.get("msgShow") == true) this.show(target, "error");
 			else target.attr("validator-msg", message);
 		},
-		success: function(target) { // 验证正确后的 默认操作
+		// 验证正确后的 默认操作
+		success: function(target) { 
 			target.removeClass("validator-input-error");
 			$(".validator-msg[mark=" + target.attr("mark") + "]").remove();
 			target.removeAttr("mark").removeAttr("validator-msg");
@@ -280,6 +297,7 @@
 		showControlMsg: function() {
 
 		},
+		// 对div、select 进行验证
 		controlValidate: function(target, label) {
 			var o = this,
 				msg = target.attr("validator-msg"),
@@ -313,28 +331,32 @@
 			} else if (label == "select") {
 				msg = (msg ? msg : o.getMessage("required"));
 				name = target.attr("name");
-				// if(target.next(".controls-select").is("hidden")){
-				// 	o.passed[name]=true;
-				// }
-				// else if(target.val()==""){
-				// 	o.passed[name]=false;
-				// 	target.next(".controls-select").addClass("validator-input-error");
-				// }
-				// else{
-				// 	o.passed[name]=true;
-				// 	target.next(".controls-select").removeClass("validator-input-error");
-				// }
+				if(target.next(".controls-select").is("hidden")){
+					o.success(target);
+					o.passed[name]=true;
+				}
+				else if(target.val()==""){
+					o.passed[name]=false;
+					o.error(target, msg);
+					target.next(".controls-select").addClass("validator-input-error");
+				}
+				else{
+					o.success(target);
+					o.passed[name]=true;
+					target.next(".controls-select").removeClass("validator-input-error");
+				}
 			}
 		},
-		validate: function(target) {
+		// 与所写正则表达式 进行对比匹配
+		validate: function(target,rule,messageDat,callback) {
 			var o = this,
 				name = target.attr("name"),
 				messageName = "",
-				message = "",
+				message =  "",
 				valueName = target.attr("valuename"),
 				value = ($.trim(target.val()) ? target.val() : ""),
 				required = target.attr("required"),
-				rule = target.attr("rule"),
+				rule = rule || target.attr("rule"),
 				minLength = target.attr("minlength"),
 				maxLength = target.attr("maxlength"),
 				authFunc = target.attr("authfunc"),
@@ -354,7 +376,7 @@
 				return;
 			}
 
-			//required
+			//required  必填
 			if (required) {
 				if (value == "") {
 					requiredFlag = false;
@@ -363,7 +385,7 @@
 			} else if (value != "") goOn = true;
 			else goOn = false;
 
-			//rule
+			//rule 正则表达式
 			if (goOn && rule && (requiredFlag)) {
 				var temp = name;
 				if (typeof rule == "string") {
@@ -379,7 +401,7 @@
 				}
 			}
 
-			//minLength
+			//minLength  最小长度
 			if (goOn && minLength && (requiredFlag && ruleFlag)) {
 				if (value.length < parseInt(minLength)) {
 					minLengthFlag = false;
@@ -387,7 +409,7 @@
 				} else minLengthFlag = true;
 			}
 
-			//maxLength
+			//maxLength 最大长度
 			if (goOn && maxLength && (requiredFlag && ruleFlag && minLengthFlag)) {
 				if (value.length > parseInt(maxLength)) {
 					maxLengthFlag = false;
@@ -430,17 +452,38 @@
 				if (target.attr("authfunc")) authFuncExec();
 			}
 
-			//message and result handle
+			//message and result handle  提示中文语句
 			if (goOn == true && !(requiredFlag && ruleFlag && minLengthFlag && maxLengthFlag && authFuncFlag)) {
-				if (messageName != "" && message == "") message = o.getMessage(messageName);
-				o.error(target, message);
-				o.passed[name] = false;
+				if(callback && typeof callback == "function"){
+					var state = callback(target);
+					if(state){
+						o.error(target, messageDat);
+						o.passed[name] = false;
+					} else {
+						o.passed[name] = true;
+					}
+				} else {	
+					if (messageName != "" && message == "") message = o.getMessage(messageName) || messageDat;
+					o.error(target, message);
+					o.passed[name] = false;
+				} 
 			} else {
-				o.success(target);
-				o.passed[name] = true;
+				if(callback && typeof callback == "function"){
+					var state = callback(target);
+					if(state){
+						o.success(target);
+						o.passed[name] = false;
+					} else {
+						o.passed[name] = true;
+					}
+				}else {
+					o.success(target);
+					o.passed[name] = true;
+				}					
 			}
 
 		},
+		// 绑定触发事件
 		bindEvent: function() {
 			var o = this,
 				label = "";
@@ -454,6 +497,7 @@
 					//click event
 					$(this).unbind("click.validator").bind("click.validator", function() {
 						if ($(this).attr("validator-msg") != undefined) o.show($(this));
+
 					});
 
 					//keydown
@@ -479,13 +523,14 @@
 					//blur event
 					$(this).unbind("blur.validator").bind("blur.validator", function() {
 						o.validate($(this));
+						o.forRegular($(this));
 						if (o.get("msgShow") == false && $(this).attr("validator-msg") != undefined) o.hide($(this));
-
 					});
 
 					//change event
 					$(this).off("change.validator").on("change.validator", function() {
 						o.validate($(this));
+						o.forRegular($(this));
 						if (o.get("msgShow") == false && $(this).attr("validator-msg") != undefined) o.hide($(this));
 
 					});
@@ -493,6 +538,26 @@
 				}
 			});
 		},
+		//自定义正则验证方法 循环处理自定义添加的数据
+		forRegular:function(target,option){
+			var o = this,
+				dat = o.get("forRegular");
+			if(option){
+				// option.regular.map(function(index, elem) {
+				// 	o.validate($(index.dom),index.rule,index.message,option.callback);
+				// });
+				if($(option.dom).length>0){
+					o.validate($(option.dom),option.rule,option.message,option.callback);
+				}
+			}else {
+				dat.map(function(index, elem)  {
+					if(target.attr("name") == index.dom){
+						o.validate($("[name="+index.dom+"]"),index.rule,index.message);
+					}
+				});	
+			}
+		},  
+		// 
 		init: function() {
 			var o = this;
 
@@ -510,18 +575,18 @@
 				// 检验成功时的回调方法 ，处理后续方法
 				if (o.result()) {
 					var succ = o.get("sure");
-					succ($(this));
+					succ($(this),o);
 				}
 				return o.result();
 			});
 
-			//set element
+			//set element 获取需要验证的Dom节点
 			o.validateElement = o.get("target").find("[rule],[required],[minlength],[maxlength],[authfunc]");
 
 			//set fileds
 			o.setFields();
 
-			//update element
+			//update element 获取需要验证的Dom节点
 			o.validateElement = o.get("target").find("[rule],[required],[minlength],[maxlength],[authfunc]");
 
 			//bind event
@@ -548,6 +613,24 @@
 		if (obj && typeof obj.result == "function") {
 			return obj.result();
 		} else return true;
+	};
+	// 自定义验证 并提供验证前回调方法
+	$.fn.validatorCustom = function(option) {
+		var obj = $(this).data();
+        var option = $.extend({}, {
+            dom : "",// 验证dom
+            rule : "",// 正则表达式
+            message : "",// 中文提示语句
+            // regular:[{ 
+	           //  dom : "",// 验证dom
+	           //  rule : "",// 正则表达式
+	           //  message : "",// 中文提示语句
+            // }],
+            callback : function(){ // 回调
+
+            },// 每隔1s检测一次  
+        }, option || {});
+		obj.forRegular(false,option);
 	};
 
 	//window
