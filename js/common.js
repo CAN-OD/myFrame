@@ -58,16 +58,18 @@
             myFrame.loadCSS($$(options.hrefType + ".css"));
         }
 
-        // _this.loadingShow(true, $("body"));
         return _this.request({
             url: $$(options.href),
             async: false,
             type: "GET",
             dataType: "html",
             data: options.data || "",
-            markShow: true,
-            loading: false,
-            loadingBox: $("body"),
+            loading: {
+                show: options.show || true,
+                maskShow:options.maskShow || true,
+                loadingBox:options.loadingBox,
+                callback:options.callback 
+            },
             success: function(d) {
                 if (options.type == "html") {
                     options.cont.html(d);
@@ -79,8 +81,6 @@
 
                 options.cont.find(".myFrame_container").last().data(options.dataVal); // 传值到页面
                 myFrame.pageCallBack(options.cont.find(".myFrame_container").last()); // 传回 当前 弹出框 dom节点
-
-                // _this.loadingHide();
             }
         });
     };
@@ -101,7 +101,6 @@
             _this = this;
         var option = $.extend({}, defaultOption, option);
         var state = false;
-        // _this.loadingShow(true, $("body"));
         //先加载 css文件  后渲染  html 模块  保障用户体验
         if (option.url.indexOf(".html") > 0) {
             var pageUrl = option.url.split(".html")[0] + ".css";
@@ -120,7 +119,6 @@
                         }
                     });
                     option.el.append(d);
-                    _this.loadingHide();
                     if (typeof callBack == "function") callBack(option.el, $(d));
                 }
             });
@@ -202,15 +200,21 @@
      * @param  {Function} callback [description]
      * @return {[type]}            [description]
      */
-    myFrame.fileIsExist = function(filepath, callback) {
+    myFrame.fileIsExist = function(filepath, callback,loading) {
+        if(loading){
+            var laod = {
+                show: loading.show || false,
+                maskShow:loading.maskShow || false,
+                loadingBox:loading.loadingBox,
+                callback:loading.callback 
+            };
+        }
         return this.request({
             url: filepath,
             async: false,
             type: "GET",
             dataType: "html",
-            markShow: true,
-            loading: false,
-            loadingBox: $("body"),
+            loading: laod,
             error: function() {
                 if (typeof callback == "function") callback(false);
             },
@@ -228,8 +232,9 @@
     myFrame.request = function(option) {
         var _this = this,
             ajaxTimeoutTest, result = "",
-            async = (option.async === false ? false : true);
-        if (!option.loading) myFrame.loadingShow();
+            async = (option.async === false ? false : true),
+            loading = option.loading;
+        if (loading && loading.show) myFrame.loadingShow(loading.maskShow,loading.loadingBox,loading.callback);
 
         ajaxTimeoutTest = $.ajax({
             type: option.type || 'POST',
@@ -242,9 +247,9 @@
                 if (typeof option.beforeSend == "function") option.beforeSend();
             },
             success: function(data) {
+                myFrame.loadingHide();
                 result = data;
                 if (typeof option.success == 'function') option.success(data);
-                if (!option.loading) setTimeout(myFrame.loadingHide, 300);
             },
             error: function(ex) {
                 myFrame.loadingHide();
@@ -275,10 +280,10 @@
                 if (typeof option.error == 'function') option.error(ex);
             },
             complete: function(XMLHttpRequest, status) { //请求完成后最终执行参数
+                myFrame.loadingHide();
                 if (status == 'timeout') { //超时,status还有success,error等值的情况
                     ajaxTimeoutTest.abort();
                     myFrame.alert("超时");
-                    myFrame.loadingHide();
                 }
             }
         });
@@ -293,16 +298,22 @@
      * @param loadingBox loading效果展示容器
      * @param markShow loading效果 遮罩
      */
-    myFrame.getJson = function(url, type, data, dataType, loading, loadingBox, markShow) {
+    myFrame.getJson = function(url, type, data, dataType, loading) {
+        if(loading){
+            var laod = {
+                show: loading.show || false,
+                maskShow:loading.maskShow || false,
+                loadingBox:loading.loadingBox,
+                callback:loading.callback 
+            };
+        }
         return this.request({
             url: url,
             data: data || {},
             async: false,
             type: type || "get",
             dataType: dataType || "json",
-            markShow: markShow || true,
-            loading: loading || false,
-            loadingBox: loadingBox || $("body")
+            loading: laod,
         });
     };
     // 解析清地址或接口地址
@@ -361,6 +372,8 @@
             btncl: "取消",
             btn: false,
             data: "",
+            backdrop:true,
+            keyboard:true,
             onReady: function(e) {},
             onShown: function(e) {},
             closeClick: function(e) {
@@ -401,29 +414,45 @@
      * @param height 高度
      */
     myFrame.alert = function(status, message, sure, mask, title, btnok, btncl, width, height) {
-
+        var status2, message2, sure2, mask2, title2, btnok2, btncl2, width2, height2;
         if (arguments[0] == "success" || arguments[0] == "error") {
-            status = arguments[0];
+            status2 = arguments[0];
+            message2 = arguments[1];
+            sure2 = arguments[2];
+            mask2 = arguments[3];
+            title2 = arguments[4];
+            btnok2 = arguments[5];
+            btncl2 = arguments[6];
+            width2 = arguments[7];
+            height2 = arguments[8];
         } else {
-            message = status;
-            status = undefined;
+            status2 = undefined;
+            message2 = arguments[0];
+            sure2 = arguments[1];
+            mask2 = arguments[2];
+            title2 = arguments[3];
+            btnok2 = arguments[4];
+            btncl2 = arguments[5];
+            width2 = arguments[6];
+            height2 = arguments[7];
         }
+
         var _this = this;
         var myAlert = myPopup.alert({
-            title: title || "系统提示",
-            message: message || "提示内容",
-            mask: mask,
-            btnok: btnok || "确定",
-            btncl: btncl || "取消",
-            width: width || 800,
-            height: height || 550,
+            title: title2 || "系统提示",
+            message: message2 || "提示内容",
+            mask: mask2,
+            btnok: btnok2 || "确定",
+            btncl: btncl2 || "取消",
+            width: width2 || 800,
+            height: height2 || 550,
             auto: false,
-            status: status,
+            status: status2,
         });
         // 点击确定时触发
         myAlert.on(function() {
-            if (typeof sure == "function") {
-                sure();
+            if (typeof sure2 == "function") {
+                sure2();
             }
         });
         // 关闭按钮
@@ -445,19 +474,43 @@
      * @param height 高度 
      */
     myFrame.confirm = function(status, message, sure, notSure, title, mask, btnok, btncl, width, height) {
+        var status2, message2, sure2, notSure2, title2, mask2, btnok2, btncl2, width2, height2;
+        if (arguments[0] == "success" || arguments[0] == "error") {
+            status2 = arguments[0];
+            message2 = arguments[1];
+            sure2 = arguments[2];
+            notSure2 = arguments[3];
+            title2 = arguments[4];
+            mask2 = arguments[5];
+            btnok2 = arguments[6];
+            btncl2 = arguments[7];
+            width2 = arguments[8];
+            height2 = arguments[9];
+        } else {
+            status2 = undefined;
+            message2 = arguments[0];
+            sure2 = arguments[1];
+            notSure2 = arguments[2];
+            title2 = arguments[3];
+            mask2 = arguments[4];
+            btnok2 = arguments[5];
+            btncl2 = arguments[6];
+            width2 = arguments[7];
+            height2 = arguments[8];
+        }
         var _this = this;
         var close = close || function() {};
         var myAlert = myPopup.confirm({
-            title: title || "系统提示",
-            message: message || "提示内容",
-            mask: mask,
-            btnok: btnok || "确定",
-            btncl: btncl || "取消",
-            width: width || 800,
-            height: height || 550,
+            title: title2 || "系统提示",
+            message: message2 || "提示内容",
+            mask: mask2,
+            btnok: btnok2 || "确定",
+            btncl: btncl2 || "取消",
+            width: width2 || 800,
+            height: height2 || 550,
             auto: false,
             // status: undefined,
-            status: undefined,
+            status: status2,
             onReady: function(dom, e) {
 
             },
@@ -468,13 +521,11 @@
 
         // 点击确定时触发
         myAlert.onSure(function(target) {
-            if (typeof sure == "function") return sure(target);
+            if (typeof sure2 == "function") return sure2(target);
         });
         // 点击关闭时触发
         myAlert.onClose(function(target) {
-            if (typeof sure == "function") {
-                if (typeof notSure == "function") return notSure(target);
-            }
+            if (typeof notSure2 == "function") return notSure2(target);
         });
         // 关闭按钮
         myAlert.hide(function() {
@@ -607,7 +658,7 @@
         } else {
             loadingBox.append($("<div  class=\"page-loading\"><span class=\"text-hide\">加载中，请稍后...</span></div>"));
         }
-        if (!maskShow) myFrame.maskShow(loadingBox);
+        if (maskShow) myFrame.maskShow(loadingBox);
         if (typeof callback == "function") callback();
     };
 
@@ -618,8 +669,10 @@
      * @return {[type]}            [description]
      */
     myFrame.loadingHide = function(loadingBox) {
-        myFrame.maskHide();
-        loadingBox ? loadingBox.find(".page-loading").fadeOut("fast") : $("body").children(".page-loading").fadeOut("fast");
+        setTimeout(function(){
+            myFrame.maskHide();
+            loadingBox ? loadingBox.find(".page-loading").fadeOut("fast") : $("body").children(".page-loading").fadeOut("fast");
+        }, 300);
     };
 
     // 遮罩层 显示
@@ -955,14 +1008,15 @@
      * @return {[type]}         [description]
      */
     myFrame.validator = function(options) {
-        $(options.elem).validator({
+        var option = $.extend({}, {
             submitBtnId: options.submitBtnId || "", // 提交按钮 ID 
             scrollDom: options.scrollDom, // 提交验证时定位
             backColor: options.backColor || [3, '#78BA32'], // 提示框 方向 颜色
             sure: function(that) { // 验证成功后的回调函数 that 当前提交按钮
                 if (typeof options.sure == "function") options.sure(that);
             }
-        });
+        }, options || {});
+        $(options.elem).validator(option);
     };
 
 
@@ -1047,24 +1101,178 @@
 
     // iframe 循环查找相应dom
     myFrame.sizeDom = ""; // 用于记录 找到的iframe节点对象 
+    /**
+    * state 需要查找的iframe 的名字节点ID
+    * childIframe  递归函数所需要的参数值 （可不传）
+    */
     myFrame.iframeCont = function(state, childIframe) {
-        var iframe = childIframe || $("iframe"),
+        var iframe = childIframe || $(window.parent.document).find("iframe"),
             name;
-        for (var i = 0; i < iframe.length; i++) {
+        for(var i=0;i<iframe.length;i++){
             name = iframe.eq(i).attr("id");
-            if (name == state) {
+            if(name == state){
                 _this.sizeDom = iframe.eq(i);
                 break;
             }
-            if (iframe.eq(i).contents().find("iframe").length > 0) {
-                _this.iframeCont(state, iframe.eq(i).contents().find("iframe"));
+            if(iframe.eq(i).contents().find("iframe").length>0){
+                _this.iframeCont(state,iframe.eq(i).contents().find("iframe"));
             }
         }
         return _this.sizeDom;
     };
-
+    // 设置自适应 字体大小 用于rem 单位移动端
+    /**
+     * [remSize description]
+     * @param  {[type]} size [设计图大小]
+     * @return {[type]}      [description]
+     */
+    myFrame.remSize = function(size){
+        var whdef = 100 / size; // 表示1920的设计图,使用100PX的默认值
+        var wH = window.innerHeight; // 当前窗口的高度
+        var wW = window.innerWidth; // 当前窗口的宽度
+        var rem = wW * whdef; // 以默认比例值乘以当前窗口宽度,得到该宽度下的相应FONT-SIZE值
+        $('html').css('font-size', rem + "px");
+    };
 
     // };
+
+    // 判断pc浏览器是否缩放，若返回100则为默认无缩放，如果大于100则是放大，否则缩小
+    myFrame.detectZoom =function (){ 
+      var ratio = 0,
+        screen = window.screen,
+        ua = navigator.userAgent.toLowerCase();
+     
+       if (window.devicePixelRatio !== undefined) {
+          ratio = window.devicePixelRatio;
+      }
+      else if (~ua.indexOf('msie')) {  
+        if (screen.deviceXDPI && screen.logicalXDPI) {
+          ratio = screen.deviceXDPI / screen.logicalXDPI;
+        }
+      }
+      else if (window.outerWidth !== undefined && window.innerWidth !== undefined) {
+        ratio = window.outerWidth / window.innerWidth;
+      }
+       
+       if (ratio){
+        ratio = Math.round(ratio * 100);
+      }
+       
+       return ratio;
+    };
+
+    // wwb 2017-11-21 处理win10浏览器放大
+    myFrame.zoom = function(options){
+        var option = $.extend({}, {
+             //interval : 1000,// 每隔1s检测一次  
+        }, options || {});
+        
+        WebpageZoomDetect.start(option); 
+    };
+
+    /**
+     * 轮播图移动方法
+     * /
+     * @param  {[type]} contDom   [description] 轮播大容器节点
+     * @param  {[type]} scrollDom [description] 内部ul容器节点
+     * @param  {[type]} leftDom   [description] 向左按钮
+     * @param  {[type]} rightDom  [description] 向右按钮
+     * @param  {[type]} automatic [description] 是否启动无缝滚动效果
+     * @param  {[type]} time      [description] 动画时间
+     * @param  {[type]} speed     [description] 每次动画移动距离
+     * @param  {[type]} number    [description] 显示个数
+     * @return {[type]}           [description]
+     */
+    myFrame.slideMove = function(options){
+        var options =  $.extend({}, {
+            number : false, //显示个数    
+            seamless : false, //是否启动无缝滚动效果  
+            time : 2000  ,     //动画时间
+            speed : false       //每次动画移动距离
+        }, options || {});
+        var oDiv= $(options.contDom), 
+            contDom = oDiv.find(options.scrollDom),   //最外层div
+            oUl= contDom.find('ul'),                 //中间层ul
+            oLi= oUl.find('li'),                //每一个板块li
+            speed,oli,Length,oUlwidth;                         
+        // 是否计算显示区域,均等分布li宽度                                
+        if(options.number){
+            oLi.css({"width":contDom.outerWidth(true)/options.number-30+"px"});  
+        }
+       
+        // 复制两份ul里面的内容到ul中，为的是实现无缝
+        if(options.seamless){
+            oLi.clone(true).appendTo(oUl);
+        }
+
+        speed=  options.speed || -oLi.outerWidth(true);  // 每次动画移动距离
+        oli = oUl.children("li");                     // 单个li节点
+        Length = oli.length ;                         // li标签个数
+        oUlwidth = oli.eq(0).outerWidth(true)*Length;     // ul的总宽aaaa度
+        oUl.css("width",oUlwidth+"px");  // 计算新的ul的长度
+
+        //----------动画移动方法集合 -------------
+        var animation = {
+           // 无缝滚动情况下 向左移动
+           move:function (){
+                if(oUl[0].offsetLeft<=-oUl[0].offsetWidth/2){
+                    oUl[0].style.left='0';
+                }
+                //设置ul的left值
+                oUl[0].style.left=oUl[0].offsetLeft+speed+'px';      //每次增加移动距离
+            },
+            //向左移动
+            moveLeft:function (){
+                // 开启无缝滚动式 点击切换也是无缝效果
+                if(options.seamless){
+                    if(oUl[0].offsetLeft<=-oUl[0].offsetWidth/2){
+                        oUl[0].style.left='0';
+                    }
+                }
+                // ul总宽度 - ul已经移动的left长度 > 显示板块容器宽度
+                if(oUlwidth-Math.abs(oUl[0].offsetLeft)>contDom.outerWidth(true)){ 
+                    //设置ul的left值
+                    oUl[0].style.left=oUl[0].offsetLeft+speed+'px';      //每次增加移动距离
+                }
+            },
+            //向右移动
+            moveRight:function (){
+                // 开启无缝滚动式 点击切换也是无缝效果
+                if(options.seamless){
+                    if(oUl[0].offsetLeft ==0){
+                        oUl[0].style.left= -oUl[0].offsetWidth/2+'px';
+                    }
+                }
+                //  ul已经移动的left长度 >= li自身宽度
+                if(Math.abs(oUl[0].offsetLeft)>=oLi.outerWidth(true) ){ 
+                    //设置ul的left值
+                    oUl[0].style.left = oUl[0].offsetLeft-speed+'px';      //每次增加移动距离
+                }
+            }
+        }; 
+     
+        // 向右移动点击事件
+        oDiv.find(options.leftDom).on("click",function(){
+            animation.moveLeft();
+        });
+
+        // 向左移动点击事件
+        oDiv.find(options.rightDom).on("click",function(){
+            animation.moveRight();
+        });
+
+        // 是否 自动移动
+        if(options.automatic){
+            var timer=setInterval(animation.move,options.time);
+            //阻止动画效果
+            oDiv.hover(function(){
+                clearInterval(timer); // 清除动画
+            },function(){
+                clearInterval(timer); // 清除动画
+                timer=setInterval(animation.move,options.time); // 再次启动动画
+            }); 
+        }
+    };
 
 
 
@@ -1077,7 +1285,6 @@
     window.myFrame = myFrame;
     myFrame.init();
     // });
-
 
     $.fn.paging = function() {
 
@@ -1427,16 +1634,22 @@
              */
             "formSubmit": function(options) {
                 var _this = this,
-                    url = _this.attr("action");
+                    url = _this.attr("action"),
+                    loading = options.loading;
+                if(loading){
+                    var laod = {
+                        show: loading.show || true,
+                        maskShow:loading.maskShow || true,
+                        loadingBox:loading.loadingBox,
+                        callback:loading.callback 
+                    };
+                }
                 myFrame.request({
-                    // url: $$(url),
                     url: url,
                     async: false,
                     type: "GET",
                     data: _this.getFormData(),
-                    markShow: true,
-                    loading: false,
-                    loadingBox: $("body"),
+                    loading:laod,
                     success: function(d) {
                         if (typeof options.success == "function") options.success(_this, d);
                     },

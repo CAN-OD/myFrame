@@ -255,7 +255,9 @@
                    }[key];
                });
 
-               $('body').append(content);
+               // 加载页面碎片地址
+               myFrame.loadingShow(options.maskShow, options.loadingBox, options.loadingCallback); 
+               $('body').append(content); // 添加弹出框HTML
                var target = $('#' + modalId);
 
 
@@ -263,20 +265,25 @@
                if (!options.btn) {
                    target.find('.modal-footer').remove();
                }
-               // 加载页面碎片地址
-               myFrame.loadingShow(options.maskShow, options.loadingBox, options.loadingCallback); 
                target.find('.modal-body').load(options.url, function(response, status, xhr) { // response - 包含来自请求的结果数据、status - 包含请求的状态 、xhr - 包含 XMLHttpRequest 对象
                    target.find('.modal-body').data(options.data); // 传值到页面
                    myFrame.pageCallBack(target.find('.modal-body')); // 传回 当前 弹出框 dom节点
+                   // 滚动条加载
+//                    myFrame.jScrollPane({
+//                      elem:target.find('.modal-body'),
+//                      autoReinitialise:true
+//                    });
                }).css({
                    height: options.height // 改变弹出框内容高度  
                });
 
-               target.modal('show').find(".modal-dialog").css({
+           
+               target.modal({backdrop:options.backdrop, keyboard: options.keyboard,show:true}).find(".modal-dialog").css({
                    "width": options.width // 改变弹出框内容宽度 
                });
+          
 
-               target.on('hidden.bs.modal', function(e) {
+              target.on('hidden.bs.modal', function(e) {
                    $('body').find('#' + modalId).next(".modal-backdrop").remove(); // 清楚已关闭的弹出框HTML
                    $('body').find(target).remove();
                    layer.closeAll('tips');
@@ -296,9 +303,9 @@
                        if (callback && callback instanceof Function) {
                            // 当模态框对用户可见时触发（shown.bs.modal将等待 CSS 过渡效果完成）。初始化时的回调函数
                            target.on('shown.bs.modal ', function(e) {
-                               _this.center($(this));
-                               setTimeout(myFrame.loadingHide(options.loadingBox),300);
-                               if (options.onReady(e)) options.onReady.call(target, e);
+                              _this.center($(this));
+                              if (options.onReady(e)) options.onReady.call(target, e);
+                              myFrame.loadingHide(options.loadingBox);
                            });
                        }
                    },
