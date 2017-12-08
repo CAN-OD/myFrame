@@ -1389,8 +1389,9 @@
                                 }
                                 rowspan = Number(rowspan) + 1;
                                 $(that).attr("rowSpan", rowspan);
+                                $(that).css({"verticalAlign":'middle'});  //td上下合并和居中
 
-                                $(this).hide();
+                                $(this).hide().remove();  //移除合并后下列的td
                             } else {
                                 that = this;
                             }

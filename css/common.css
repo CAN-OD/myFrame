@@ -132,6 +132,20 @@
 .tAlignR {
   text-align: right !important;
 }
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: normal;
+}
 /* -------------- page loading加载 style ------------------------------- */
 .page-loading {
   width: 316px;
@@ -410,7 +424,7 @@ li {
   padding: 0;
   line-height: 28px;
   margin: 0;
-  width: 140px;
+  /*width: 140px;*/
 }
 .form-group .form-control {
   height: 28px;
@@ -424,7 +438,7 @@ li {
   resize: none;
 }
 .form-group .form-group-left {
-  width: 140px;
+  /*width: 140px;*/
   float: left;
 }
 .form-group .form-group-right {
@@ -449,18 +463,24 @@ li {
   min-height: 70px;
 }
 /*------------------------------chrom input输入框黄色背景去除-----------------------------*/
-input:-webkit-autofill,
-textarea:-webkit-autofill,
-select:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 1000px #fff inset;
+/*input:-webkit-autofill,
+textarea:-webkit-autofill, 
+select:-webkit-autofill { 
+  -webkit-box-shadow:0 0 0 1000px #fff inset;         //去除黄色背景
+  -webkit-text-fill-color:#333;             //字体颜色
+} */
+/*input[type=text]:focus,
+input[type=password]:focus, 
+textarea:focus {       
+  -webkit-box-shadow: 0 0 0 1000px #fff  inset;    //获取焦点时候可以去除背景色
+  -webkit-text-fill-color:#333;              //字体颜色
+}*/
+/* 去除黄色背景*/
+/*input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
   -webkit-text-fill-color: #333;
 }
-input[type=text]:focus,
-input[type=password]:focus,
-textarea:focus {
-  -webkit-box-shadow: 0 0 0 1000px #fff  inset;
-  -webkit-text-fill-color: #333;
-}
+
 /*------------------------------字体图标样式--------------------------------------------------*/
 i.fa {
   padding: 0 2px;
